@@ -43,9 +43,9 @@ erDiagram
     }
 
     auctions {
-        int id "オークションid"
+        int id PK "オークションid"
         int card_id FK "nullable 場の動物カード"
         uuid top_bet_user_id "nullable 落札者"
-        int top_bet "nullble 落札価格"
+        int top_bet "nullable 落札価格"
     }
 ```

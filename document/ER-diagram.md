@@ -6,8 +6,15 @@ erDiagram
     cards |{--|| user_cards : "card_id"
     rooms o|--|| auctions : "auction_id"
     rooms o|--|| trades : "trade_id"
-    trades ||--|{ cards : "card_id"
+    trades ||--|{ cards : "animal_card_id"
     trades ||--|{ users : "target_user_id"
+    auctions |{--|| cards : "animal_card_id"
+    auctions |{--|| users : "bet_user_id"
+    auction_bets |{--|| auctions : "auction_id"
+    auction_bets |{--|| cards : "money_card_id"
+    trade_bets |{--|| auctions : "auction_id"
+    trade_bets |{--|| users : "user_id"
+    trade_bets |{--|| cards : "money_card_id"
 
     users {
         uuid id PK "ユーザid"
@@ -35,17 +42,30 @@ erDiagram
         id trade_id FK "nullable"
     }
 
+    auctions {
+        uuid id PK "オークションid"
+        int animal_card_id FK "nullable 場の動物カード"
+        uuid bet_user_id FK "nullable 落札者"
+    }
+
+    auction_bets {
+        int id PK "オークションベットid"
+        uuid auction_id FK "オークションid"
+        int money_card_id FK "お金カードid"
+    }
+
     trades {
-        int id PK "トレードid"
+        uuid id PK "トレードid"
         bool is_double "2枚トレードか"
-        int card_id FK "turn_userのトレード対象"
+        bool is_confirmed "片方が金額確定したか"
+        int animal_card_id FK "turn_userのトレード対象"
         uuid target_user_id FK "トレード対象ユーザ"
     }
 
-    auctions {
-        int id PK "オークションid"
-        int card_id FK "nullable 場の動物カード"
-        uuid top_bet_user_id "nullable 落札者"
-        int top_bet "nullable 落札価格"
+    trade_bets{
+        int id PK "トレードベットid"
+        uuid auction_id FK "オークションid"
+        uuid user_id FK "ユーザid"
+        int money_card_id FK "お金カードid"
     }
 ```

@@ -47,7 +47,7 @@ sequenceDiagram
     alt turn_user_id !== null
         f1->>f1: ルーム一覧ページに遷移
     end
-    f1->>+b: ルームに参加<br/>PUT /users
+    f1->>+b: ルームに参加<br/>PUT /users/{userId}
     b->>+d: SET users.room_id
     d-->>-b: user
     b-->>-f1: user
@@ -60,7 +60,7 @@ sequenceDiagram
     f2->>+b: WS /rooms/{room_id}
     b->>f2: WS room(リレーション含む)
     b->>-f1: WS room(リレーション含む)
-    f1->>+b: ゲームスタート<br/>PUT /rooms
+    f1->>+b: ゲームスタート<br/>PUT /rooms/{roomId}
     b->>+d: SET rooms.turn_user_id
     d->>-b: room
     b->>f1: WS room(リレーション含む)

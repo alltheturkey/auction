@@ -1,0 +1,537 @@
+{
+  'openapi': '3.1.0',
+  'info': { 'version': '1.0', 'title': 'backend' },
+  'servers': [{ 'url': 'http://localhost:3000' }],
+  'paths':
+    {
+      '/users':
+        {
+          'post':
+            {
+              'summary': '',
+              'operationId': 'post-users',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties': { 'name': { 'type': 'string' } },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'OK',
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'status':
+                                        { 'type': 'integer', 'default': 200 },
+                                      'data':
+                                        { '$ref': '#/components/schemas/User' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+        },
+      '/users/{userId}':
+        {
+          'get':
+            {
+              'summary': '',
+              'description': '',
+              'operationId': 'get-users-userId',
+              'parameters':
+                [
+                  {
+                    'name': 'userId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'OK',
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'status':
+                                        { 'type': 'integer', 'default': 200 },
+                                      'data':
+                                        { '$ref': '#/components/schemas/User' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                  '404':
+                    {
+                      'description': 'Not Found',
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'status':
+                                        { 'type': 'number', 'default': 404 },
+                                    },
+                                },
+                              'examples':
+                                { 'Example 1': { 'value': { 'status': 404 } } },
+                            },
+                        },
+                    },
+                },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+          'put':
+            {
+              'summary': '',
+              'operationId': 'put-users-userId',
+              'parameters':
+                [
+                  {
+                    'name': 'userId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                {
+                                  'name': { 'type': ['string', 'null'] },
+                                  'room_id': { 'type': ['string', 'null'] },
+                                },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'OK',
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'status':
+                                        { 'type': 'integer', 'default': 200 },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+        },
+      '/rooms':
+        {
+          'get':
+            {
+              'summary': '',
+              'operationId': 'get-rooms',
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'OK',
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'status':
+                                        { 'type': 'integer', 'default': 200 },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+          'post':
+            {
+              'summary': '',
+              'operationId': 'post-rooms',
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'OK',
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'status':
+                                        { 'type': 'integer', 'default': 200 },
+                                      'data':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              '$ref': '#/components/schemas/Room',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+        },
+      '/room/{roomId}':
+        {
+          'options':
+            {
+              'summary': 'WebSocket',
+              'operationId': 'options-room-roomId',
+              'parameters':
+                [
+                  {
+                    'name': 'roomId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'OK',
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'data':
+                                        {
+                                          '$ref': '#/components/schemas/RoomWithRelation',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+          'get':
+            {
+              'summary': '',
+              'operationId': 'get-room-roomId',
+              'parameters':
+                [
+                  {
+                    'name': 'roomId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'OK',
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'status':
+                                        { 'type': 'integer', 'default': 200 },
+                                      'data':
+                                        { '$ref': '#/components/schemas/Room' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                  '404':
+                    {
+                      'description': 'Not Found',
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'status':
+                                        { 'type': 'integer', 'default': 404 },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+          'put':
+            {
+              'summary': '',
+              'operationId': 'put-room-roomId',
+              'parameters':
+                [
+                  {
+                    'name': 'roomId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                {
+                                  'turn_user_id':
+                                    { 'type': 'string', 'format': 'uuid' },
+                                  'auction_id':
+                                    { 'type': 'string', 'format': 'uuid' },
+                                  'trade_id':
+                                    { 'type': 'string', 'format': 'uuid' },
+                                },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'OK',
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'status':
+                                        { 'type': 'integer', 'default': 200 },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+        },
+    },
+  'components':
+    {
+      'schemas':
+        {
+          'User':
+            {
+              'type': 'object',
+              'title': 'User',
+              'properties':
+                {
+                  'id': { 'type': 'string', 'format': 'uuid' },
+                  'name': { 'type': 'string' },
+                },
+            },
+          'Room':
+            {
+              'type': 'object',
+              'title': 'Room',
+              'properties': { 'id': { 'type': 'string', 'format': 'uuid' } },
+            },
+          'RoomWithRelation':
+            {
+              'type': 'object',
+              'title': 'RoomWithRelation',
+              'properties':
+                {
+                  'id': { 'type': 'string', 'format': 'uuid' },
+                  'turnUser':
+                    {
+                      '$ref': '#/components/schemas/User',
+                      'description': 'nullable ターンのユーザ',
+                    },
+                  'auction':
+                    {
+                      '$ref': '#/components/schemas/Auction',
+                      'description': 'nullable',
+                    },
+                  'trade':
+                    {
+                      '$ref': '#/components/schemas/Trade',
+                      'description': 'nullable',
+                    },
+                },
+            },
+          'Auction':
+            {
+              'type': 'object',
+              'title': 'Auction',
+              'properties':
+                {
+                  'id': { 'type': 'string', 'format': 'uuid' },
+                  'animalCard':
+                    {
+                      '$ref': '#/components/schemas/Card',
+                      'description': '場の動物カード',
+                    },
+                  'betUser':
+                    {
+                      '$ref': '#/components/schemas/User',
+                      'description': '落札者',
+                    },
+                  'auctionBets':
+                    {
+                      'type': 'array',
+                      'items': { '$ref': '#/components/schemas/AuctionBet' },
+                    },
+                },
+            },
+          'Card':
+            {
+              'type': 'object',
+              'title': 'Card',
+              'properties':
+                {
+                  'id': { 'type': 'integer' },
+                  'type': { 'type': 'string', 'enum': ['animal', 'money'] },
+                  'name': { 'type': 'string' },
+                  'img': { 'type': 'string' },
+                  'point': { 'type': 'integer' },
+                },
+            },
+          'AuctionBet':
+            {
+              'type': 'object',
+              'title': 'AuctionBet',
+              'properties':
+                {
+                  'id': { 'type': 'integer' },
+                  'moneyCards':
+                    {
+                      'type': 'array',
+                      'items': { '$ref': '#/components/schemas/Card' },
+                    },
+                },
+            },
+          'Trade':
+            {
+              'type': 'object',
+              'title': 'Trade',
+              'properties':
+                {
+                  'id': { 'type': 'string', 'format': 'uuid' },
+                  'isDouble':
+                    {
+                      'type': 'boolean',
+                      'description': '片方が金額確定したか',
+                    },
+                  'animalCard':
+                    {
+                      '$ref': '#/components/schemas/Card',
+                      'description': 'turnUserが選択したトレード対象のカード(1枚)',
+                    },
+                  'targetUser':
+                    {
+                      '$ref': '#/components/schemas/User',
+                      'description': 'トレード対象ユーザ',
+                    },
+                  'tradeBets':
+                    {
+                      'type': 'array',
+                      'items': { '$ref': '#/components/schemas/tradeBet' },
+                    },
+                },
+            },
+          'tradeBet':
+            {
+              'type': 'object',
+              'title': 'tradeBet',
+              'properties':
+                {
+                  'id': { 'type': 'string' },
+                  'user': { '$ref': '#/components/schemas/User' },
+                  'moneyCard': { '$ref': '#/components/schemas/Card' },
+                },
+            },
+        },
+    },
+}

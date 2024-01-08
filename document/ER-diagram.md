@@ -12,7 +12,7 @@ erDiagram
     auctions |{--|| users : "bet_user_id"
     auction_bets |{--|| auctions : "auction_id"
     auction_bets |{--|| cards : "money_card_id"
-    trade_bets |{--|| auctions : "auction_id"
+    trade_bets |{--|| trades : "trade_id"
     trade_bets |{--|| users : "user_id"
     trade_bets |{--|| cards : "money_card_id"
 
@@ -38,8 +38,8 @@ erDiagram
     rooms {
         uuid id PK "ルームid"
         uuid turn_user_id FK "nullable ターンのユーザ"
-        id auction_id FK "nullable"
-        id trade_id FK "nullable"
+        uuid auction_id FK "nullable"
+        uuid trade_id FK "nullable"
     }
 
     auctions {
@@ -64,7 +64,7 @@ erDiagram
 
     trade_bets{
         int id PK "トレードベットid"
-        uuid auction_id FK "オークションid"
+        uuid trade_id FK "オークションid"
         uuid user_id FK "ユーザid"
         int money_card_id FK "お金カードid"
     }

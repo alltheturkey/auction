@@ -1,0 +1,34 @@
+{
+  "name": "auction",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "type:check": "npx -y nuxi typecheck",
+    "lint:check": "eslint . --ext .js,.ts,.vue --ignore-path .gitignore --cache --cache-location node_modules/.cache/.eslintcache",
+    "format:check": "prettier . --cache --check --ignore-path .gitignore",
+    "format": "npm run lint -- --fix; prettier . --cache --write --log-level warn --ignore-path .gitignore",
+    "migrate": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "migrate:reset": "prisma migrate reset"
+  },
+  "devDependencies": {
+    "@nuxt/eslint-config": "^0.2.0",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-unicorn": "^50.0.1",
+    "nuxt": "^3.9.0",
+    "prettier": "^3.1.1",
+    "prisma": "^5.7.1",
+    "vue": "^3.4.5",
+    "vue-router": "^4.2.5"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.7.1"
+  }
+}

@@ -83,7 +83,7 @@ sequenceDiagram
         b->>d: INSERT auction_bets
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)
-        f1->>+b: 確定<br/>GET /auctions/{auction_id}
+        f1->>+b: オークション確定<br/>DELETE /auctions/{auction_id}
         b->>b: 動物カード付与、お金カード交換
         b->>b: 次のターン
         b->>f1: WS room(リレーション含む)
@@ -103,11 +103,11 @@ sequenceDiagram
         f2->>+b: 金額カード指定<br/>PUT /trade/{trade_id}
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)
-        f1->>+b: 金額カード確定<br/>PUT /trade/{trade_id}
+        f1->>+b: 金額カード確定<br/>DELETE /trade/{trade_id}
         b->>d: SET trades.is_confirmed
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)
-        f2->>+b: 金額カード確定<br/>PUT /trade/{trade_id}
+        f2->>+b: 金額カード確定<br/>DELETE /trade/{trade_id}
         b->>b: trades.is_confirmed === trueならトレード処理、次のターン
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)

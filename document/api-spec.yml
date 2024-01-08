@@ -1,6 +1,6 @@
 {
   'openapi': '3.1.0',
-  'info': { 'version': '1.0', 'title': 'backend' },
+  'info': { 'version': '1.0', 'title': 'auction-backend' },
   'servers': [{ 'url': 'http://localhost:3000' }],
   'paths':
     {
@@ -90,27 +90,7 @@
                             },
                         },
                     },
-                  '404':
-                    {
-                      'description': 'Not Found',
-                      'content':
-                        {
-                          'application/json':
-                            {
-                              'schema':
-                                {
-                                  'type': 'object',
-                                  'properties':
-                                    {
-                                      'status':
-                                        { 'type': 'number', 'default': 404 },
-                                    },
-                                },
-                              'examples':
-                                { 'Example 1': { 'value': { 'status': 404 } } },
-                            },
-                        },
-                    },
+                  '404': { '$ref': '#/components/responses/404NotFound' },
                 },
               'servers': [{ 'url': 'http://localhost:3000' }],
             },
@@ -139,34 +119,14 @@
                               'properties':
                                 {
                                   'name': { 'type': ['string', 'null'] },
-                                  'room_id': { 'type': ['string', 'null'] },
+                                  'roomId': { 'type': ['string', 'null'] },
                                 },
                             },
                         },
                     },
                 },
               'responses':
-                {
-                  '200':
-                    {
-                      'description': 'OK',
-                      'content':
-                        {
-                          'application/json':
-                            {
-                              'schema':
-                                {
-                                  'type': 'object',
-                                  'properties':
-                                    {
-                                      'status':
-                                        { 'type': 'integer', 'default': 200 },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
+                { '200': { '$ref': '#/components/responses/200OKOnly' } },
               'servers': [{ 'url': 'http://localhost:3000' }],
             },
         },
@@ -192,6 +152,14 @@
                                     {
                                       'status':
                                         { 'type': 'integer', 'default': 200 },
+                                      'data':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              '$ref': '#/components/schemas/Room',
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -236,48 +204,18 @@
                 },
               'servers': [{ 'url': 'http://localhost:3000' }],
             },
+          'delete':
+            {
+              'summary': '',
+              'description': 'ゲーム終了(同じルームを使って再プレイする場合は要検討)',
+              'operationId': 'delete-rooms',
+              'responses':
+                { '200': { '$ref': '#/components/responses/200OKOnly' } },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
         },
       '/room/{roomId}':
         {
-          'options':
-            {
-              'summary': 'WebSocket',
-              'operationId': 'options-room-roomId',
-              'parameters':
-                [
-                  {
-                    'name': 'roomId',
-                    'in': 'path',
-                    'required': true,
-                    'schema': { 'type': 'string' },
-                  },
-                ],
-              'responses':
-                {
-                  '200':
-                    {
-                      'description': 'OK',
-                      'content':
-                        {
-                          'application/json':
-                            {
-                              'schema':
-                                {
-                                  'type': 'object',
-                                  'properties':
-                                    {
-                                      'data':
-                                        {
-                                          '$ref': '#/components/schemas/RoomWithRelation',
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-              'servers': [{ 'url': 'http://localhost:3000' }],
-            },
           'get':
             {
               'summary': '',
@@ -314,25 +252,7 @@
                             },
                         },
                     },
-                  '404':
-                    {
-                      'description': 'Not Found',
-                      'content':
-                        {
-                          'application/json':
-                            {
-                              'schema':
-                                {
-                                  'type': 'object',
-                                  'properties':
-                                    {
-                                      'status':
-                                        { 'type': 'integer', 'default': 404 },
-                                    },
-                                },
-                            },
-                        },
-                    },
+                  '404': { '$ref': '#/components/responses/404NotFound' },
                 },
               'servers': [{ 'url': 'http://localhost:3000' }],
             },
@@ -372,6 +292,23 @@
                     },
                 },
               'responses':
+                { '200': { '$ref': '#/components/responses/200OKOnly' } },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+          'options':
+            {
+              'summary': 'WebSocket',
+              'operationId': 'options-room-roomId',
+              'parameters':
+                [
+                  {
+                    'name': 'roomId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'responses':
                 {
                   '200':
                     {
@@ -385,8 +322,10 @@
                                   'type': 'object',
                                   'properties':
                                     {
-                                      'status':
-                                        { 'type': 'integer', 'default': 200 },
+                                      'data':
+                                        {
+                                          '$ref': '#/components/schemas/RoomWithRelation',
+                                        },
                                     },
                                 },
                             },
@@ -396,9 +335,227 @@
               'servers': [{ 'url': 'http://localhost:3000' }],
             },
         },
+      '/auctions':
+        {
+          'post':
+            {
+              'summary': '',
+              'operationId': 'post-auctions',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                {
+                                  'roomId':
+                                    { 'type': 'string', 'format': 'uuid' },
+                                },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                { '200': { '$ref': '#/components/responses/200OKOnly' } },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+        },
+      '/auctions/{auctionId}':
+        {
+          'put':
+            {
+              'summary': '',
+              'operationId': 'put-auctions-auctionId',
+              'parameters':
+                [
+                  {
+                    'name': 'auctionId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                {
+                                  'betUserId': { 'type': 'string' },
+                                  'moneyCardIds':
+                                    {
+                                      'type': 'array',
+                                      'items': { 'type': 'integer' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                { '200': { '$ref': '#/components/responses/200OKOnly' } },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+          'delete':
+            {
+              'summary': '',
+              'description': 'オークション確定(ターンユーザが叩く)',
+              'operationId': 'delete-auctions-auctionId',
+              'parameters':
+                [
+                  {
+                    'name': 'auctionId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'responses':
+                { '200': { '$ref': '#/components/responses/200OKOnly' } },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+        },
+      '/trades':
+        {
+          'post':
+            {
+              'summary': '',
+              'operationId': 'post-trades',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                {
+                                  'roomId':
+                                    { 'type': 'string', 'format': 'uuid' },
+                                  'isDouble': { 'type': 'boolean' },
+                                  'isConfirmed':
+                                    { 'type': 'boolean', 'default': false },
+                                  'animalCardId': { 'type': 'integer' },
+                                  'targetUserId':
+                                    { 'type': 'string', 'format': 'uuid' },
+                                },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                { '200': { '$ref': '#/components/responses/200OKOnly' } },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+        },
+      '/trade/{tradeId}':
+        {
+          'put':
+            {
+              'summary': '',
+              'operationId': 'put-trade-tradeId',
+              'parameters':
+                [
+                  {
+                    'name': 'tradeId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                {
+                                  'moneyCardIds':
+                                    {
+                                      'type': 'array',
+                                      'items': { 'type': 'integer' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                { '200': { '$ref': '#/components/responses/200OKOnly' } },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+          'delete':
+            {
+              'summary': '',
+              'description': 'トレード確定(1プレイヤー目の場合はis_confirmedをtrueにするのみでエントリは削除しない)',
+              'operationId': 'delete-trade-tradeId',
+              'parameters':
+                [
+                  {
+                    'name': 'tradeId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'responses':
+                { '200': { '$ref': '#/components/responses/200OKOnly' } },
+              'servers': [{ 'url': 'http://localhost:3000' }],
+            },
+        },
     },
   'components':
     {
+      'responses':
+        {
+          '200OKOnly':
+            {
+              'description': 'OK',
+              'content':
+                {
+                  'application/json':
+                    {
+                      'schema':
+                        {
+                          'type': 'object',
+                          'properties':
+                            { 'status': { 'type': 'integer', 'default': 200 } },
+                        },
+                    },
+                },
+            },
+          '404NotFound':
+            {
+              'description': 'Not Found',
+              'content':
+                {
+                  'application/json':
+                    {
+                      'schema':
+                        {
+                          'type': 'object',
+                          'properties':
+                            { 'status': { 'type': 'integer', 'default': 404 } },
+                        },
+                    },
+                },
+            },
+        },
       'schemas':
         {
           'User':
@@ -431,17 +588,23 @@
                     },
                   'auction':
                     {
-                      '$ref': '#/components/schemas/Auction',
+                      '$ref': '#/components/schemas/AuctionWithRelation',
                       'description': 'nullable',
                     },
                   'trade':
                     {
-                      '$ref': '#/components/schemas/Trade',
+                      '$ref': '#/components/schemas/tradeBetWithRelation',
                       'description': 'nullable',
+                    },
+                  'users':
+                    {
+                      'type': 'array',
+                      'items':
+                        { '$ref': '#/components/schemas/UserWithRelation' },
                     },
                 },
             },
-          'Auction':
+          'AuctionWithRelation':
             {
               'type': 'object',
               'title': 'Auction',
@@ -461,7 +624,10 @@
                   'auctionBets':
                     {
                       'type': 'array',
-                      'items': { '$ref': '#/components/schemas/AuctionBet' },
+                      'items':
+                        {
+                          '$ref': '#/components/schemas/AuctionBetWithRelation',
+                        },
                     },
                 },
             },
@@ -478,7 +644,7 @@
                   'point': { 'type': 'integer' },
                 },
             },
-          'AuctionBet':
+          'AuctionBetWithRelation':
             {
               'type': 'object',
               'title': 'AuctionBet',
@@ -492,36 +658,7 @@
                     },
                 },
             },
-          'Trade':
-            {
-              'type': 'object',
-              'title': 'Trade',
-              'properties':
-                {
-                  'id': { 'type': 'string', 'format': 'uuid' },
-                  'isDouble':
-                    {
-                      'type': 'boolean',
-                      'description': '片方が金額確定したか',
-                    },
-                  'animalCard':
-                    {
-                      '$ref': '#/components/schemas/Card',
-                      'description': 'turnUserが選択したトレード対象のカード(1枚)',
-                    },
-                  'targetUser':
-                    {
-                      '$ref': '#/components/schemas/User',
-                      'description': 'トレード対象ユーザ',
-                    },
-                  'tradeBets':
-                    {
-                      'type': 'array',
-                      'items': { '$ref': '#/components/schemas/tradeBet' },
-                    },
-                },
-            },
-          'tradeBet':
+          'tradeBetWithRelation':
             {
               'type': 'object',
               'title': 'tradeBet',
@@ -530,6 +667,21 @@
                   'id': { 'type': 'string' },
                   'user': { '$ref': '#/components/schemas/User' },
                   'moneyCard': { '$ref': '#/components/schemas/Card' },
+                },
+            },
+          'UserWithRelation':
+            {
+              'type': 'object',
+              'title': 'UserWithRelation',
+              'properties':
+                {
+                  'id': { 'type': 'string', 'format': 'uuid' },
+                  'name': { 'type': 'string' },
+                  'cards':
+                    {
+                      'type': 'array',
+                      'items': { '$ref': '#/components/schemas/Card' },
+                    },
                 },
             },
         },

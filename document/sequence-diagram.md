@@ -47,7 +47,7 @@ sequenceDiagram
     alt turn_user_id !== null
         f1->>f1: ルーム一覧ページに遷移
     end
-    f1->>+b: ルームに参加<br/>PUT /users
+    f1->>+b: ルームに参加<br/>PUT /users/{userId}
     b->>+d: SET users.room_id
     d-->>-b: user
     b-->>-f1: user
@@ -60,7 +60,7 @@ sequenceDiagram
     f2->>+b: WS /rooms/{room_id}
     b->>f2: WS room(リレーション含む)
     b->>-f1: WS room(リレーション含む)
-    f1->>+b: ゲームスタート<br/>PUT /rooms
+    f1->>+b: ゲームスタート<br/>PUT /rooms/{roomId}
     b->>+d: SET rooms.turn_user_id
     d->>-b: room
     b->>f1: WS room(リレーション含む)
@@ -83,7 +83,7 @@ sequenceDiagram
         b->>d: INSERT auction_bets
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)
-        f1->>+b: 確定<br/>GET /auctions/{auction_id}
+        f1->>+b: オークション確定<br/>DELETE /auctions/{auction_id}
         b->>b: 動物カード付与、お金カード交換
         b->>b: 次のターン
         b->>f1: WS room(リレーション含む)
@@ -103,11 +103,11 @@ sequenceDiagram
         f2->>+b: 金額カード指定<br/>PUT /trade/{trade_id}
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)
-        f1->>+b: 金額カード確定<br/>PUT /trade/{trade_id}
+        f1->>+b: 金額カード確定<br/>DELETE /trade/{trade_id}
         b->>d: SET trades.is_confirmed
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)
-        f2->>+b: 金額カード確定<br/>PUT /trade/{trade_id}
+        f2->>+b: 金額カード確定<br/>DELETE /trade/{trade_id}
         b->>b: trades.is_confirmed === trueならトレード処理、次のターン
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)

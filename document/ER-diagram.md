@@ -45,7 +45,7 @@ erDiagram
 
     auctions {
         uuid id PK "オークションid"
-        int animal_card_id FK "nullable 場の動物カード"
+        int animal_card_id FK "場の動物カード"
         uuid bet_user_id FK "nullable 落札者"
     }
 

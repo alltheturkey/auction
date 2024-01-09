@@ -4,6 +4,8 @@
     "dbaeumer.vscode-eslint",
     "editorconfig.editorconfig",
     "vivaxy.vscode-conventional-commits",
-    "prisma.prisma"
+    "prisma.prisma",
+    "vue.volar",
+    "vue.vscode-typescript-vue-plugin"
   ]
 }

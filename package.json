@@ -14,10 +14,12 @@
     "format": "npm run lint -- --fix; prettier . --cache --write --log-level warn --ignore-path .gitignore",
     "migrate": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
-    "migrate:reset": "prisma migrate reset"
+    "migrate:reset": "prisma migrate reset",
+    "studio": "prisma studio"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^0.2.0",
+    "@prisma/client": "^5.7.1",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
@@ -27,8 +29,5 @@
     "prisma": "^5.7.1",
     "vue": "^3.4.5",
     "vue-router": "^4.2.5"
-  },
-  "dependencies": {
-    "@prisma/client": "^5.7.1"
   }
 }

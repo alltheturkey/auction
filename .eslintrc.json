@@ -82,6 +82,7 @@
     "unicorn/prefer-dom-node-text-content": "off",
     "unicorn/prefer-includes": "off",
     "unicorn/prefer-string-replace-all": "off",
+    "unicorn/no-process-exit": "off",
     "unicorn/catch-error-name": [
       "warn",
       {

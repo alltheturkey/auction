@@ -7,16 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
 model User {
   id               String     @id @default(cuid())
   name             String
-  room             Room       @relation("RoomUsers", fields: [roomId], references: [id])
-  roomId           String
+  room             Room?      @relation(fields: [roomId], references: [id])
+  roomId           String?
   turnUserRooms    Room[]     @relation("turnUserRooms")
-  betUserAuctions  Auction[]  @relation("betUserAuctions")
-  targetUserTrades Trade[]    @relation("targetUserTrades")
-  userTradeBets    TradeBet[] @relation("userTradeBets")
-  UserCard         UserCard[]
+  betUserAuctions  Auction[]
+  targetUserTrades Trade[]
+  userTradeBets    TradeBet[]
+  userCards        UserCard[]
 }
 
 model Room {
@@ -24,21 +28,21 @@ model Room {
   turnUser   User?    @relation("turnUserRooms", fields: [turnUserId], references: [id])
   turnUserId String?
   auction    Auction? @relation(fields: [auctionId], references: [id])
-  auctionId  String   @unique
+  auctionId  String?  @unique
   trade      Trade?   @relation(fields: [tradeId], references: [id])
-  tradeId    String   @unique
+  tradeId    String?  @unique
   userOrder  Json
-  roomUsers  User[]   @relation("RoomUsers")
+  users      User[]
 }
 
 model Auction {
   id           String       @id @default(cuid())
-  betUser      User         @relation("betUserAuctions", fields: [betUserId], references: [id])
+  betUser      User         @relation(fields: [betUserId], references: [id])
   betUserId    String
   animalCard   Card         @relation(fields: [animalCardId], references: [id])
   animalCardId Int
   room         Room?
-  AuctionBet   AuctionBet[]
+  auctionBets  AuctionBet[]
 }
 
 model AuctionBet {
@@ -55,17 +59,17 @@ model Trade {
   isConfirmed  Boolean    @default(false)
   animalCard   Card       @relation(fields: [animalCardId], references: [id])
   animalCardId Int
-  targetUser   User       @relation("targetUserTrades", fields: [targetUserId], references: [id])
+  targetUser   User       @relation(fields: [targetUserId], references: [id])
   targetUserId String
-  Room         Room?
-  TradeBet     TradeBet[]
+  room         Room?
+  tradeBet     TradeBet[]
 }
 
 model TradeBet {
   id          Int    @id @default(autoincrement())
   trade       Trade  @relation(fields: [tradeId], references: [id])
   tradeId     String
-  user        User   @relation("userTradeBets", fields: [userId], references: [id])
+  user        User   @relation(fields: [userId], references: [id])
   userId      String
   moneyCard   Card   @relation(fields: [moneyCardId], references: [id])
   moneyCardId Int
@@ -74,14 +78,14 @@ model TradeBet {
 model Card {
   id          Int          @id @default(autoincrement())
   type        CardType
-  name        String       @unique
+  name        String
   img         String
   point       Int
   auctions    Auction[]
   auctionBets AuctionBet[]
-  Trade       Trade[]
-  TradeBet    TradeBet[]
-  UserCard    UserCard[]
+  trades      Trade[]
+  tradeBets   TradeBet[]
+  userCards   UserCard[]
 }
 
 enum CardType {

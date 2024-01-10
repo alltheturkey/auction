@@ -30,7 +30,7 @@ erDiagram
     cards {
         int id PK "カードid"
         enum type "animal | money"
-        string name UK "カード名"
+        string name "カード名"
         string img "画像パス"
         int point "ポイント"
     }

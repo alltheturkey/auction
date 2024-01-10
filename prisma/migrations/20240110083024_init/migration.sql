@@ -5,7 +5,7 @@ CREATE TYPE "CardType" AS ENUM ('ANIMAL', 'MONEY');
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "roomId" TEXT NOT NULL,
+    "roomId" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -14,8 +14,8 @@ CREATE TABLE "User" (
 CREATE TABLE "Room" (
     "id" TEXT NOT NULL,
     "turnUserId" TEXT,
-    "auctionId" TEXT NOT NULL,
-    "tradeId" TEXT NOT NULL,
+    "auctionId" TEXT,
+    "tradeId" TEXT,
     "userOrder" JSONB NOT NULL,
 
     CONSTRAINT "Room_pkey" PRIMARY KEY ("id")
@@ -85,20 +85,17 @@ CREATE UNIQUE INDEX "Room_auctionId_key" ON "Room"("auctionId");
 -- CreateIndex
 CREATE UNIQUE INDEX "Room_tradeId_key" ON "Room"("tradeId");
 
--- CreateIndex
-CREATE UNIQUE INDEX "Card_name_key" ON "Card"("name");
-
 -- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "Room"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "User" ADD CONSTRAINT "User_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "Room"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Room" ADD CONSTRAINT "Room_turnUserId_fkey" FOREIGN KEY ("turnUserId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Room" ADD CONSTRAINT "Room_auctionId_fkey" FOREIGN KEY ("auctionId") REFERENCES "Auction"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Room" ADD CONSTRAINT "Room_auctionId_fkey" FOREIGN KEY ("auctionId") REFERENCES "Auction"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Room" ADD CONSTRAINT "Room_tradeId_fkey" FOREIGN KEY ("tradeId") REFERENCES "Trade"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Room" ADD CONSTRAINT "Room_tradeId_fkey" FOREIGN KEY ("tradeId") REFERENCES "Trade"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Auction" ADD CONSTRAINT "Auction_betUserId_fkey" FOREIGN KEY ("betUserId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

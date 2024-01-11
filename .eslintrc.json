@@ -115,7 +115,7 @@
       }
     },
     {
-      "files": ["{middleware,plugins}/**/*.{js,ts}"],
+      "files": ["{middleware,plugins,server}/**/*.{js,ts}"],
       "rules": {
         "import/no-default-export": "off"
       }

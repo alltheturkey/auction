@@ -12,7 +12,7 @@
     "lint:check": "eslint . --ext .js,.ts,.vue --ignore-path .gitignore --cache --cache-location node_modules/.cache/.eslintcache",
     "format:check": "prettier . --cache --check --ignore-path .gitignore",
     "format": "npm run lint -- --fix; prettier . --cache --write --log-level warn --ignore-path .gitignore",
-    "migrate": "prisma migrate dev",
+    "migrate": "prisma migrate dev && prisma generate",
     "migrate:deploy": "prisma migrate deploy",
     "migrate:reset": "prisma migrate reset",
     "studio": "prisma studio"
@@ -27,7 +27,12 @@
     "nuxt": "^3.9.0",
     "prettier": "^3.1.1",
     "prisma": "^5.7.1",
+    "prisma-dbml-generator": "^0.10.0",
+    "tsx": "^4.7.0",
     "vue": "^3.4.5",
     "vue-router": "^4.2.5"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }

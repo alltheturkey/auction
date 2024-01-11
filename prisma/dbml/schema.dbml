@@ -1,0 +1,126 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id String [pk]
+  name String [not null]
+  room Room
+  roomId String
+  turnUserRooms Room [not null]
+  betUserAuctions Auction [not null]
+  targetUserTrades Trade [not null]
+  userTradeBets TradeBet [not null]
+  userCards UserCard [not null]
+}
+
+Table Room {
+  id String [pk]
+  turnUser User
+  turnUserId String
+  auction Auction
+  auctionId String [unique]
+  trade Trade
+  tradeId String [unique]
+  userOrder Json [not null]
+  users User [not null]
+}
+
+Table Auction {
+  id String [pk]
+  betUser User [not null]
+  betUserId String [not null]
+  animalCard Card [not null]
+  animalCardId Int [not null]
+  room Room
+  auctionBets AuctionBet [not null]
+}
+
+Table AuctionBet {
+  id Int [pk, increment]
+  auction Auction [not null]
+  auctionId String [not null]
+  moneyCard Card [not null]
+  moneyCardId Int [not null]
+}
+
+Table Trade {
+  id String [pk]
+  isDouble Boolean [not null]
+  isConfirmed Boolean [not null, default: false]
+  animalCard Card [not null]
+  animalCardId Int [not null]
+  targetUser User [not null]
+  targetUserId String [not null]
+  room Room
+  tradeBet TradeBet [not null]
+}
+
+Table TradeBet {
+  id Int [pk, increment]
+  trade Trade [not null]
+  tradeId String [not null]
+  user User [not null]
+  userId String [not null]
+  moneyCard Card [not null]
+  moneyCardId Int [not null]
+}
+
+Table Card {
+  id Int [pk, increment]
+  type CardType [not null]
+  name String [not null]
+  img String [not null]
+  point Int [not null]
+  auctions Auction [not null]
+  auctionBets AuctionBet [not null]
+  trades Trade [not null]
+  tradeBets TradeBet [not null]
+  userCards UserCard [not null]
+}
+
+Table UserCard {
+  user User [not null]
+  userId String [not null]
+  card Card [not null]
+  cardId Int [not null]
+
+  indexes {
+    (userId, cardId) [pk]
+  }
+}
+
+Enum CardType {
+  ANIMAL
+  MONEY
+}
+
+Ref: User.roomId - Room.id
+
+Ref: Room.turnUserId - User.id
+
+Ref: Room.auctionId - Auction.id
+
+Ref: Room.tradeId - Trade.id
+
+Ref: Auction.betUserId > User.id
+
+Ref: Auction.animalCardId > Card.id
+
+Ref: AuctionBet.auctionId > Auction.id
+
+Ref: AuctionBet.moneyCardId > Card.id
+
+Ref: Trade.animalCardId > Card.id
+
+Ref: Trade.targetUserId > User.id
+
+Ref: TradeBet.tradeId > Trade.id
+
+Ref: TradeBet.userId > User.id
+
+Ref: TradeBet.moneyCardId > Card.id
+
+Ref: UserCard.userId > User.id
+
+Ref: UserCard.cardId > Card.id

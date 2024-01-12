@@ -16,7 +16,7 @@ CREATE TABLE "Room" (
     "turnUserId" TEXT,
     "auctionId" TEXT,
     "tradeId" TEXT,
-    "userOrder" JSONB NOT NULL,
+    "userOrder" JSONB,
 
     CONSTRAINT "Room_pkey" PRIMARY KEY ("id")
 );

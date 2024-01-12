@@ -30,7 +30,7 @@ erDiagram
     cards {
         int id PK "カードid"
         enum type "animal | money"
-        string name UK "カード名"
+        string name "カード名"
         string img "画像パス"
         int point "ポイント"
     }
@@ -45,7 +45,7 @@ erDiagram
 
     auctions {
         uuid id PK "オークションid"
-        int animal_card_id FK "nullable 場の動物カード"
+        int animal_card_id FK "場の動物カード"
         uuid bet_user_id FK "nullable 落札者"
     }
 

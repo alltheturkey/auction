@@ -1,0 +1,942 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "auction",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [],
+  "paths": {
+    "/users": {
+      "post": {
+        "summary": "post-users",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "operationId": "post-users",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "x-apidog-orders": [
+                  "name"
+                ],
+                "x-apidog-ignore-properties": []
+              },
+              "example": ""
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184639-run",
+        "security": []
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "summary": "get-users-userId",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "operationId": "get-users-userId",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184640-run",
+        "security": []
+      },
+      "put": {
+        "summary": "put-users-userId",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "operationId": "put-users-userId",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "roomId": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                },
+                "x-apidog-orders": [
+                  "name",
+                  "roomId"
+                ],
+                "x-apidog-ignore-properties": []
+              },
+              "example": ""
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184641-run",
+        "security": []
+      }
+    },
+    "/rooms": {
+      "get": {
+        "summary": "get-rooms",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "operationId": "get-rooms",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Room"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184642-run",
+        "security": []
+      },
+      "post": {
+        "summary": "post-rooms",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "operationId": "post-rooms",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Room"
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184643-run",
+        "security": []
+      }
+    },
+    "/room/{roomId}": {
+      "get": {
+        "summary": "get-room-roomId",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "operationId": "get-room-roomId",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Room"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184644-run",
+        "security": []
+      },
+      "put": {
+        "summary": "put-room-roomId",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "operationId": "put-room-roomId",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "turn_user_id": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "auction_id": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "trade_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                },
+                "x-apidog-orders": [
+                  "turn_user_id",
+                  "auction_id",
+                  "trade_id"
+                ],
+                "x-apidog-ignore-properties": []
+              },
+              "example": ""
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184645-run",
+        "security": []
+      },
+      "delete": {
+        "summary": "delete-room-roomId",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "ゲーム終了(同じルームを使って再プレイする場合は要検討)",
+        "operationId": "delete-room-roomId",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184646-run",
+        "security": []
+      },
+      "options": {
+        "summary": "WebSocket",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "operationId": "options-room-roomId",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomWithRelation"
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184647-run",
+        "security": []
+      }
+    },
+    "/auctions": {
+      "post": {
+        "summary": "post-auctions",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "operationId": "post-auctions",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "roomId": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
+                "x-apidog-orders": [
+                  "roomId"
+                ],
+                "x-apidog-ignore-properties": []
+              },
+              "example": ""
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184648-run",
+        "security": []
+      }
+    },
+    "/auctions/{auctionId}": {
+      "put": {
+        "summary": "put-auctions-auctionId",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "operationId": "put-auctions-auctionId",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "auctionId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "betUserId": {
+                    "type": "string"
+                  },
+                  "moneyCardIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "x-apidog-orders": [
+                  "betUserId",
+                  "moneyCardIds"
+                ],
+                "x-apidog-ignore-properties": []
+              },
+              "example": ""
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184649-run",
+        "security": []
+      },
+      "delete": {
+        "summary": "delete-auctions-auctionId",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "オークション確定(ターンユーザが叩く)",
+        "operationId": "delete-auctions-auctionId",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "auctionId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184650-run",
+        "security": []
+      }
+    },
+    "/trades": {
+      "post": {
+        "summary": "post-trades",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "operationId": "post-trades",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "roomId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "isDouble": {
+                    "type": "boolean"
+                  },
+                  "isConfirmed": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "animalCardId": {
+                    "type": "integer"
+                  },
+                  "targetUserId": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
+                "x-apidog-orders": [
+                  "roomId",
+                  "isDouble",
+                  "isConfirmed",
+                  "animalCardId",
+                  "targetUserId"
+                ],
+                "x-apidog-ignore-properties": []
+              },
+              "example": ""
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184651-run",
+        "security": []
+      }
+    },
+    "/trade/{tradeId}": {
+      "put": {
+        "summary": "put-trade-tradeId",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "operationId": "put-trade-tradeId",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "tradeId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "moneyCardIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "x-apidog-orders": [
+                  "moneyCardIds"
+                ],
+                "x-apidog-ignore-properties": []
+              },
+              "example": ""
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184652-run",
+        "security": []
+      },
+      "delete": {
+        "summary": "delete-trade-tradeId",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "トレード確定(1プレイヤー目の場合はis_confirmedをtrueにするのみでエントリは削除しない)",
+        "operationId": "delete-trade-tradeId",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "tradeId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184653-run",
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserWithRelation": {
+        "type": "object",
+        "title": "UserWithRelation",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "cards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Card"
+            }
+          }
+        },
+        "x-apidog-orders": [
+          "id",
+          "name",
+          "cards"
+        ],
+        "x-apidog-ignore-properties": [],
+        "x-apidog-folder": "Schemas"
+      },
+      "tradeBetWithRelation": {
+        "type": "object",
+        "title": "tradeBet",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "moneyCard": {
+            "$ref": "#/components/schemas/Card"
+          }
+        },
+        "x-apidog-orders": [
+          "id",
+          "user",
+          "moneyCard"
+        ],
+        "x-apidog-ignore-properties": [],
+        "x-apidog-folder": "Schemas"
+      },
+      "AuctionBetWithRelation": {
+        "type": "object",
+        "title": "AuctionBet",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "moneyCards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Card"
+            }
+          }
+        },
+        "x-apidog-orders": [
+          "id",
+          "moneyCards"
+        ],
+        "x-apidog-ignore-properties": [],
+        "x-apidog-folder": "Schemas"
+      },
+      "Card": {
+        "type": "object",
+        "title": "Card",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "animal",
+              "money"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "img": {
+            "type": "string"
+          },
+          "point": {
+            "type": "integer"
+          }
+        },
+        "x-apidog-orders": [
+          "id",
+          "type",
+          "name",
+          "img",
+          "point"
+        ],
+        "x-apidog-ignore-properties": [],
+        "x-apidog-folder": "Schemas"
+      },
+      "AuctionWithRelation": {
+        "type": "object",
+        "title": "Auction",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "animalCard": {
+            "$ref": "#/components/schemas/Card"
+          },
+          "betUser": {
+            "$ref": "#/components/schemas/User"
+          },
+          "auctionBets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuctionBetWithRelation"
+            }
+          }
+        },
+        "x-apidog-orders": [
+          "id",
+          "animalCard",
+          "betUser",
+          "auctionBets"
+        ],
+        "x-apidog-ignore-properties": [],
+        "x-apidog-folder": "Schemas"
+      },
+      "RoomWithRelation": {
+        "type": "object",
+        "title": "RoomWithRelation",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "turnUser": {
+            "$ref": "#/components/schemas/User"
+          },
+          "auction": {
+            "$ref": "#/components/schemas/AuctionWithRelation",
+            "description": "nullable"
+          },
+          "trade": {
+            "$ref": "#/components/schemas/tradeBetWithRelation",
+            "description": "nullable"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserWithRelation"
+            }
+          }
+        },
+        "x-apidog-orders": [
+          "id",
+          "turnUser",
+          "auction",
+          "trade",
+          "users"
+        ],
+        "x-apidog-ignore-properties": [],
+        "x-apidog-folder": "Schemas"
+      },
+      "Room": {
+        "type": "object",
+        "title": "Room",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "x-apidog-orders": [
+          "id"
+        ],
+        "x-apidog-ignore-properties": [],
+        "x-apidog-folder": "Schemas"
+      },
+      "User": {
+        "type": "object",
+        "title": "User",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "x-apidog-orders": [
+          "id",
+          "name"
+        ],
+        "x-apidog-ignore-properties": [],
+        "x-apidog-folder": "Schemas"
+      }
+    },
+    "securitySchemes": {}
+  },
+  "servers": []
+}

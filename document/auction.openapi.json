@@ -27,9 +27,7 @@
                     "type": "string"
                   }
                 },
-                "x-apidog-orders": [
-                  "name"
-                ],
+                "x-apidog-orders": ["name"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -136,10 +134,7 @@
                     "nullable": true
                   }
                 },
-                "x-apidog-orders": [
-                  "name",
-                  "roomId"
-                ],
+                "x-apidog-orders": ["name", "roomId"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -306,11 +301,7 @@
                     "nullable": true
                   }
                 },
-                "x-apidog-orders": [
-                  "turn_user_id",
-                  "auction_id",
-                  "trade_id"
-                ],
+                "x-apidog-orders": ["turn_user_id", "auction_id", "trade_id"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -430,9 +421,7 @@
                     "format": "uuid"
                   }
                 },
-                "x-apidog-orders": [
-                  "roomId"
-                ],
+                "x-apidog-orders": ["roomId"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -495,10 +484,7 @@
                     }
                   }
                 },
-                "x-apidog-orders": [
-                  "betUserId",
-                  "moneyCardIds"
-                ],
+                "x-apidog-orders": ["betUserId", "moneyCardIds"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -663,9 +649,7 @@
                     }
                   }
                 },
-                "x-apidog-orders": [
-                  "moneyCardIds"
-                ],
+                "x-apidog-orders": ["moneyCardIds"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -750,11 +734,7 @@
             }
           }
         },
-        "x-apidog-orders": [
-          "id",
-          "name",
-          "cards"
-        ],
+        "x-apidog-orders": ["id", "name", "cards"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       },
@@ -772,11 +752,7 @@
             "$ref": "#/components/schemas/Card"
           }
         },
-        "x-apidog-orders": [
-          "id",
-          "user",
-          "moneyCard"
-        ],
+        "x-apidog-orders": ["id", "user", "moneyCard"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       },
@@ -794,10 +770,7 @@
             }
           }
         },
-        "x-apidog-orders": [
-          "id",
-          "moneyCards"
-        ],
+        "x-apidog-orders": ["id", "moneyCards"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       },
@@ -810,10 +783,7 @@
           },
           "type": {
             "type": "string",
-            "enum": [
-              "animal",
-              "money"
-            ]
+            "enum": ["animal", "money"]
           },
           "name": {
             "type": "string"
@@ -825,13 +795,7 @@
             "type": "integer"
           }
         },
-        "x-apidog-orders": [
-          "id",
-          "type",
-          "name",
-          "img",
-          "point"
-        ],
+        "x-apidog-orders": ["id", "type", "name", "img", "point"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       },
@@ -856,12 +820,7 @@
             }
           }
         },
-        "x-apidog-orders": [
-          "id",
-          "animalCard",
-          "betUser",
-          "auctionBets"
-        ],
+        "x-apidog-orders": ["id", "animalCard", "betUser", "auctionBets"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       },
@@ -891,13 +850,7 @@
             }
           }
         },
-        "x-apidog-orders": [
-          "id",
-          "turnUser",
-          "auction",
-          "trade",
-          "users"
-        ],
+        "x-apidog-orders": ["id", "turnUser", "auction", "trade", "users"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       },
@@ -910,9 +863,7 @@
             "format": "uuid"
           }
         },
-        "x-apidog-orders": [
-          "id"
-        ],
+        "x-apidog-orders": ["id"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       },
@@ -928,10 +879,7 @@
             "type": "string"
           }
         },
-        "x-apidog-orders": [
-          "id",
-          "name"
-        ],
+        "x-apidog-orders": ["id", "name"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       }

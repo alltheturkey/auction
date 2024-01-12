@@ -31,7 +31,7 @@ model Room {
   auctionId  String?  @unique
   trade      Trade?   @relation(fields: [tradeId], references: [id])
   tradeId    String?  @unique
-  userOrder  Json
+  userOrder  Json?
   users      User[]
 }
 

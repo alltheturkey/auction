@@ -32,8 +32,8 @@ sequenceDiagram
     b-->>-f1: room[]
     f1->>+b: ルーム作成<br/>POST /rooms
     b->>+d: INSERT rooms
-    d-->>-b: room[]
-    b-->>-f1: room[]
+    d-->>-b: room
+    b-->>-f1: room
     f1->>f1: ルームに参加(ページ遷移)
 
     Note over f1,f2: ゲーム画面(開始前)

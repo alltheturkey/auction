@@ -22,7 +22,7 @@ Table Room {
   auctionId String [unique]
   trade Trade
   tradeId String [unique]
-  userOrder Json [not null]
+  userOrder Json
   users User [not null]
 }
 

@@ -10,6 +10,6 @@ export const prismaErrorHandler = (
 
   throw createError({
     statusCode: statusCodeMap.get(err.code) ?? 500,
-    statusMessage: err.message,
+    message: err.message,
   });
 };

@@ -27,8 +27,8 @@
                     "type": "string"
                   }
                 },
-                "x-apidog-orders": ["name"],
                 "required": ["name"],
+                "x-apidog-orders": ["name"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -47,7 +47,7 @@
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184639-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208243-run",
         "security": []
       }
     },
@@ -89,15 +89,15 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "x-apidog-orders": [],
                   "properties": {},
-                  "x-apidog-ignore-properties": [],
-                  "x-apidog-orders": []
+                  "x-apidog-ignore-properties": []
                 }
               }
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184640-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208244-run",
         "security": []
       },
       "put": {
@@ -148,15 +148,15 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "x-apidog-orders": [],
                   "properties": {},
-                  "x-apidog-ignore-properties": [],
-                  "x-apidog-orders": []
+                  "x-apidog-ignore-properties": []
                 }
               }
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184641-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208245-run",
         "security": []
       }
     },
@@ -185,7 +185,7 @@
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184642-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208246-run",
         "security": []
       },
       "post": {
@@ -209,7 +209,7 @@
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184643-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208247-run",
         "security": []
       }
     },
@@ -251,15 +251,15 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "x-apidog-orders": [],
                   "properties": {},
-                  "x-apidog-ignore-properties": [],
-                  "x-apidog-orders": []
+                  "x-apidog-ignore-properties": []
                 }
               }
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184644-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208248-run",
         "security": []
       },
       "put": {
@@ -301,8 +301,8 @@
                     "nullable": true
                   }
                 },
-                "x-apidog-orders": ["turn_user_id", "auction_id", "trade_id"],
                 "required": ["turn_user_id", "auction_id", "trade_id"],
+                "x-apidog-orders": ["turn_user_id", "auction_id", "trade_id"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -316,15 +316,15 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "x-apidog-orders": [],
                   "properties": {},
-                  "x-apidog-ignore-properties": [],
-                  "x-apidog-orders": []
+                  "x-apidog-ignore-properties": []
                 }
               }
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184645-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208249-run",
         "security": []
       },
       "delete": {
@@ -354,15 +354,15 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "x-apidog-orders": [],
                   "properties": {},
-                  "x-apidog-ignore-properties": [],
-                  "x-apidog-orders": []
+                  "x-apidog-ignore-properties": []
                 }
               }
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184646-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208250-run",
         "security": []
       },
       "options": {
@@ -397,7 +397,7 @@
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184647-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208251-run",
         "security": []
       }
     },
@@ -422,8 +422,8 @@
                     "format": "uuid"
                   }
                 },
-                "x-apidog-orders": ["roomId"],
                 "required": ["roomId"],
+                "x-apidog-orders": ["roomId"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -437,15 +437,15 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "x-apidog-orders": [],
                   "properties": {},
-                  "x-apidog-ignore-properties": [],
-                  "x-apidog-orders": []
+                  "x-apidog-ignore-properties": []
                 }
               }
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184648-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208252-run",
         "security": []
       }
     },
@@ -486,8 +486,8 @@
                     }
                   }
                 },
-                "x-apidog-orders": ["betUserId", "moneyCardIds"],
                 "required": ["betUserId", "moneyCardIds"],
+                "x-apidog-orders": ["betUserId", "moneyCardIds"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -501,15 +501,15 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "x-apidog-orders": [],
                   "properties": {},
-                  "x-apidog-ignore-properties": [],
-                  "x-apidog-orders": []
+                  "x-apidog-ignore-properties": []
                 }
               }
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184649-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208253-run",
         "security": []
       },
       "delete": {
@@ -539,15 +539,15 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "x-apidog-orders": [],
                   "properties": {},
-                  "x-apidog-ignore-properties": [],
-                  "x-apidog-orders": []
+                  "x-apidog-ignore-properties": []
                 }
               }
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184650-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208254-run",
         "security": []
       }
     },
@@ -582,16 +582,16 @@
                     "format": "uuid"
                   }
                 },
-                "x-apidog-orders": [
+                "required": [
                   "roomId",
                   "isDouble",
                   "animalCardId",
                   "targetUserId"
                 ],
-                "required": [
-                  "animalCardId",
-                  "isDouble",
+                "x-apidog-orders": [
                   "roomId",
+                  "isDouble",
+                  "animalCardId",
                   "targetUserId"
                 ],
                 "x-apidog-ignore-properties": []
@@ -607,15 +607,15 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "x-apidog-orders": [],
                   "properties": {},
-                  "x-apidog-ignore-properties": [],
-                  "x-apidog-orders": []
+                  "x-apidog-ignore-properties": []
                 }
               }
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184651-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208255-run",
         "security": []
       }
     },
@@ -656,8 +656,8 @@
                     }
                   }
                 },
+                "required": ["userId", "moneyCardIds"],
                 "x-apidog-orders": ["userId", "moneyCardIds"],
-                "required": ["moneyCardIds", "userId"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -671,15 +671,15 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "x-apidog-orders": [],
                   "properties": {},
-                  "x-apidog-ignore-properties": [],
-                  "x-apidog-orders": []
+                  "x-apidog-ignore-properties": []
                 }
               }
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184652-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208256-run",
         "security": []
       },
       "delete": {
@@ -709,15 +709,15 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "x-apidog-orders": [],
                   "properties": {},
-                  "x-apidog-ignore-properties": [],
-                  "x-apidog-orders": []
+                  "x-apidog-ignore-properties": []
                 }
               }
             }
           }
         },
-        "x-run-in-apidog": "https://apidog.com/web/project/441597/apis/api-5184653-run",
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208257-run",
         "security": []
       }
     }
@@ -746,9 +746,9 @@
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       },
-      "tradeBetWithRelation": {
+      "TradeBetWithRelation": {
         "type": "object",
-        "title": "tradeBet",
+        "title": "TradeBetWithRelation",
         "properties": {
           "id": {
             "type": "string"
@@ -764,9 +764,48 @@
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       },
+      "TradeWithRelation": {
+        "type": "object",
+        "properties": {
+          "isDouble": {
+            "type": "boolean"
+          },
+          "isConfirmed": {
+            "type": "boolean"
+          },
+          "animalCard": {
+            "$ref": "#/components/schemas/Card"
+          },
+          "targetUser": {
+            "$ref": "#/components/schemas/User"
+          },
+          "tradeBets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TradeBetWithRelation"
+            }
+          }
+        },
+        "required": [
+          "isDouble",
+          "isConfirmed",
+          "animalCard",
+          "targetUser",
+          "tradeBets"
+        ],
+        "x-apidog-orders": [
+          "isDouble",
+          "isConfirmed",
+          "animalCard",
+          "targetUser",
+          "tradeBets"
+        ],
+        "x-apidog-ignore-properties": [],
+        "x-apidog-folder": "Schemas"
+      },
       "AuctionBetWithRelation": {
         "type": "object",
-        "title": "AuctionBet",
+        "title": "AuctionBetWithRelation",
         "properties": {
           "id": {
             "type": "integer"
@@ -778,6 +817,7 @@
             }
           }
         },
+        "required": ["id", "moneyCards"],
         "x-apidog-orders": ["id", "moneyCards"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
@@ -803,13 +843,14 @@
             "type": "integer"
           }
         },
+        "required": ["id", "type", "name", "img", "point"],
         "x-apidog-orders": ["id", "type", "name", "img", "point"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       },
       "AuctionWithRelation": {
         "type": "object",
-        "title": "Auction",
+        "title": "AuctionWithRelation",
         "properties": {
           "id": {
             "type": "string",
@@ -828,6 +869,7 @@
             }
           }
         },
+        "required": ["id", "animalCard", "betUser", "auctionBets"],
         "x-apidog-orders": ["id", "animalCard", "betUser", "auctionBets"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
@@ -841,15 +883,35 @@
             "format": "uuid"
           },
           "turnUser": {
-            "$ref": "#/components/schemas/User"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "auction": {
-            "$ref": "#/components/schemas/AuctionWithRelation",
-            "description": "nullable"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AuctionWithRelation",
+                "description": "nullable"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "trade": {
-            "$ref": "#/components/schemas/tradeBetWithRelation",
-            "description": "nullable"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TradeWithRelation"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "users": {
             "type": "array",
@@ -858,6 +920,7 @@
             }
           }
         },
+        "required": ["id", "turnUser", "auction", "trade", "users"],
         "x-apidog-orders": ["id", "turnUser", "auction", "trade", "users"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
@@ -869,9 +932,14 @@
           "id": {
             "type": "string",
             "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "idから自動生成"
           }
         },
-        "x-apidog-orders": ["id"],
+        "required": ["id", "name"],
+        "x-apidog-orders": ["id", "name"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       },
@@ -887,6 +955,7 @@
             "type": "string"
           }
         },
+        "required": ["id", "name"],
         "x-apidog-orders": ["id", "name"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"

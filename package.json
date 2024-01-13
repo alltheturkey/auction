@@ -29,6 +29,7 @@
     "prisma": "^5.7.1",
     "prisma-dbml-generator": "^0.10.0",
     "tsx": "^4.7.0",
+    "unique-names-generator": "^4.7.1",
     "vue": "^3.4.5",
     "vue-router": "^4.2.5",
     "zod": "^3.22.4"

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { insertNameFromId } from '~/server/lib/insertNameFromId';
 import { prismaErrorHandler } from '~/server/lib/prismaErrorHandler';
 
 const prisma = new PrismaClient();
@@ -13,5 +14,5 @@ export default defineEventHandler(async (event) => {
     })
     .catch(prismaErrorHandler);
 
-  return room;
+  return insertNameFromId(room);
 });

@@ -28,6 +28,7 @@
                   }
                 },
                 "x-apidog-orders": ["name"],
+                "required": ["name"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -126,8 +127,7 @@
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string",
-                    "nullable": true
+                    "type": "string"
                   },
                   "roomId": {
                     "type": "string",
@@ -302,6 +302,7 @@
                   }
                 },
                 "x-apidog-orders": ["turn_user_id", "auction_id", "trade_id"],
+                "required": ["turn_user_id", "auction_id", "trade_id"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -422,6 +423,7 @@
                   }
                 },
                 "x-apidog-orders": ["roomId"],
+                "required": ["roomId"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -485,6 +487,7 @@
                   }
                 },
                 "x-apidog-orders": ["betUserId", "moneyCardIds"],
+                "required": ["betUserId", "moneyCardIds"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -571,10 +574,6 @@
                   "isDouble": {
                     "type": "boolean"
                   },
-                  "isConfirmed": {
-                    "type": "boolean",
-                    "default": false
-                  },
                   "animalCardId": {
                     "type": "integer"
                   },
@@ -586,8 +585,13 @@
                 "x-apidog-orders": [
                   "roomId",
                   "isDouble",
-                  "isConfirmed",
                   "animalCardId",
+                  "targetUserId"
+                ],
+                "required": [
+                  "animalCardId",
+                  "isDouble",
+                  "roomId",
                   "targetUserId"
                 ],
                 "x-apidog-ignore-properties": []
@@ -642,6 +646,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "userId": {
+                    "type": "string"
+                  },
                   "moneyCardIds": {
                     "type": "array",
                     "items": {
@@ -649,7 +656,8 @@
                     }
                   }
                 },
-                "x-apidog-orders": ["moneyCardIds"],
+                "x-apidog-orders": ["userId", "moneyCardIds"],
+                "required": ["moneyCardIds", "userId"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""

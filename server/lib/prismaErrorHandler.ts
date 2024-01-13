@@ -3,6 +3,7 @@ import type { Prisma } from '@prisma/client';
 export const prismaErrorHandler = (
   err: Prisma.PrismaClientKnownRequestError,
 ) => {
+  console.error(err);
   const statusCodeMap = new Map<
     Prisma.PrismaClientKnownRequestError['code'],
     number

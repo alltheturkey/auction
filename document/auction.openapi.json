@@ -213,7 +213,7 @@
         "security": []
       }
     },
-    "/room/{roomId}": {
+    "/rooms/{roomId}": {
       "get": {
         "summary": "get-room-roomId",
         "x-apidog-folder": "",
@@ -615,7 +615,7 @@
         "security": []
       }
     },
-    "/trade/{tradeId}": {
+    "/trades/{tradeId}": {
       "put": {
         "summary": "put-trade-tradeId",
         "x-apidog-folder": "",

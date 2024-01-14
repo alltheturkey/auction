@@ -19,6 +19,7 @@ export default defineEventHandler(async (event) => {
       data: userRequest,
     })
     .catch(prismaErrorHandler);
+
   await broadcastRoom(userRequest.roomId);
 
   return user;

@@ -8,6 +8,7 @@ sequenceDiagram
     Note over f1,f2: ルーム一覧ページ
     f1->>f1: アクセス
     f1->>+b: ルーム一覧取得<br>GET /rooms
+    b->>b: 古いroom削除
     b->>+d: FROM rooms WHERE turn_user_id = null
     d-->>-b: room[]
     b-->>-f1: room[]
@@ -51,13 +52,14 @@ sequenceDiagram
     f1->>+b: ルームに参加<br/>PUT /users/{userId}
     b->>+d: SET users.room_id
     d-->>-b: user
-    b-->>-f1: user
+    b->>-f1: WS room(リレーション含む)
     end
     f2->>f2: アクセス
     f2->>b: WS /rooms/{room_id}
     f2->>f2: ユーザ作成処理
     f2->>f2: ルーム参加処理
     f1->>+b: ゲームスタート<br/>PUT /rooms/{roomId}
+    b->>b: turn_user_idをランダムに設定
     b->>+d: SET rooms.turn_user_id
     d->>-b: room
     b->>f1: WS room(リレーション含む)
@@ -73,6 +75,7 @@ sequenceDiagram
         b->>+d: 山札からランダムに動物カードを1枚取得
         d-->>-b: card
         b->>d: SET auctions.animel_card_id
+        b->>b: ロバならお金を配る
         b-->>f1: WS room(リレーション含む)
         b-->>-f2: WS room(リレーション含む)
         f2->>+b: 入札<br/>PUT /auctions/{auction_id}
@@ -82,7 +85,10 @@ sequenceDiagram
         b->>-f2: WS room(リレーション含む)
         f1->>+b: オークション確定<br/>DELETE /auctions/{auction_id}
         b->>b: 動物カード付与、お金カード交換
-        b->>b: 次のターン
+        b->>b: room.turn_user_id更新
+        alt turn_user_id === null
+            b->>b: WS送信後に全員のuser.roomm_id = null
+        end
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)
         f1->>f1: 次のターン(room.turn_user_id === nullならゲーム終了へ)
@@ -105,14 +111,20 @@ sequenceDiagram
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)
         f2->>+b: 金額カード確定<br/>DELETE /trade/{trade_id}
-        b->>b: trades.is_confirmed === trueならトレード処理、次のターン
+        b->>b: trades.is_confirmed === trueならトレード処理
+        b->>b: room.turn_user_id更新
+        alt turn_user_id === null
+            b->>b: WS送信後に全員のuser.roomm_id = null
+        end
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)
         f1->>f1: 次のターン(room.turn_user_id === nullならゲーム終了へ)
         f2->>f2: 次のターン(room.turn_user_id === nullならゲーム終了へ)
     else ゲーム終了
-        f1->>b: ゲーム終了(ルーム削除)<br/>DELETE /rooms
         f1->>f1: 点数計算、勝者表示
         f2->>f2: 点数計算、勝者表示
+        alt 再戦
+            f1->>b: ゲームスタート<br/>PUT /rooms/{room_id}
+        end
     end
 ```

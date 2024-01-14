@@ -25,10 +25,13 @@
                 "properties": {
                   "name": {
                     "type": "string"
+                  },
+                  "roomId": {
+                    "type": "string"
                   }
                 },
-                "required": ["name"],
-                "x-apidog-orders": ["name"],
+                "required": ["name", "roomId"],
+                "x-apidog-orders": ["name", "roomId"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -98,65 +101,6 @@
           }
         },
         "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208244-run",
-        "security": []
-      },
-      "put": {
-        "summary": "put-users-userId",
-        "x-apidog-folder": "",
-        "x-apidog-status": "released",
-        "deprecated": false,
-        "description": "",
-        "operationId": "put-users-userId",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "example": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "roomId": {
-                    "type": "string",
-                    "nullable": true
-                  }
-                },
-                "x-apidog-orders": ["name", "roomId"],
-                "x-apidog-ignore-properties": []
-              },
-              "example": ""
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "成功",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "x-apidog-orders": [],
-                  "properties": {},
-                  "x-apidog-ignore-properties": []
-                }
-              }
-            }
-          }
-        },
-        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208245-run",
         "security": []
       }
     },

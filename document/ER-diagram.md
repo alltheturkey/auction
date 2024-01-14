@@ -41,6 +41,7 @@ erDiagram
         uuid auction_id FK "nullable"
         uuid trade_id FK "nullable"
         JSON user_order "nullable ターンの順番配列"
+        datetime updated_at
     }
 
     auctions {

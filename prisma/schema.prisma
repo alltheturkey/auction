@@ -95,10 +95,9 @@ enum CardType {
 }
 
 model UserCard {
+  id     Int    @id @default(autoincrement())
   user   User   @relation(fields: [userId], references: [id])
   userId String
   card   Card   @relation(fields: [cardId], references: [id])
   cardId Int
-
-  @@id([userId, cardId])
 }

@@ -5,8 +5,8 @@
 Table User {
   id String [pk]
   name String [not null]
-  room Room
-  roomId String
+  room Room [not null]
+  roomId String [not null]
   turnUserRooms Room [not null]
   betUserAuctions Auction [not null]
   targetUserTrades Trade [not null]

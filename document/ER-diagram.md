@@ -19,7 +19,7 @@ erDiagram
     users {
         uuid id PK "ユーザid"
         string name "ユーザ名"
-        uuid room_id FK "nullable"
+        uuid room_id FK
     }
 
     user_cards {

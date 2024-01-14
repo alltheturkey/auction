@@ -74,10 +74,11 @@ CREATE TABLE "Card" (
 
 -- CreateTable
 CREATE TABLE "UserCard" (
+    "id" SERIAL NOT NULL,
     "userId" TEXT NOT NULL,
     "cardId" INTEGER NOT NULL,
 
-    CONSTRAINT "UserCard_pkey" PRIMARY KEY ("userId","cardId")
+    CONSTRAINT "UserCard_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

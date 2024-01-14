@@ -81,14 +81,11 @@ Table Card {
 }
 
 Table UserCard {
+  id Int [pk, increment]
   user User [not null]
   userId String [not null]
   card Card [not null]
   cardId Int [not null]
-
-  indexes {
-    (userId, cardId) [pk]
-  }
 }
 
 Enum CardType {

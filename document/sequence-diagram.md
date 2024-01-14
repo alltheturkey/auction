@@ -19,28 +19,8 @@ sequenceDiagram
     f1->>f1: ルームに参加(ページ遷移)
 
     Note over f1,f2: ゲーム画面(開始前)
-    f1->>b: WS /rooms/{room_id}
     rect rgb(240, 250, 255)
-    note right of d: ユーザ作成処理
-    f1->>f1: localStorageのuser_id確認
-    alt localStorageにuser_idが有る
-        f1->>+b: user_idの存在確認<br/>GET /users/{user_id}
-        b->>+d: FROM users
-        d-->>-b: user | null
-        b-->>-f1: user | null
-        alt user_idがDBに存在しない
-            f1->>f1: goto [localStorageにuser_idが無い]
-        end
-    else localStorageにuser_idが無い
-        f1->>+b: ユーザ作成<br/>POST /users
-        b->>+d: INSERT users
-        d-->>-b: user
-        b-->>-f1: user
-        f1->>f1: localStorageにuser_id保存
-    end
-    end
-    rect rgb(240, 250, 255)
-    note right of d: ルーム参加処理
+    note right of d: ルーム参加(ユーザ作成)
     f1->>+b: ルームの状態確認<br/>GET /rooms/{room_id}
     b->>+d: FROM rooms WHERE id = room_id
     d-->>-b: room
@@ -49,17 +29,19 @@ sequenceDiagram
     alt turn_user_id !== null
         f1->>f1: ルーム一覧ページに遷移
     end
-    f1->>+b: ルームに参加<br/>PUT /users/{userId}
-    b->>+d: SET users.room_id
+    f1->>b: WS /rooms/{room_id}
+    f1->>f1: 名前を入力(またはlocalStorageから取得)
+    f1->>+b: ユーザ作成<br/>POST /users<br/>{ name, roomId }
+    b->>+d: INSERT users
     d-->>-b: user
+    b-->>f1: user
     b->>-f1: WS room(リレーション含む)
     end
     f2->>f2: アクセス
-    f2->>b: WS /rooms/{room_id}
-    f2->>f2: ユーザ作成処理
-    f2->>f2: ルーム参加処理
+    f2->>f2: ルーム参加(ユーザ作成)
     f1->>+b: ゲームスタート<br/>PUT /rooms/{roomId}
     b->>b: turn_user_idをランダムに設定
+    b->>b: 参加ユーザのカードリセット、お金を配る
     b->>+d: SET rooms.turn_user_id
     d->>-b: room
     b->>f1: WS room(リレーション含む)

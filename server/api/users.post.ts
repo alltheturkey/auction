@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 export default defineEventHandler(async (event) => {
   const schema = z.object({
     name: z.string(),
+    roomId: z.string(),
   });
   const userRequest = await schema
     .parseAsync(await readBody(event))

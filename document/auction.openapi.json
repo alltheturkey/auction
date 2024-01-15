@@ -312,10 +312,14 @@
                   "roomId": {
                     "type": "string",
                     "format": "uuid"
+                  },
+                  "betUserId": {
+                    "type": "string",
+                    "format": "uuid"
                   }
                 },
-                "required": ["roomId"],
-                "x-apidog-orders": ["roomId"],
+                "required": ["roomId", "betUserId"],
+                "x-apidog-orders": ["roomId", "betUserId"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -369,17 +373,15 @@
                 "type": "object",
                 "properties": {
                   "betUserId": {
-                    "type": "string"
+                    "type": "string",
+                    "nullable": true
                   },
-                  "moneyCardIds": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    }
+                  "amount": {
+                    "type": "integer"
                   }
                 },
-                "required": ["betUserId", "moneyCardIds"],
-                "x-apidog-orders": ["betUserId", "moneyCardIds"],
+                "required": ["betUserId", "amount"],
+                "x-apidog-orders": ["betUserId", "amount"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -409,7 +411,7 @@
         "x-apidog-folder": "",
         "x-apidog-status": "released",
         "deprecated": false,
-        "description": "オークション確定(ターンユーザが叩く)",
+        "description": "",
         "operationId": "delete-auctions-auctionId",
         "tags": [],
         "parameters": [
@@ -424,6 +426,30 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "moneyCardIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "x-apidog-orders": ["userId", "moneyCardIds"],
+                "required": ["userId", "moneyCardIds"],
+                "x-apidog-ignore-properties": []
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "成功",

@@ -26,6 +26,18 @@ export const broadcastRoom = async (roomId: string) => {
             },
           },
         },
+        auction: {
+          select: {
+            topUser: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            animalCard: true,
+            amount: true,
+          },
+        },
       },
     })
     .catch(prismaErrorHandler);

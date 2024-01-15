@@ -29,20 +29,12 @@ Table Room {
 
 Table Auction {
   id String [pk]
-  betUser User [not null]
-  betUserId String [not null]
+  topUser User
+  topUserId String
   animalCard Card [not null]
   animalCardId Int [not null]
+  amount Int [not null, default: 0]
   room Room
-  auctionBets AuctionBet [not null]
-}
-
-Table AuctionBet {
-  id Int [pk, increment]
-  auction Auction [not null]
-  auctionId String [not null]
-  moneyCard Card [not null]
-  moneyCardId Int [not null]
 }
 
 Table Trade {
@@ -74,7 +66,6 @@ Table Card {
   img String [not null]
   point Int [not null]
   auctions Auction [not null]
-  auctionBets AuctionBet [not null]
   trades Trade [not null]
   tradeBets TradeBet [not null]
   userCards UserCard [not null]
@@ -101,13 +92,9 @@ Ref: Room.auctionId - Auction.id
 
 Ref: Room.tradeId - Trade.id
 
-Ref: Auction.betUserId > User.id
+Ref: Auction.topUserId > User.id
 
 Ref: Auction.animalCardId > Card.id
-
-Ref: AuctionBet.auctionId > Auction.id
-
-Ref: AuctionBet.moneyCardId > Card.id
 
 Ref: Trade.animalCardId > Card.id
 

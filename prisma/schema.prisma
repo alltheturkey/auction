@@ -9,6 +9,7 @@ datasource db {
 
 generator dbml {
   provider = "prisma-dbml-generator"
+  output   = "../document/ER-diagram"
 }
 
 model User {
@@ -37,21 +38,13 @@ model Room {
 }
 
 model Auction {
-  id           String       @id @default(cuid())
-  betUser      User         @relation(fields: [betUserId], references: [id])
-  betUserId    String
-  animalCard   Card         @relation(fields: [animalCardId], references: [id])
+  id           String  @id @default(cuid())
+  topUser      User?   @relation(fields: [topUserId], references: [id])
+  topUserId    String?
+  animalCard   Card    @relation(fields: [animalCardId], references: [id])
   animalCardId Int
+  amount       Int     @default(0)
   room         Room?
-  auctionBets  AuctionBet[]
-}
-
-model AuctionBet {
-  id          Int     @id @default(autoincrement())
-  auction     Auction @relation(fields: [auctionId], references: [id])
-  auctionId   String
-  moneyCard   Card    @relation(fields: [moneyCardId], references: [id])
-  moneyCardId Int
 }
 
 model Trade {
@@ -77,16 +70,15 @@ model TradeBet {
 }
 
 model Card {
-  id          Int          @id @default(autoincrement())
-  type        CardType
-  name        String
-  img         String
-  point       Int
-  auctions    Auction[]
-  auctionBets AuctionBet[]
-  trades      Trade[]
-  tradeBets   TradeBet[]
-  userCards   UserCard[]
+  id        Int        @id @default(autoincrement())
+  type      CardType
+  name      String
+  img       String
+  point     Int
+  auctions  Auction[]
+  trades    Trade[]
+  tradeBets TradeBet[]
+  userCards UserCard[]
 }
 
 enum CardType {

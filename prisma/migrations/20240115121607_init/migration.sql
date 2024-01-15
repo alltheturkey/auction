@@ -25,19 +25,11 @@ CREATE TABLE "Room" (
 -- CreateTable
 CREATE TABLE "Auction" (
     "id" TEXT NOT NULL,
-    "betUserId" TEXT NOT NULL,
+    "topUserId" TEXT,
     "animalCardId" INTEGER NOT NULL,
+    "amount" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "Auction_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "AuctionBet" (
-    "id" SERIAL NOT NULL,
-    "auctionId" TEXT NOT NULL,
-    "moneyCardId" INTEGER NOT NULL,
-
-    CONSTRAINT "AuctionBet_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -100,16 +92,10 @@ ALTER TABLE "Room" ADD CONSTRAINT "Room_auctionId_fkey" FOREIGN KEY ("auctionId"
 ALTER TABLE "Room" ADD CONSTRAINT "Room_tradeId_fkey" FOREIGN KEY ("tradeId") REFERENCES "Trade"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Auction" ADD CONSTRAINT "Auction_betUserId_fkey" FOREIGN KEY ("betUserId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Auction" ADD CONSTRAINT "Auction_topUserId_fkey" FOREIGN KEY ("topUserId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Auction" ADD CONSTRAINT "Auction_animalCardId_fkey" FOREIGN KEY ("animalCardId") REFERENCES "Card"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "AuctionBet" ADD CONSTRAINT "AuctionBet_auctionId_fkey" FOREIGN KEY ("auctionId") REFERENCES "Auction"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "AuctionBet" ADD CONSTRAINT "AuctionBet_moneyCardId_fkey" FOREIGN KEY ("moneyCardId") REFERENCES "Card"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Trade" ADD CONSTRAINT "Trade_animalCardId_fkey" FOREIGN KEY ("animalCardId") REFERENCES "Card"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

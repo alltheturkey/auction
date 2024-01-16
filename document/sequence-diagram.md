@@ -61,8 +61,7 @@ sequenceDiagram
         b-->>f1: WS room(リレーション含む)
         b-->>-f2: WS room(リレーション含む)
         f2->>+b: 入札<br/>PUT /auctions/{auction_id}
-        b->>d: SET auctions.bet_user_id
-        b->>d: INSERT auction_bets
+        b->>d: SET auctions.top_user_id, amount
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)
         f1->>+b: オークション確定<br/>DELETE /auctions/{auction_id}

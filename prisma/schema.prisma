@@ -13,21 +13,21 @@ generator dbml {
 }
 
 model User {
-  id               String     @id @default(cuid())
-  name             String
-  room             Room       @relation(fields: [roomId], references: [id])
-  roomId           String
-  turnUserRooms    Room[]     @relation("turnUserRooms")
-  betUserAuctions  Auction[]
-  targetUserTrades Trade[]
-  userTradeBets    TradeBet[]
-  userCards        UserCard[]
+  id              String     @id @default(cuid())
+  name            String
+  room            Room       @relation(fields: [roomId], references: [id])
+  roomId          String
+  turnUserRoom    Room?      @relation("turnUserRoom")
+  topUserAuction  Auction?
+  targetUserTrade Trade?
+  userTradeBets   TradeBet[]
+  userCards       UserCard[]
 }
 
 model Room {
   id         String   @id @default(cuid())
-  turnUser   User?    @relation("turnUserRooms", fields: [turnUserId], references: [id])
-  turnUserId String?
+  turnUser   User?    @relation("turnUserRoom", fields: [turnUserId], references: [id])
+  turnUserId String?  @unique
   auction    Auction? @relation(fields: [auctionId], references: [id])
   auctionId  String?  @unique
   trade      Trade?   @relation(fields: [tradeId], references: [id])
@@ -40,7 +40,7 @@ model Room {
 model Auction {
   id           String  @id @default(cuid())
   topUser      User?   @relation(fields: [topUserId], references: [id])
-  topUserId    String?
+  topUserId    String? @unique
   animalCard   Card    @relation(fields: [animalCardId], references: [id])
   animalCardId Int
   amount       Int     @default(0)
@@ -54,7 +54,7 @@ model Trade {
   animalCard   Card       @relation(fields: [animalCardId], references: [id])
   animalCardId Int
   targetUser   User       @relation(fields: [targetUserId], references: [id])
-  targetUserId String
+  targetUserId String     @unique
   room         Room?
   tradeBet     TradeBet[]
 }

@@ -74,10 +74,19 @@ CREATE TABLE "UserCard" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Room_turnUserId_key" ON "Room"("turnUserId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Room_auctionId_key" ON "Room"("auctionId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Room_tradeId_key" ON "Room"("tradeId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Auction_topUserId_key" ON "Auction"("topUserId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Trade_targetUserId_key" ON "Trade"("targetUserId");
 
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "Room"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

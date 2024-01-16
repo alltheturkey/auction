@@ -368,16 +368,15 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "betUserId": {
-                    "type": "string",
-                    "nullable": true
+                  "topUser": {
+                    "type": "string"
                   },
                   "amount": {
                     "type": "integer"
                   }
                 },
-                "required": ["betUserId", "amount"],
-                "x-apidog-orders": ["betUserId", "amount"],
+                "required": ["topUser", "amount"],
+                "x-apidog-orders": ["topUser", "amount"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -717,25 +716,6 @@
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       },
-      "AuctionBetWithRelation": {
-        "type": "object",
-        "title": "AuctionBetWithRelation",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "moneyCards": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Card"
-            }
-          }
-        },
-        "required": ["id", "moneyCards"],
-        "x-apidog-orders": ["id", "moneyCards"],
-        "x-apidog-ignore-properties": [],
-        "x-apidog-folder": "Schemas"
-      },
       "Card": {
         "type": "object",
         "title": "Card",
@@ -773,18 +753,15 @@
           "animalCard": {
             "$ref": "#/components/schemas/Card"
           },
-          "betUser": {
+          "topUser": {
             "$ref": "#/components/schemas/User"
           },
-          "auctionBets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AuctionBetWithRelation"
-            }
+          "amount": {
+            "type": "integer"
           }
         },
-        "required": ["id", "animalCard", "betUser", "auctionBets"],
-        "x-apidog-orders": ["id", "animalCard", "betUser", "auctionBets"],
+        "required": ["id", "animalCard", "topUser", "amount"],
+        "x-apidog-orders": ["id", "animalCard", "topUser", "amount"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       },

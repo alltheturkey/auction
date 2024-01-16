@@ -74,6 +74,9 @@ CREATE TABLE "UserCard" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Room_turnUserId_key" ON "Room"("turnUserId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Room_auctionId_key" ON "Room"("auctionId");
 
 -- CreateIndex

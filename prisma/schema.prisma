@@ -17,7 +17,7 @@ model User {
   name            String
   room            Room       @relation(fields: [roomId], references: [id])
   roomId          String
-  turnUserRooms   Room[]     @relation("turnUserRooms")
+  turnUserRoom    Room?      @relation("turnUserRoom")
   topUserAuction  Auction?
   targetUserTrade Trade?
   userTradeBets   TradeBet[]
@@ -26,8 +26,8 @@ model User {
 
 model Room {
   id         String   @id @default(cuid())
-  turnUser   User?    @relation("turnUserRooms", fields: [turnUserId], references: [id])
-  turnUserId String?
+  turnUser   User?    @relation("turnUserRoom", fields: [turnUserId], references: [id])
+  turnUserId String?  @unique
   auction    Auction? @relation(fields: [auctionId], references: [id])
   auctionId  String?  @unique
   trade      Trade?   @relation(fields: [tradeId], references: [id])

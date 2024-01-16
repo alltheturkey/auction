@@ -7,7 +7,7 @@ Table User {
   name String [not null]
   room Room [not null]
   roomId String [not null]
-  turnUserRooms Room [not null]
+  turnUserRoom Room
   topUserAuction Auction
   targetUserTrade Trade
   userTradeBets TradeBet [not null]
@@ -17,7 +17,7 @@ Table User {
 Table Room {
   id String [pk]
   turnUser User
-  turnUserId String
+  turnUserId String [unique]
   auction Auction
   auctionId String [unique]
   trade Trade

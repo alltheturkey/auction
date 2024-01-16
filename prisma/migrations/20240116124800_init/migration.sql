@@ -28,6 +28,7 @@ CREATE TABLE "Auction" (
     "topUserId" TEXT,
     "animalCardId" INTEGER NOT NULL,
     "amount" INTEGER NOT NULL DEFAULT 0,
+    "isConfirmed" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Auction_pkey" PRIMARY KEY ("id")
 );

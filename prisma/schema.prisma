@@ -44,6 +44,7 @@ model Auction {
   animalCard   Card    @relation(fields: [animalCardId], references: [id])
   animalCardId Int
   amount       Int     @default(0)
+  isConfirmed  Boolean @default(false)
   room         Room?
 }
 

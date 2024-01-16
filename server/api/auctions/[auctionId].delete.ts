@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import { broadcastRoom } from '~/server/lib/broadcastRoom';
-import { isInclude } from '~/server/lib/isInclude';
+import { isSubset } from '~/server/lib/isSubset';
 import { prismaErrorHandler } from '~/server/lib/prismaErrorHandler';
 import { zodErrorHandler } from '~/server/lib/zodErrorHandler';
 
@@ -65,9 +65,9 @@ export default defineEventHandler(async (event) => {
 
       // お金カードを本当に持っているか確認
       if (
-        !isInclude(
-          topUserMoneyCards.map(({ card: { id } }) => id),
+        !isSubset(
           auctionRequest.moneyCardIds,
+          topUserMoneyCards.map(({ card: { id } }) => id),
         )
       ) {
         throw createError({

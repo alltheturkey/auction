@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   const schema = z.object({
-    betUserId: z.string().cuid(),
+    topUserId: z.string().cuid(),
     amount: z.number(),
   });
   const auctionRequest = await schema

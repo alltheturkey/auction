@@ -8,8 +8,8 @@ Table User {
   room Room [not null]
   roomId String [not null]
   turnUserRooms Room [not null]
-  betUserAuctions Auction [not null]
-  targetUserTrades Trade [not null]
+  topUserAuction Auction
+  targetUserTrade Trade
   userTradeBets TradeBet [not null]
   userCards UserCard [not null]
 }
@@ -30,7 +30,7 @@ Table Room {
 Table Auction {
   id String [pk]
   topUser User
-  topUserId String
+  topUserId String [unique]
   animalCard Card [not null]
   animalCardId Int [not null]
   amount Int [not null, default: 0]
@@ -44,7 +44,7 @@ Table Trade {
   animalCard Card [not null]
   animalCardId Int [not null]
   targetUser User [not null]
-  targetUserId String [not null]
+  targetUserId String [unique, not null]
   room Room
   tradeBet TradeBet [not null]
 }
@@ -92,13 +92,13 @@ Ref: Room.auctionId - Auction.id
 
 Ref: Room.tradeId - Trade.id
 
-Ref: Auction.topUserId > User.id
+Ref: Auction.topUserId - User.id
 
 Ref: Auction.animalCardId > Card.id
 
 Ref: Trade.animalCardId > Card.id
 
-Ref: Trade.targetUserId > User.id
+Ref: Trade.targetUserId - User.id
 
 Ref: TradeBet.tradeId > Trade.id
 

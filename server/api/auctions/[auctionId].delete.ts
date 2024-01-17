@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import { broadcastRoom } from '~/server/lib/broadcastRoom';
-import { isSubset } from '~/server/lib/isSubset';
 import { prismaErrorHandler } from '~/server/lib/prismaErrorHandler';
 import { zodErrorHandler } from '~/server/lib/zodErrorHandler';
 
@@ -10,7 +9,7 @@ const prisma = new PrismaClient();
 export default defineEventHandler(async (event) => {
   const schema = z.object({
     userId: z.string().cuid(),
-    moneyCardIds: z.array(z.number()),
+    userCardIds: z.array(z.number()),
   });
   const auctionRequest = await schema
     .parseAsync(await readBody(event))
@@ -49,43 +48,101 @@ export default defineEventHandler(async (event) => {
     }
     // topUserからからのリクエスト -> 支払い処理
     case auction.topUserId: {
-      const topUserMoneyCards = await prisma.userCard
+      if (auction.isConfirmed === false) {
+        throw createError({
+          statusCode: 400,
+          message: 'The auction has not been confirmed yet.',
+        });
+      }
+
+      const requestUserCards = await prisma.userCard
         .findMany({
           where: {
-            userId: auctionRequest.userId,
+            id: {
+              in: auctionRequest.userCardIds,
+            },
             card: {
               type: 'MONEY',
+              // 0円カードは除外
+              point: {
+                not: 0,
+              },
             },
           },
-          select: {
+          include: {
             card: true,
           },
         })
         .catch(prismaErrorHandler);
 
-      // お金カードを本当に持っているか確認
-      if (
-        !isSubset(
-          auctionRequest.moneyCardIds,
-          topUserMoneyCards.map(({ card: { id } }) => id),
-        )
-      ) {
+      // お金が足りているか確認
+      const requestMoneyAmount = requestUserCards.reduce(
+        (acc, { card: { point } }) => acc + point,
+        0,
+      );
+
+      if (requestMoneyAmount < auction.amount) {
         throw createError({
           statusCode: 400,
-          message: 'The user does not have designated money cards.',
+          message: 'The user does not have enough money.',
         });
       }
-      // [] お金の金額が足りているか確認
 
-      // [] topUserからお金カード削除
+      prisma
+        .$transaction(async (prisma) => {
+          // topUserからお金カード削除
+          await prisma.userCard.deleteMany({
+            where: {
+              id: {
+                in: requestUserCards.map(({ id }) => id),
+              },
+            },
+          });
 
-      // [] turnUserにお金カード付与
+          // turnUserにお金カード付与
+          await prisma.userCard.createMany({
+            data: requestUserCards.map(({ cardId }) => ({
+              userId: auction.room!.turnUserId!,
+              cardId,
+            })),
+          });
 
-      // [] topUserに動物カード付与
+          // topUserに動物カード付与
+          await prisma.userCard.create({
+            data: {
+              userId: auctionRequest.userId,
+              cardId: auction.animalCardId,
+            },
+          });
 
-      // [] auction削除(room.auctionIdもnullに
+          // auction削除
+          await prisma.auction.delete({
+            where: {
+              id: auctionId,
+            },
+          });
 
-      // [] 次のターン(turnUserIdの更新) // ゲーム終了判定はフロントで行う
+          // 次のターン
+          const userOrder = auction.room!.userOrder as string[];
+          const nextTurnUserId =
+            userOrder[
+              (userOrder.findIndex(
+                (userId) => userId === auction.room!.turnUserId,
+              ) +
+                1) %
+                userOrder.length
+            ];
+          await prisma.room.update({
+            where: {
+              id: auction.room!.id,
+            },
+            data: {
+              auctionId: null,
+              turnUserId: nextTurnUserId,
+            },
+          });
+        })
+        .catch(prismaErrorHandler);
 
       break;
     }
@@ -98,4 +155,6 @@ export default defineEventHandler(async (event) => {
   }
 
   broadcastRoom(auction.room.id);
+
+  return;
 });

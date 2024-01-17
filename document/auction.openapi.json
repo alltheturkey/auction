@@ -431,15 +431,15 @@
                     "type": "string",
                     "format": "uuid"
                   },
-                  "moneyCardIds": {
+                  "userCardIds": {
                     "type": "array",
                     "items": {
                       "type": "integer"
                     }
                   }
                 },
-                "x-apidog-orders": ["userId", "moneyCardIds"],
-                "required": ["userId", "moneyCardIds"],
+                "x-apidog-orders": ["userId", "userCardIds"],
+                "required": ["userId", "userCardIds"],
                 "x-apidog-ignore-properties": []
               }
             }

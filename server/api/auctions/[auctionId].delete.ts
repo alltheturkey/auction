@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 export default defineEventHandler(async (event) => {
   const schema = z.object({
     userId: z.string().cuid(),
-    userCardIds: z.array(z.number()),
+    moneyUserCardIds: z.array(z.number()),
   });
   const auctionRequest = await schema
     .parseAsync(await readBody(event))
@@ -55,11 +55,11 @@ export default defineEventHandler(async (event) => {
         });
       }
 
-      const requestUserCards = await prisma.userCard
+      const requestMoneyUserCards = await prisma.userCard
         .findMany({
           where: {
             id: {
-              in: auctionRequest.userCardIds,
+              in: auctionRequest.moneyUserCardIds,
             },
             card: {
               type: 'MONEY',
@@ -76,7 +76,7 @@ export default defineEventHandler(async (event) => {
         .catch(prismaErrorHandler);
 
       // お金が足りているか確認
-      const requestMoneyAmount = requestUserCards.reduce(
+      const requestMoneyAmount = requestMoneyUserCards.reduce(
         (acc, { card: { point } }) => acc + point,
         0,
       );
@@ -94,14 +94,14 @@ export default defineEventHandler(async (event) => {
           await prisma.userCard.deleteMany({
             where: {
               id: {
-                in: requestUserCards.map(({ id }) => id),
+                in: requestMoneyUserCards.map(({ id }) => id),
               },
             },
           });
 
           // turnUserにお金カード付与
           await prisma.userCard.createMany({
-            data: requestUserCards.map(({ cardId }) => ({
+            data: requestMoneyUserCards.map(({ cardId }) => ({
               userId: auction.room!.turnUserId!,
               cardId,
             })),

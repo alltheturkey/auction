@@ -21,6 +21,7 @@ export const broadcastRoom = async (roomId: string) => {
             name: true,
             userCards: {
               select: {
+                id: true,
                 card: true,
               },
             },

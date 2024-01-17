@@ -25,22 +25,23 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const auction = await prisma.auction
-    .create({
-      data: {
-        animalCardId: shuffleArr(deckAnimalCards)[0].id,
-      },
-    })
-    .catch(prismaErrorHandler);
+  await prisma
+    .$transaction(async (prisma) => {
+      const auction = await prisma.auction.create({
+        data: {
+          animalCardId: shuffleArr(deckAnimalCards)[0].id,
+        },
+      });
 
-  await prisma.room
-    .update({
-      where: {
-        id: auctionRequest.roomId,
-      },
-      data: {
-        auctionId: auction.id,
-      },
+      await prisma.room.update({
+        where: {
+          id: auctionRequest.roomId,
+        },
+        data: {
+          auctionId: auction.id,
+          tradeId: null,
+        },
+      });
     })
     .catch(prismaErrorHandler);
 

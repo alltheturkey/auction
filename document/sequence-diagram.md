@@ -25,13 +25,12 @@ sequenceDiagram
     b->>+d: FROM rooms WHERE id = room_id
     d-->>-b: room
     b-->>-f1: room
-    f1->>f1: room.turn_user_idの存在確認
-    alt turn_user_id !== null
+    alt room.turn_user_id !== null
         f1->>f1: ルーム一覧ページに遷移
     end
     f1->>b: WS /rooms/{room_id}
     f1->>f1: 名前を入力(またはlocalStorageから取得)
-    f1->>+b: ユーザ作成<br/>POST /users<br/>{ name, roomId }
+    f1->>+b: ユーザ作成(ルーム参加)<br/>POST /users<br/>{ name, roomId }
     b->>+d: INSERT users
     d-->>-b: user
     b-->>f1: user
@@ -48,6 +47,13 @@ sequenceDiagram
     b->>-f2: WS room(リレーション含む)
 
     Note over f1,f2: ゲーム画面(ゲーム中)
+    alt ゲーム終了判定 === true
+        f1->>f1: 点数計算、勝者表示
+        f2->>f2: 点数計算、勝者表示
+        alt 再戦
+            f1->>b: ゲームスタート<br/>PUT /rooms/{room_id}
+        end
+    end
     f1->>f1: 自分のターン(room.turn_user_id)
     f1->>f1: 競売か取引を選択
     alt 競売
@@ -65,15 +71,16 @@ sequenceDiagram
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)
         f1->>+b: オークション確定<br/>DELETE /auctions/{auction_id}
-        b->>b: 動物カード付与、お金カード交換
-        b->>b: room.turn_user_id更新
-        alt turn_user_id === null
-            b->>b: WS送信後に全員のuser.roomm_id = null
-        end
+        b->>d: SET auctions.isConfirmed = true
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)
-        f1->>f1: 次のターン(room.turn_user_id === nullならゲーム終了へ)
-        f2->>f2: 次のターン(room.turn_user_id === nullならゲーム終了へ)
+        f2->>+b: 支払い<br/>DELETE /auctions/{auction_id}
+        b->>b: 動物カード付与、お金カード交換
+        b->>b: room.turn_user_id更新
+        b->>f1: WS room(リレーション含む)
+        b->>-f2: WS room(リレーション含む)
+        f1->>f1: 次のターン
+        f2->>f2: 次のターン
     else 取引
         f1->>f1: 取引対象を選択
         f1->>+b: 取引を開始<br/>POST /trades
@@ -94,18 +101,9 @@ sequenceDiagram
         f2->>+b: 金額カード確定<br/>DELETE /trade/{trade_id}
         b->>b: trades.is_confirmed === trueならトレード処理
         b->>b: room.turn_user_id更新
-        alt turn_user_id === null
-            b->>b: WS送信後に全員のuser.roomm_id = null
-        end
         b->>f1: WS room(リレーション含む)
         b->>-f2: WS room(リレーション含む)
-        f1->>f1: 次のターン(room.turn_user_id === nullならゲーム終了へ)
-        f2->>f2: 次のターン(room.turn_user_id === nullならゲーム終了へ)
-    else ゲーム終了
-        f1->>f1: 点数計算、勝者表示
-        f2->>f2: 点数計算、勝者表示
-        alt 再戦
-            f1->>b: ゲームスタート<br/>PUT /rooms/{room_id}
-        end
+        f1->>f1: 次のターン
+        f2->>f2: 次のターン
     end
 ```

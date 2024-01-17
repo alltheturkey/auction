@@ -34,6 +34,7 @@ Table Auction {
   animalCard Card [not null]
   animalCardId Int [not null]
   amount Int [not null, default: 0]
+  isConfirmed Boolean [not null, default: false]
   room Room
 }
 

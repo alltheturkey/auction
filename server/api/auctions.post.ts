@@ -39,6 +39,7 @@ export default defineEventHandler(async (event) => {
         },
         data: {
           auctionId: auction.id,
+          tradeId: null,
         },
       });
     })

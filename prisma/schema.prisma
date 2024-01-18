@@ -33,7 +33,7 @@ model Room {
   trade      Trade?   @relation(fields: [tradeId], references: [id])
   tradeId    String?  @unique
   updatedAt  DateTime @updatedAt
-  userOrder  Json?
+  userOrder  String[]
   users      User[]
 }
 
@@ -49,15 +49,14 @@ model Auction {
 }
 
 model Trade {
-  id           String     @id @default(cuid())
-  isDouble     Boolean
-  isConfirmed  Boolean    @default(false)
-  animalCard   Card       @relation(fields: [animalCardId], references: [id])
-  animalCardId Int
-  targetUser   User       @relation(fields: [targetUserId], references: [id])
-  targetUserId String     @unique
-  room         Room?
-  tradeBet     TradeBet[]
+  id                          String     @id @default(cuid())
+  isConfirmed                 Boolean    @default(false)
+  targetUser                  User       @relation(fields: [targetUserId], references: [id])
+  targetUserId                String     @unique
+  targetUserAnimalUserCardIds Int[]
+  turnUserAnimalUserCardIds   Int[]
+  room                        Room?
+  tradeBet                    TradeBet[]
 }
 
 model TradeBet {
@@ -77,7 +76,6 @@ model Card {
   img       String
   point     Int
   auctions  Auction[]
-  trades    Trade[]
   tradeBets TradeBet[]
   userCards UserCard[]
 }

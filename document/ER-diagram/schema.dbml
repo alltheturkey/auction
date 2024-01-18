@@ -23,7 +23,7 @@ Table Room {
   trade Trade
   tradeId String [unique]
   updatedAt DateTime [not null]
-  userOrder Json
+  userOrder String[] [not null]
   users User [not null]
 }
 
@@ -40,12 +40,11 @@ Table Auction {
 
 Table Trade {
   id String [pk]
-  isDouble Boolean [not null]
   isConfirmed Boolean [not null, default: false]
-  animalCard Card [not null]
-  animalCardId Int [not null]
   targetUser User [not null]
   targetUserId String [unique, not null]
+  targetUserAnimalUserCardIds Int[] [not null]
+  turnUserAnimalUserCardIds Int[] [not null]
   room Room
   tradeBet TradeBet [not null]
 }
@@ -67,7 +66,6 @@ Table Card {
   img String [not null]
   point Int [not null]
   auctions Auction [not null]
-  trades Trade [not null]
   tradeBets TradeBet [not null]
   userCards UserCard [not null]
 }
@@ -96,8 +94,6 @@ Ref: Room.tradeId - Trade.id
 Ref: Auction.topUserId - User.id
 
 Ref: Auction.animalCardId > Card.id
-
-Ref: Trade.animalCardId > Card.id
 
 Ref: Trade.targetUserId - User.id
 

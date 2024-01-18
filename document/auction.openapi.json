@@ -484,11 +484,17 @@
                     "type": "string",
                     "format": "uuid"
                   },
-                  "isDouble": {
-                    "type": "boolean"
+                  "turnUserAnimalUserCardIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
                   },
-                  "animalCardId": {
-                    "type": "integer"
+                  "targetUserAnimalUserCardIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
                   },
                   "targetUserId": {
                     "type": "string",
@@ -497,14 +503,14 @@
                 },
                 "required": [
                   "roomId",
-                  "isDouble",
-                  "animalCardId",
+                  "turnUserAnimalUserCardIds",
+                  "targetUserAnimalUserCardIds",
                   "targetUserId"
                 ],
                 "x-apidog-orders": [
                   "roomId",
-                  "isDouble",
-                  "animalCardId",
+                  "turnUserAnimalUserCardIds",
+                  "targetUserAnimalUserCardIds",
                   "targetUserId"
                 ],
                 "x-apidog-ignore-properties": []

@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   const { users } = await prisma.room
     .findUniqueOrThrow({
       where: { id: roomId },
-      include: {
+      select: {
         users: {
           select: {
             id: true,

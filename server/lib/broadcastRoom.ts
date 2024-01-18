@@ -39,9 +39,29 @@ export const broadcastRoom = async (roomId: string) => {
             amount: true,
           },
         },
+        trade: {
+          select: {
+            targetUser: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            targetUserAnimalUserCardIds: true,
+            turnUserAnimalUserCardIds: true,
+            tradeBet: {
+              select: {
+                userId: true,
+                moneyCardId: true,
+              },
+            },
+          },
+        },
       },
     })
     .catch(prismaErrorHandler);
 
   console.log(JSON.stringify(room, null, 2));
+
+  return room;
 };

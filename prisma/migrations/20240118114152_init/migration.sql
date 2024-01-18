@@ -17,7 +17,7 @@ CREATE TABLE "Room" (
     "auctionId" TEXT,
     "tradeId" TEXT,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "userOrder" JSONB,
+    "userOrder" TEXT[],
 
     CONSTRAINT "Room_pkey" PRIMARY KEY ("id")
 );
@@ -36,10 +36,10 @@ CREATE TABLE "Auction" (
 -- CreateTable
 CREATE TABLE "Trade" (
     "id" TEXT NOT NULL,
-    "isDouble" BOOLEAN NOT NULL,
     "isConfirmed" BOOLEAN NOT NULL DEFAULT false,
-    "animalCardId" INTEGER NOT NULL,
     "targetUserId" TEXT NOT NULL,
+    "targetUserAnimalUserCardIds" INTEGER[],
+    "turnUserAnimalUserCardIds" INTEGER[],
 
     CONSTRAINT "Trade_pkey" PRIMARY KEY ("id")
 );
@@ -106,9 +106,6 @@ ALTER TABLE "Auction" ADD CONSTRAINT "Auction_topUserId_fkey" FOREIGN KEY ("topU
 
 -- AddForeignKey
 ALTER TABLE "Auction" ADD CONSTRAINT "Auction_animalCardId_fkey" FOREIGN KEY ("animalCardId") REFERENCES "Card"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Trade" ADD CONSTRAINT "Trade_animalCardId_fkey" FOREIGN KEY ("animalCardId") REFERENCES "Card"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Trade" ADD CONSTRAINT "Trade_targetUserId_fkey" FOREIGN KEY ("targetUserId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

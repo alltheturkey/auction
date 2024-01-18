@@ -123,7 +123,7 @@ export default defineEventHandler(async (event) => {
           });
 
           // 次のターン
-          const userOrder = auction.room!.userOrder as string[];
+          const userOrder = auction.room!.userOrder;
           const nextTurnUserId =
             userOrder[
               (userOrder.findIndex(

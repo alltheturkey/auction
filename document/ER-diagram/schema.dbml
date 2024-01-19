@@ -55,8 +55,8 @@ Table TradeBet {
   tradeId String [not null]
   user User [not null]
   userId String [not null]
-  moneyCard Card [not null]
-  moneyCardId Int [not null]
+  moneyUserCard UserCard [not null]
+  moneyUserCardId Int [not null]
 }
 
 Table Card {
@@ -66,7 +66,6 @@ Table Card {
   img String [not null]
   point Int [not null]
   auctions Auction [not null]
-  tradeBets TradeBet [not null]
   userCards UserCard [not null]
 }
 
@@ -76,6 +75,7 @@ Table UserCard {
   userId String [not null]
   card Card [not null]
   cardId Int [not null]
+  TradeBet TradeBet [not null]
 }
 
 Enum CardType {
@@ -101,7 +101,7 @@ Ref: TradeBet.tradeId > Trade.id
 
 Ref: TradeBet.userId > User.id
 
-Ref: TradeBet.moneyCardId > Card.id
+Ref: TradeBet.moneyUserCardId > UserCard.id
 
 Ref: UserCard.userId > User.id
 

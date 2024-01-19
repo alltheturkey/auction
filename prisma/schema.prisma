@@ -60,13 +60,13 @@ model Trade {
 }
 
 model TradeBet {
-  id          Int    @id @default(autoincrement())
-  trade       Trade  @relation(fields: [tradeId], references: [id])
-  tradeId     String
-  user        User   @relation(fields: [userId], references: [id])
-  userId      String
-  moneyCard   Card   @relation(fields: [moneyCardId], references: [id])
-  moneyCardId Int
+  id              Int      @id @default(autoincrement())
+  trade           Trade    @relation(fields: [tradeId], references: [id])
+  tradeId         String
+  user            User     @relation(fields: [userId], references: [id])
+  userId          String
+  moneyUserCard   UserCard @relation(fields: [moneyUserCardId], references: [id])
+  moneyUserCardId Int
 }
 
 model Card {
@@ -76,7 +76,6 @@ model Card {
   img       String
   point     Int
   auctions  Auction[]
-  tradeBets TradeBet[]
   userCards UserCard[]
 }
 
@@ -86,9 +85,10 @@ enum CardType {
 }
 
 model UserCard {
-  id     Int    @id @default(autoincrement())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-  card   Card   @relation(fields: [cardId], references: [id])
-  cardId Int
+  id       Int        @id @default(autoincrement())
+  user     User       @relation(fields: [userId], references: [id])
+  userId   String
+  card     Card       @relation(fields: [cardId], references: [id])
+  cardId   Int
+  TradeBet TradeBet[]
 }

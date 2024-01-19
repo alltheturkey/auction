@@ -566,17 +566,18 @@
                 "type": "object",
                 "properties": {
                   "userId": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "uuid"
                   },
-                  "moneyCardIds": {
+                  "moneyUserCardIds": {
                     "type": "array",
                     "items": {
                       "type": "integer"
                     }
                   }
                 },
-                "required": ["userId", "moneyCardIds"],
-                "x-apidog-orders": ["userId", "moneyCardIds"],
+                "required": ["userId", "moneyUserCardIds"],
+                "x-apidog-orders": ["userId", "moneyUserCardIds"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""

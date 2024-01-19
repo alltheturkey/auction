@@ -49,7 +49,7 @@ CREATE TABLE "TradeBet" (
     "id" SERIAL NOT NULL,
     "tradeId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "moneyCardId" INTEGER NOT NULL,
+    "moneyUserCardId" INTEGER NOT NULL,
 
     CONSTRAINT "TradeBet_pkey" PRIMARY KEY ("id")
 );
@@ -117,7 +117,7 @@ ALTER TABLE "TradeBet" ADD CONSTRAINT "TradeBet_tradeId_fkey" FOREIGN KEY ("trad
 ALTER TABLE "TradeBet" ADD CONSTRAINT "TradeBet_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "TradeBet" ADD CONSTRAINT "TradeBet_moneyCardId_fkey" FOREIGN KEY ("moneyCardId") REFERENCES "Card"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "TradeBet" ADD CONSTRAINT "TradeBet_moneyUserCardId_fkey" FOREIGN KEY ("moneyUserCardId") REFERENCES "UserCard"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UserCard" ADD CONSTRAINT "UserCard_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

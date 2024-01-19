@@ -52,7 +52,12 @@ export const broadcastRoom = async (roomId: string) => {
             tradeBet: {
               select: {
                 userId: true,
-                moneyCardId: true,
+                moneyUserCard: {
+                  select: {
+                    id: true,
+                    card: true,
+                  },
+                },
               },
             },
           },

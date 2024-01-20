@@ -13,15 +13,16 @@ generator dbml {
 }
 
 model User {
-  id              String     @id @default(cuid())
-  name            String
-  room            Room       @relation(fields: [roomId], references: [id])
-  roomId          String
-  turnUserRoom    Room?      @relation("turnUserRoom")
-  topUserAuction  Auction?
-  targetUserTrade Trade?
-  userTradeBets   TradeBet[]
-  userCards       UserCard[]
+  id                 String     @id @default(cuid())
+  name               String
+  room               Room       @relation(fields: [roomId], references: [id])
+  roomId             String
+  turnUserRoom       Room?      @relation("turnUserRoom")
+  topUserAuction     Auction?
+  targetUserTrade    Trade?     @relation("targetUserTrade")
+  confirmedUserTrade Trade?     @relation("confirmedUserTrade")
+  userTradeBets      TradeBet[]
+  userCards          UserCard[]
 }
 
 model Room {
@@ -50,8 +51,9 @@ model Auction {
 
 model Trade {
   id                          String     @id @default(cuid())
-  isConfirmed                 Boolean    @default(false)
-  targetUser                  User       @relation(fields: [targetUserId], references: [id])
+  confirmedUser               User?      @relation("confirmedUserTrade", fields: [confirmedUserId], references: [id])
+  confirmedUserId             String?    @unique
+  targetUser                  User       @relation("targetUserTrade", fields: [targetUserId], references: [id])
   targetUserId                String     @unique
   targetUserAnimalUserCardIds Int[]
   turnUserAnimalUserCardIds   Int[]

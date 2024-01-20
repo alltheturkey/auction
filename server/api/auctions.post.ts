@@ -16,7 +16,9 @@ export default defineEventHandler(async (event) => {
     .parseAsync(await readBody(event))
     .catch(zodErrorHandler);
 
-  const deckAnimalCards = await getDeckAnimalCards(auctionRequest.roomId);
+  const deckAnimalCards = await getDeckAnimalCards(auctionRequest.roomId).catch(
+    prismaErrorHandler,
+  );
 
   if (deckAnimalCards.length === 0) {
     throw createError({

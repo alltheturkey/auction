@@ -16,14 +16,16 @@ export default defineEventHandler(async (event) => {
     .catch(zodErrorHandler);
 
   const tradeId = event.context.params!.tradeId;
-  const { room } = await prisma.trade.findUniqueOrThrow({
-    where: {
-      id: tradeId,
-    },
-    include: {
-      room: true,
-    },
-  });
+  const { room } = await prisma.trade
+    .findUniqueOrThrow({
+      where: {
+        id: tradeId,
+      },
+      include: {
+        room: true,
+      },
+    })
+    .catch(prismaErrorHandler);
 
   if (room === null) {
     throw createError({

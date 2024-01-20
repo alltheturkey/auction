@@ -607,7 +607,7 @@
         "x-apidog-folder": "",
         "x-apidog-status": "released",
         "deprecated": false,
-        "description": "トレード確定(1プレイヤー目の場合はis_confirmedをtrueにするのみでエントリは削除しない)",
+        "description": "",
         "operationId": "delete-trade-tradeId",
         "tags": [],
         "parameters": [
@@ -622,6 +622,24 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
+                "x-apidog-orders": ["userId"],
+                "required": ["userId"],
+                "x-apidog-ignore-properties": []
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "成功",

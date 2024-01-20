@@ -10,4 +10,7 @@ cp .env.example .env
 npm install
 npm run migrate
 npm run dev
+
+# another terminal
+npm run ws-server
 ```

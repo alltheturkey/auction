@@ -36,7 +36,7 @@ CREATE TABLE "Auction" (
 -- CreateTable
 CREATE TABLE "Trade" (
     "id" TEXT NOT NULL,
-    "isConfirmed" BOOLEAN NOT NULL DEFAULT false,
+    "confirmedUserId" TEXT,
     "targetUserId" TEXT NOT NULL,
     "targetUserAnimalUserCardIds" INTEGER[],
     "turnUserAnimalUserCardIds" INTEGER[],
@@ -87,6 +87,9 @@ CREATE UNIQUE INDEX "Room_tradeId_key" ON "Room"("tradeId");
 CREATE UNIQUE INDEX "Auction_topUserId_key" ON "Auction"("topUserId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Trade_confirmedUserId_key" ON "Trade"("confirmedUserId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Trade_targetUserId_key" ON "Trade"("targetUserId");
 
 -- AddForeignKey
@@ -106,6 +109,9 @@ ALTER TABLE "Auction" ADD CONSTRAINT "Auction_topUserId_fkey" FOREIGN KEY ("topU
 
 -- AddForeignKey
 ALTER TABLE "Auction" ADD CONSTRAINT "Auction_animalCardId_fkey" FOREIGN KEY ("animalCardId") REFERENCES "Card"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Trade" ADD CONSTRAINT "Trade_confirmedUserId_fkey" FOREIGN KEY ("confirmedUserId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Trade" ADD CONSTRAINT "Trade_targetUserId_fkey" FOREIGN KEY ("targetUserId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

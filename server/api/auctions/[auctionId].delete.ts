@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import { broadcastRoom } from '~/server/lib/broadcastRoom';
+import { nextTurn } from '~/server/lib/nextTurn';
 import { prismaErrorHandler } from '~/server/lib/prismaErrorHandler';
 import { zodErrorHandler } from '~/server/lib/zodErrorHandler';
 
@@ -123,24 +124,7 @@ export default defineEventHandler(async (event) => {
           });
 
           // 次のターン
-          const userOrder = auction.room!.userOrder;
-          const nextTurnUserId =
-            userOrder[
-              (userOrder.findIndex(
-                (userId) => userId === auction.room!.turnUserId,
-              ) +
-                1) %
-                userOrder.length
-            ];
-          await prisma.room.update({
-            where: {
-              id: auction.room!.id,
-            },
-            data: {
-              auctionId: null,
-              turnUserId: nextTurnUserId,
-            },
-          });
+          await nextTurn(auction.room!);
         })
         .catch(prismaErrorHandler);
 

@@ -44,6 +44,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  // 先に確定を押したリクエストの場合
   if (trade.confirmedUserId === null) {
     await prisma.trade
       .update({
@@ -55,7 +56,9 @@ export default defineEventHandler(async (event) => {
         },
       })
       .catch(prismaErrorHandler);
-  } else {
+  }
+  // 後から確定を押したリクエストの場合
+  else {
     await prisma
       .$transaction(async (prisma) => {
         // turnUserの掛け金取得
@@ -162,6 +165,9 @@ export default defineEventHandler(async (event) => {
                 loserUserId === trade.targetUserId
                   ? trade.targetUserAnimalUserCardIds
                   : trade.turnUserAnimalUserCardIds,
+            },
+            card: {
+              type: 'ANIMAL',
             },
           },
           include: {

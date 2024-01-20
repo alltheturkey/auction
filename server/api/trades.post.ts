@@ -27,6 +27,9 @@ export default defineEventHandler(async (event) => {
           type: 'ANIMAL',
         },
       },
+      include: {
+        card: true,
+      },
     })
     .catch(prismaErrorHandler);
   const targetUserAnimalUserCards = await prisma.userCard
@@ -39,6 +42,9 @@ export default defineEventHandler(async (event) => {
           type: 'ANIMAL',
         },
       },
+      include: {
+        card: true,
+      },
     })
     .catch(prismaErrorHandler);
 
@@ -46,6 +52,24 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       message: 'Both players must trade the same number of cards',
+    });
+  }
+
+  const turnUserAnimalUserCardNames = turnUserAnimalUserCards.map(
+    ({ card }) => card.name,
+  );
+  const targetUserAnimalUserCardNames = targetUserAnimalUserCards.map(
+    ({ card }) => card.name,
+  );
+  const tradeAnimalCardNameSet = new Set([
+    ...turnUserAnimalUserCardNames,
+    ...targetUserAnimalUserCardNames,
+  ]);
+
+  if (tradeAnimalCardNameSet.size !== 1) {
+    throw createError({
+      statusCode: 400,
+      message: 'Both players must trade the same animal',
     });
   }
 

@@ -852,10 +852,16 @@
           "name": {
             "type": "string",
             "description": "idから自動生成"
+          },
+          "user": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
           }
         },
-        "required": ["id", "name"],
-        "x-apidog-orders": ["id", "name"],
+        "required": ["id", "name", "user"],
+        "x-apidog-orders": ["id", "name", "user"],
         "x-apidog-ignore-properties": [],
         "x-apidog-folder": "Schemas"
       },

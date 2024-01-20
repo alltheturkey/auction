@@ -69,7 +69,16 @@ export default defineEventHandler(async () => {
     })
     .catch(prismaErrorHandler);
 
-  const rooms = await prisma.room.findMany().catch(prismaErrorHandler);
+  const rooms = await prisma.room
+    .findMany({
+      where: {
+        turnUserId: null,
+      },
+      include: {
+        users: true,
+      },
+    })
+    .catch(prismaErrorHandler);
 
   return rooms.map((room) => insertNameFromId(room));
 });

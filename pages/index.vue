@@ -1,7 +1,43 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const router = useRouter();
+const { data: rooms, refresh } = await useFetch('/api/rooms');
+
+const timer = setInterval(() => {
+  refresh();
+}, 2000);
+
+onUnmounted(() => {
+  clearInterval(timer);
+});
+
+const createRoom = async () => {
+  const { data: room } = await useFetch('/api/rooms', {
+    method: 'POST',
+  });
+
+  if (room.value !== null) {
+    router.push(`/${room.value.id}`);
+  }
+};
+</script>
 
 <template>
-  <h1>Hello</h1>
+  <div>
+    <ul>
+      <li v-for="room in rooms" :key="room.id">
+        <NuxtLink
+          :to="{
+            name: 'roomId',
+            params: {
+              roomId: room.id,
+            },
+          }"
+          >{{ room.name }}</NuxtLink
+        >
+      </li>
+    </ul>
+    <button @click="createRoom">Create Room</button>
+  </div>
 </template>
 
 <style scoped></style>

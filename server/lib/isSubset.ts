@@ -11,7 +11,7 @@ const countElement = (arr: any[]): Record<string, number> =>
 export const isSubset = <T extends number | string>(
   subset: T[],
   superset: T[],
-): Boolean => {
+): boolean => {
   const subsetCount = countElement(subset);
   const supersetCount = countElement(superset);
 

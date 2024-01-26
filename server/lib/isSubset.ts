@@ -2,7 +2,9 @@
  * 要素ごとの出現回数を数える
  * numberの1とstringの’1’が区別されないので注意
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const countElement = (arr: any[]): Record<string, number> =>
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   arr.reduce((a, b) => ({ ...a, [b]: (a[b] ?? 0) + 1 }), {});
 
 /**

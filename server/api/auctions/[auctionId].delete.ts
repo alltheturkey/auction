@@ -138,7 +138,7 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  broadcastRoom(auction.room.id);
+  await broadcastRoom(auction.room.id);
 
   return;
 });

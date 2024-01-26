@@ -64,7 +64,7 @@ export default defineEventHandler(async (event) => {
     })
     .catch(prismaErrorHandler);
 
-  broadcastRoom(room.id);
+  await broadcastRoom(room.id);
 
   return;
 });

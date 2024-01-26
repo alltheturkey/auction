@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  broadcastRoom(room.id);
+  await broadcastRoom(room.id);
 
   return;
 });

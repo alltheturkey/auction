@@ -3,7 +3,7 @@ const router = useRouter();
 const { data: rooms, refresh } = await useFetch('/api/rooms');
 
 const timer = setInterval(() => {
-  refresh();
+  void refresh();
 }, 2000);
 
 onUnmounted(() => {
@@ -16,7 +16,7 @@ const createRoom = async () => {
   });
 
   if (room.value !== null) {
-    router.push(`/${room.value.id}`);
+    await router.push(`/${room.value.id}`);
   }
 };
 </script>

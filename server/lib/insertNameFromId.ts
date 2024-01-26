@@ -1,6 +1,6 @@
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 
-export const insertNameFromId = (obj: { id: string; [key: string]: any }) => {
+export const insertNameFromId = <T extends { id: number | string }>(obj: T) => {
   return {
     ...obj,
     name: uniqueNamesGenerator({

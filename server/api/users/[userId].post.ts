@@ -1,24 +1,20 @@
 import { PrismaClient } from '@prisma/client';
 import { broadcastRoom } from '~/server/lib/broadcastRoom';
-import { insertNameFromId } from '~/server/lib/insertNameFromId';
 import { prismaErrorHandler } from '~/server/lib/prismaErrorHandler';
 
 const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
-  const roomId = event.context.params!.roomId;
-  const room = await prisma.room
-    .findUniqueOrThrow({
+  const userId = event.context.params!.userId;
+  const user = await prisma.user
+    .delete({
       where: {
-        id: roomId,
-      },
-      include: {
-        users: true,
+        id: userId,
       },
     })
     .catch(prismaErrorHandler);
 
-  await broadcastRoom(roomId);
+  await broadcastRoom(user.roomId);
 
-  return insertNameFromId(room);
+  return;
 });

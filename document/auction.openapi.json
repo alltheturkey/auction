@@ -102,6 +102,42 @@
         },
         "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5208244-run",
         "security": []
+      },
+      "post": {
+        "summary": "delete-users-userId",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "navigator.sendBeaconがPOSTしか対応していないためPOST",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/442708/apis/api-5385989-run",
+        "security": []
       }
     },
     "/rooms": {

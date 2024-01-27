@@ -4,7 +4,7 @@ const { data: rooms, refresh } = await useFetch('/api/rooms');
 
 const timer = setInterval(() => {
   void refresh();
-}, 2000);
+}, 1000);
 
 onUnmounted(() => {
   clearInterval(timer);
@@ -16,7 +16,12 @@ const createRoom = async () => {
   });
 
   if (room.value !== null) {
-    await router.push(`/${room.value.id}`);
+    await router.push({
+      name: 'roomId',
+      params: {
+        roomId: room.value.id,
+      },
+    });
   }
 };
 </script>
@@ -32,7 +37,7 @@ const createRoom = async () => {
               roomId: room.id,
             },
           }"
-          >{{ room.name }}</NuxtLink
+          >{{ `${room.name}(${room.users.length})` }}</NuxtLink
         >
       </li>
     </ul>

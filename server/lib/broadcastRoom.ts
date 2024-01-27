@@ -4,7 +4,6 @@ import { prismaErrorHandler } from '~/server/lib/prismaErrorHandler';
 const prisma = new PrismaClient();
 const runtimeConfig = useRuntimeConfig();
 
-// [] ws serverにroom(リレーション含む)をPOSTする、responce.okでない場合はthrow createError
 export const broadcastRoom = async (roomId: string) => {
   const room = await prisma.room
     .findUniqueOrThrow({

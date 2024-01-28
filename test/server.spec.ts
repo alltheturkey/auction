@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */ // NOTE: テスト時に `$fetch` の返却値を具体的にassertで比較するので、any型を許容する。本来はajvなどのスキーマバリデータでdecodeしてやると良い(decode時に実行時エラーを出すべきなので、 `as` は適さない。)
 import { $fetch, setup } from '@nuxt/test-utils/e2e';
 import { describe, expect, test } from 'vitest';
-import { fixtureRoom } from './fixture/room';
+import { fixtureFixedRoom } from './fixture/room';
 import { cleanup } from './util/reset';
 
 describe('backendのE2Eテスト', async () => {
@@ -10,8 +10,8 @@ describe('backendのE2Eテスト', async () => {
   });
   cleanup(['Room']);
 
-  test('GET /api/rooms が fixtureで作ったデータ から期待される返り値を返すこと', async () => {
-    await fixtureRoom();
+  test('GET /api/rooms が fixture で作ったデータから期待される返り値を返すこと', async () => {
+    await fixtureFixedRoom();
     const rooms = await $fetch('/api/rooms');
     expect(rooms).toStrictEqual([
       {
@@ -45,5 +45,12 @@ describe('backendのE2Eテスト', async () => {
         users: [],
       },
     ]);
+  });
+  test('POST /api/rooms が成功し id をプロパティとして持つ値を返すこと', async () => {
+    const room = await $fetch('/api/rooms', {
+      method: 'POST',
+    });
+    // 返却された新しいルームの property に id が含まれている
+    expect(room).toHaveProperty('id');
   });
 });

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import { broadcastRoom } from '~/server/lib/broadcastRoom';
-import { nextTurn } from '~/server/lib/nextTurn';
+import { getNextTurnUserId } from '~/server/lib/getNextTurnUserId';
 import { prismaErrorHandler } from '~/server/lib/prismaErrorHandler';
 import { zodErrorHandler } from '~/server/lib/zodErrorHandler';
 
@@ -207,7 +207,18 @@ export default defineEventHandler(async (event) => {
         });
 
         // 次のターン
-        await nextTurn(trade.room!);
+        if (trade.room) {
+          await prisma.room.update({
+            where: {
+              id: trade.room.id,
+            },
+            data: {
+              auctionId: null,
+              tradeId: null,
+              turnUserId: getNextTurnUserId(trade.room),
+            },
+          });
+        }
       })
       .catch(prismaErrorHandler);
   }

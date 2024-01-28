@@ -15,27 +15,11 @@ export default defineEventHandler(async (event) => {
     .parseAsync(await readBody(event))
     .catch(zodErrorHandler);
   const auctionId = event.context.params!.auctionId;
-  const { amount: currentAmount } = await prisma.auction
+  const { room, amount: currentAmount } = await prisma.auction
     .findUniqueOrThrow({
       where: {
         id: auctionId,
       },
-    })
-    .catch(prismaErrorHandler);
-
-  if (auctionRequest.amount <= currentAmount) {
-    throw createError({
-      statusCode: 400,
-      message: 'The bet amount must be greater than the current amount.',
-    });
-  }
-
-  const { room } = await prisma.auction
-    .update({
-      where: {
-        id: auctionId,
-      },
-      data: auctionRequest,
       include: {
         room: true,
       },
@@ -48,6 +32,32 @@ export default defineEventHandler(async (event) => {
       message: 'The auction does not belong to any room.',
     });
   }
+
+  // turnUserの場合は、currentAmountで入札(買い取り)ができるでの除外
+  if (
+    auctionRequest.topUserId !== room.turnUserId &&
+    auctionRequest.amount <= currentAmount
+  ) {
+    throw createError({
+      statusCode: 400,
+      message: 'The bet amount must be greater than the current amount.',
+    });
+  }
+
+  await prisma.auction
+    .update({
+      where: {
+        id: auctionId,
+      },
+      data: {
+        ...auctionRequest,
+        isConfirmed: false,
+      },
+      include: {
+        room: true,
+      },
+    })
+    .catch(prismaErrorHandler);
 
   await broadcastRoom(room.id);
 

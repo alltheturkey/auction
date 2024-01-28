@@ -1,32 +1,33 @@
 type CardType = 'ANIMAL' | 'MONEY';
 
+type Card = {
+  id: number;
+  type: CardType;
+  name: string;
+  img: string;
+  point: number;
+};
+
+export type UserCard = {
+  id: number;
+  card: Card;
+};
+
 export type Room = {
   auction: {
+    id: string;
+    isConfirmed: boolean;
     topUser: {
       id: string;
       name: string;
     } | null;
-    animalCard: {
-      id: number;
-      type: CardType;
-      name: string;
-      img: string;
-      point: number;
-    };
+    animalCard: Card;
     amount: number;
   } | null;
   trade: {
+    id: string;
     tradeBet: {
-      moneyUserCard: {
-        id: number;
-        card: {
-          id: number;
-          type: CardType;
-          name: string;
-          img: string;
-          point: number;
-        };
-      };
+      moneyUserCard: UserCard;
       userId: string;
     }[];
     confirmedUserId: string | null;
@@ -41,15 +42,6 @@ export type Room = {
   users: {
     id: string;
     name: string;
-    userCards: {
-      id: number;
-      card: {
-        id: number;
-        type: CardType;
-        name: string;
-        img: string;
-        point: number;
-      };
-    }[];
+    userCards: UserCard[];
   }[];
 };

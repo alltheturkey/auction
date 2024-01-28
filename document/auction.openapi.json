@@ -404,15 +404,16 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "topUser": {
-                    "type": "string"
+                  "topUserId": {
+                    "type": "string",
+                    "format": "uuid"
                   },
                   "amount": {
                     "type": "integer"
                   }
                 },
-                "required": ["topUser", "amount"],
-                "x-apidog-orders": ["topUser", "amount"],
+                "required": ["topUserId", "amount"],
+                "x-apidog-orders": ["topUserId", "amount"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""

@@ -404,15 +404,16 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "topUser": {
-                    "type": "string"
+                  "topUserId": {
+                    "type": "string",
+                    "format": "uuid"
                   },
                   "amount": {
                     "type": "integer"
                   }
                 },
-                "required": ["topUser", "amount"],
-                "x-apidog-orders": ["topUser", "amount"],
+                "required": ["amount"],
+                "x-apidog-orders": ["topUserId", "amount"],
                 "x-apidog-ignore-properties": []
               },
               "example": ""
@@ -463,7 +464,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "userId": {
+                  "buyerUserId": {
                     "type": "string",
                     "format": "uuid"
                   },
@@ -474,8 +475,8 @@
                     }
                   }
                 },
-                "x-apidog-orders": ["userId", "moneyUserCardIds"],
-                "required": ["userId", "moneyUserCardIds"],
+                "x-apidog-orders": ["buyerUserId", "moneyUserCardIds"],
+                "required": ["buyerUserId", "moneyUserCardIds"],
                 "x-apidog-ignore-properties": []
               }
             }

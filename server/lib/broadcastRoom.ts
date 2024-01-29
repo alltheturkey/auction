@@ -29,6 +29,13 @@ export const broadcastRoom = async (roomId: string) => {
         },
         auction: {
           select: {
+            id: true,
+            buyerUser: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
             topUser: {
               select: {
                 id: true,
@@ -41,6 +48,7 @@ export const broadcastRoom = async (roomId: string) => {
         },
         trade: {
           select: {
+            id: true,
             targetUserId: true,
             targetUserAnimalUserCardIds: true,
             turnUserAnimalUserCardIds: true,

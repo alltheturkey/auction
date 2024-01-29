@@ -18,7 +18,8 @@ model User {
   room               Room       @relation(fields: [roomId], references: [id])
   roomId             String
   turnUserRoom       Room?      @relation("turnUserRoom")
-  topUserAuction     Auction?
+  topUserAuction     Auction?   @relation("topUserAuction")
+  buyerUserAuction   Auction?   @relation("buyerUserAuction")
   targetUserTrade    Trade?     @relation("targetUserTrade")
   confirmedUserTrade Trade?     @relation("confirmedUserTrade")
   userTradeBets      TradeBet[]
@@ -40,12 +41,13 @@ model Room {
 
 model Auction {
   id           String  @id @default(cuid())
-  topUser      User?   @relation(fields: [topUserId], references: [id])
+  topUser      User?   @relation("topUserAuction", fields: [topUserId], references: [id])
   topUserId    String? @unique
+  buyerUser    User?   @relation("buyerUserAuction", fields: [buyerUserId], references: [id])
+  buyerUserId  String? @unique
   animalCard   Card    @relation(fields: [animalCardId], references: [id])
   animalCardId Int
   amount       Int     @default(0)
-  isConfirmed  Boolean @default(false)
   room         Room?
 }
 

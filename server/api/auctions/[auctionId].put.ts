@@ -8,34 +8,18 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   const schema = z.object({
-    topUserId: z.string().cuid(),
+    topUserId: z.string().cuid().optional(),
     amount: z.number(),
   });
   const auctionRequest = await schema
     .parseAsync(await readBody(event))
     .catch(zodErrorHandler);
   const auctionId = event.context.params!.auctionId;
-  const { amount: currentAmount } = await prisma.auction
+  const { room, amount: currentAmount } = await prisma.auction
     .findUniqueOrThrow({
       where: {
         id: auctionId,
       },
-    })
-    .catch(prismaErrorHandler);
-
-  if (auctionRequest.amount <= currentAmount) {
-    throw createError({
-      statusCode: 400,
-      message: 'The bet amount must be greater than the current amount.',
-    });
-  }
-
-  const { room } = await prisma.auction
-    .update({
-      where: {
-        id: auctionId,
-      },
-      data: auctionRequest,
       include: {
         room: true,
       },
@@ -48,6 +32,30 @@ export default defineEventHandler(async (event) => {
       message: 'The auction does not belong to any room.',
     });
   }
+
+  if (auctionRequest.topUserId && auctionRequest.amount <= currentAmount) {
+    throw createError({
+      statusCode: 400,
+      message: 'The bet amount must be greater than the current amount.',
+    });
+  }
+
+  await prisma.auction
+    .update({
+      where: {
+        id: auctionId,
+      },
+      data: {
+        topUserId: auctionRequest.topUserId ?? null,
+        amount:
+          auctionRequest.topUserId === undefined ? 0 : auctionRequest.amount,
+        buyerUserId: null,
+      },
+      include: {
+        room: true,
+      },
+    })
+    .catch(prismaErrorHandler);
 
   await broadcastRoom(room.id);
 

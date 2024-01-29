@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   const schema = z.object({
-    topUserId: z.string().cuid(),
+    topUserId: z.string().cuid().optional(),
     amount: z.number(),
   });
   const auctionRequest = await schema
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  if (auctionRequest.amount <= currentAmount) {
+  if (auctionRequest.topUserId && auctionRequest.amount <= currentAmount) {
     throw createError({
       statusCode: 400,
       message: 'The bet amount must be greater than the current amount.',
@@ -46,7 +46,9 @@ export default defineEventHandler(async (event) => {
         id: auctionId,
       },
       data: {
-        ...auctionRequest,
+        topUserId: auctionRequest.topUserId ?? null,
+        amount:
+          auctionRequest.topUserId === undefined ? 0 : auctionRequest.amount,
         buyerUserId: null,
       },
       include: {

@@ -158,7 +158,6 @@ const sellAuction = () => {
   void useFetch(`/api/auctions/${room.value?.auction?.id}`, {
     method: 'DELETE',
     body: {
-      // [] openapi修正
       buyerUserId: room.value?.auction?.topUser?.id,
       moneyUserCardIds: [],
     },
@@ -184,7 +183,6 @@ const payAuction = async () => {
     await useFetch(`/api/auctions/${room.value?.auction?.id}`, {
       method: 'PUT',
       body: {
-        topUserId: userId.value,
         amount: 0,
       },
     });

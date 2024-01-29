@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   const schema = z.object({
-    userId: z.string().cuid(),
+    buyerUserId: z.string().cuid(),
     moneyUserCardIds: z.array(z.number()),
   });
   const auctionRequest = await schema
@@ -35,7 +35,14 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  if (auction.isConfirmed) {
+  if (auction.buyerUserId) {
+    if (auction.buyerUserId !== auctionRequest.buyerUserId) {
+      throw createError({
+        statusCode: 400,
+        message: 'You are not the buyer of this auction.',
+      });
+    }
+
     const requestMoneyUserCards = await prisma.userCard
       .findMany({
         where: {
@@ -71,7 +78,7 @@ export default defineEventHandler(async (event) => {
 
     await prisma
       .$transaction(async (prisma) => {
-        // topUserからお金カード削除
+        // buyerからお金カード削除
         await prisma.userCard.deleteMany({
           where: {
             id: {
@@ -80,18 +87,21 @@ export default defineEventHandler(async (event) => {
           },
         });
 
-        // turnUserにお金カード付与
+        // buyerでない方にお金カード付与
         await prisma.userCard.createMany({
           data: requestMoneyUserCards.map(({ cardId }) => ({
-            userId: auction.room!.turnUserId!,
+            userId:
+              auction.topUserId === auctionRequest.buyerUserId
+                ? auction.room!.turnUserId!
+                : auction.topUserId!,
             cardId,
           })),
         });
 
-        // topUserに動物カード付与
+        // buyerに動物カード付与
         await prisma.userCard.create({
           data: {
-            userId: auctionRequest.userId,
+            userId: auctionRequest.buyerUserId,
             cardId: auction.animalCardId,
           },
         });
@@ -122,7 +132,7 @@ export default defineEventHandler(async (event) => {
     await prisma.auction.update({
       where: { id: auctionId },
       data: {
-        isConfirmed: true,
+        buyerUserId: auctionRequest.buyerUserId,
       },
     });
   }

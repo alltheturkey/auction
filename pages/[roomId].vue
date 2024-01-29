@@ -11,7 +11,7 @@ const room: Ref<Room | undefined> = ref();
 const beforeunloadHandler = (e: BeforeUnloadEvent) => {
   if (
     room.value?.turnUser &&
-    room.value?.users.some(({ id }) => id === userId)
+    room.value?.users.some(({ id }) => id === userId.value)
   ) {
     e.preventDefault();
     // eslint-disable-next-line no-param-reassign
@@ -53,7 +53,7 @@ onUnmounted(() => {
 onBeforeRouteLeave(() => {
   if (
     room.value?.turnUser &&
-    room.value?.users.some(({ id }) => id === userId)
+    room.value?.users.some(({ id }) => id === userId.value)
   ) {
     const answer = confirm('Do you want to leave?');
 
@@ -134,32 +134,19 @@ const bid = () => {
   });
 };
 
-const buyAuction = async () => {
-  // 同額でbid
-  // BUG: このやりかただと、お金が自分自身と交換される(支払われない) -> backend修正
-  await useFetch(`/api/auctions/${room.value?.auction?.id}`, {
-    method: 'PUT',
-    body: {
-      topUserId: userId.value,
-      amount: room.value?.auction?.amount,
-    },
-  });
-
-  // auction確定
-  await useFetch(`/api/auctions/${room.value?.auction?.id}`, {
+const buyAuction = () => {
+  // buyerが自分でauction確定
+  void useFetch(`/api/auctions/${room.value?.auction?.id}`, {
     method: 'DELETE',
     body: {
-      userId: userId.value,
+      buyerUserId: userId.value,
       moneyUserCardIds: [],
     },
   });
 };
 
 const isMoneyClickable = computed(() => {
-  if (
-    room.value?.auction?.isConfirmed &&
-    room.value?.auction?.topUser?.id === userId.value
-  ) {
+  if (room.value?.auction?.buyerUser?.id === userId.value) {
     return true;
   }
 
@@ -167,7 +154,15 @@ const isMoneyClickable = computed(() => {
 });
 
 const sellAuction = () => {
-  // [] 売却処理
+  // buyerがtopUserでauction確定
+  void useFetch(`/api/auctions/${room.value?.auction?.id}`, {
+    method: 'DELETE',
+    body: {
+      // [] openapi修正
+      buyerUserId: room.value?.auction?.topUser?.id,
+      moneyUserCardIds: [],
+    },
+  });
 };
 
 const payAuction = async () => {
@@ -177,7 +172,7 @@ const payAuction = async () => {
     {
       method: 'DELETE',
       body: {
-        userId,
+        buyerUserId: userId.value,
         moneyUserCardIds: clickedMoneyCardIds.value,
       },
     },
@@ -227,7 +222,7 @@ const clickMoneyCard = (userCardId: number) => {
           {{ room.auction.topUser?.name }}
           {{ room.auction.amount }}
         </span>
-        <span v-if="room.auction.isConfirmed === false">
+        <span v-if="room.auction.buyerUser === null">
           <div v-if="room.turnUser?.id !== userId">
             <input
               v-model="bidAmount"

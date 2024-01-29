@@ -30,7 +30,12 @@ export const broadcastRoom = async (roomId: string) => {
         auction: {
           select: {
             id: true,
-            isConfirmed: true,
+            buyerUser: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
             topUser: {
               select: {
                 id: true,

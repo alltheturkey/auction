@@ -33,11 +33,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // turnUserの場合は、currentAmountで入札(買い取り)ができるでの除外
-  if (
-    auctionRequest.topUserId !== room.turnUserId &&
-    auctionRequest.amount <= currentAmount
-  ) {
+  if (auctionRequest.amount <= currentAmount) {
     throw createError({
       statusCode: 400,
       message: 'The bet amount must be greater than the current amount.',
@@ -51,7 +47,7 @@ export default defineEventHandler(async (event) => {
       },
       data: {
         ...auctionRequest,
-        isConfirmed: false,
+        buyerUserId: null,
       },
       include: {
         room: true,

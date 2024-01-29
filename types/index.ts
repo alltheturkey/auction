@@ -16,7 +16,10 @@ export type UserCard = {
 export type Room = {
   auction: {
     id: string;
-    isConfirmed: boolean;
+    buyerUser: {
+      id: string;
+      name: string;
+    } | null;
     topUser: {
       id: string;
       name: string;

@@ -15,7 +15,7 @@ const animalCards = computed(() =>
 <template>
   <div>
     <img
-      v-for="animalCard in animalCards"
+      v-for="animalCard of animalCards"
       :key="animalCard.id"
       class="card"
       :src="animalCard.card.img"

@@ -253,7 +253,7 @@ const clickMoneyCard = (userCardId: number) => {
       </span>
     </div>
 
-    <div v-for="user in room?.users" :key="user.id">
+    <div v-for="user of room?.users" :key="user.id">
       <div
         :style="{ color: user.id === room?.turnUser?.id ? 'green' : 'black' }"
       >
@@ -269,7 +269,7 @@ const clickMoneyCard = (userCardId: number) => {
     </div>
 
     <img
-      v-for="moneyCard in room?.users
+      v-for="moneyCard of room?.users
         .find(({ id }) => id === userId)
         ?.userCards.filter(({ card: { type } }) => type === 'MONEY')
         .toSorted((a, b) => a.card.point - b.card.point)"

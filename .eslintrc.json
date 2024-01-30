@@ -13,6 +13,30 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "vue/require-macro-variable-name": "error",
+    "vue/define-emits-declaration": ["error", "type-literal"],
+    "vue/define-props-declaration": "error",
+    "vue/no-sparse-arrays": "error",
+    "vue/no-loss-of-precision": "error",
+    "vue/no-empty-pattern": "error",
+    "vue/no-constant-condition": "error",
+    "vue/eqeqeq": "warn",
+    "vue/camelcase": "warn",
+    "vue/no-console": [
+      "warn",
+      { "allow": ["time", "timeEnd", "info", "error", "debug"] }
+    ],
+    "vue/block-order": "warn",
+    "vue/block-tag-newline": "warn",
+    "vue/define-macros-order": "warn",
+    "vue/html-comment-content-newline": "warn",
+    "vue/html-comment-content-spacing": "warn",
+    "vue/html-comment-indent": "warn",
+    "vue/no-empty-component-block": "warn",
+    "vue/padding-line-between-blocks": "warn",
+    "vue/prefer-separate-static-class": "warn",
+    "vue/static-class-names-order": "warn",
+    "vue/v-for-delimiter-style": ["warn", "of"],
     "func-style": "error",
     "guard-for-in": "error",
     "spaced-comment": ["warn", "always"],
@@ -127,6 +151,20 @@
       "files": ["{middleware,plugins,server}/**/*.{js,ts}"],
       "rules": {
         "import/no-default-export": "off"
+      }
+    },
+    {
+      "files": ["pages/**/*.vue"],
+      "rules": {
+        "unicorn/filename-case": [
+          "warn",
+          {
+            "cases": {
+              "camelCase": true,
+              "kebabCase": true
+            }
+          }
+        ]
       }
     }
   ]

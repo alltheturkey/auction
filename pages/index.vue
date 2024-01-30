@@ -29,7 +29,7 @@ const createRoom = async () => {
 <template>
   <div>
     <ul>
-      <li v-for="room in rooms" :key="room.id">
+      <li v-for="room of rooms" :key="room.id">
         <NuxtLink
           :to="{
             name: 'roomId',
@@ -44,5 +44,3 @@ const createRoom = async () => {
     <button @click="createRoom">Create Room</button>
   </div>
 </template>
-
-<style scoped></style>

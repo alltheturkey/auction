@@ -33,7 +33,10 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  if (auctionRequest.topUserId && auctionRequest.amount <= currentAmount) {
+  if (
+    auctionRequest.topUserId !== undefined &&
+    auctionRequest.amount <= currentAmount
+  ) {
     throw createError({
       statusCode: 400,
       message: 'The bet amount must be greater than the current amount.',

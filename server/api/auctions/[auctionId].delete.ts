@@ -35,7 +35,14 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  if (auction.buyerUserId) {
+  if (auction.buyerUserId === null) {
+    await prisma.auction.update({
+      where: { id: auctionId },
+      data: {
+        buyerUserId: auctionRequest.buyerUserId,
+      },
+    });
+  } else {
     if (auction.buyerUserId !== auctionRequest.buyerUserId) {
       throw createError({
         statusCode: 400,
@@ -128,13 +135,6 @@ export default defineEventHandler(async (event) => {
         }
       })
       .catch(prismaErrorHandler);
-  } else {
-    await prisma.auction.update({
-      where: { id: auctionId },
-      data: {
-        buyerUserId: auctionRequest.buyerUserId,
-      },
-    });
   }
 
   await broadcastRoom(auction.room.id);

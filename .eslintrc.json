@@ -37,15 +37,16 @@
     "vue/prefer-separate-static-class": "warn",
     "vue/static-class-names-order": "warn",
     "vue/v-for-delimiter-style": ["warn", "of"],
+    "eqeqeq": ["error", "always", { "null": "ignore" }],
     "func-style": "error",
     "guard-for-in": "error",
     "spaced-comment": ["warn", "always"],
     "camelcase": "warn",
-    "eqeqeq": "warn",
     "max-params": "warn",
     "max-depth": "warn",
     "array-callback-return": "warn",
     "no-return-await": "warn",
+    "no-implicit-coercion": "warn",
     "no-param-reassign": ["warn", { "props": true }],
     "curly": ["warn", "multi-line"],
     "no-console": [
@@ -101,6 +102,8 @@
     "@typescript-eslint/sort-type-constituents": "warn",
     "@typescript-eslint/consistent-type-imports": "warn",
     "@typescript-eslint/no-for-in-array": "error",
+    "@typescript-eslint/strict-boolean-expressions": "error",
+    "@typescript-eslint/switch-exhaustiveness-check": "error",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-inferrable-types": "off",
@@ -167,5 +170,6 @@
         ]
       }
     }
-  ]
+  ],
+  "reportUnusedDisableDirectives": true
 }

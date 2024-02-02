@@ -70,8 +70,8 @@ void useFetch(`/api/rooms/${roomId}`).then(async ({ data: room, status }) => {
   if (status.value === 'error' || room.value?.turnUserId !== null) {
     // 開始済みゲームに参加していたユーザがリロードしたときに再接続
     if (
-      sessionUserId &&
-      room.value?.users.some(({ id }) => id === sessionUserId)
+      sessionUserId !== null &&
+      (room.value?.users.some(({ id }) => id === sessionUserId) ?? false)
     ) {
       userId.value = sessionUserId;
 
@@ -86,7 +86,7 @@ void useFetch(`/api/rooms/${roomId}`).then(async ({ data: room, status }) => {
 
   let userName = localStorage.getItem('userName');
 
-  while (!userName) {
+  while (userName === null) {
     userName = prompt('name?');
   }
 

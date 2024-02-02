@@ -4,6 +4,10 @@ import { prismaErrorHandler } from '~/server/lib/prismaErrorHandler';
 const prisma = new PrismaClient();
 const runtimeConfig = useRuntimeConfig();
 
+/**
+ * ルーム情報をブロードキャスト
+ * @param roomId ルームID
+ */
 export const broadcastRoom = async (roomId: string) => {
   const room = await prisma.room
     .findUniqueOrThrow({

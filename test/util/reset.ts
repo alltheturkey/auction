@@ -5,6 +5,10 @@ import { seed } from '~/prisma/seed';
 
 const prisma = new PrismaClient();
 
+/**
+ * DBテーブルのリセット
+ * @param modelNames Prismaモデルの配列
+ */
 export const resetTable = async (
   modelNames: Prisma.ModelName[],
 ): Promise<void> => {
@@ -17,6 +21,10 @@ export const resetTable = async (
   }
 };
 
+/**
+ * テスト前後のDBテーブルのリセットとシード
+ * @param modelNames Prismaモデルの配列
+ */
 export const cleanup = (modelNames: Prisma.ModelName[] = []) => {
   beforeAll(async () => {
     await resetTable(['Card', ...modelNames]);

@@ -2,6 +2,9 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+/**
+ * シードデータを投入
+ */
 export const seed = async () => {
   // お金カード
   await prisma.card.createMany({

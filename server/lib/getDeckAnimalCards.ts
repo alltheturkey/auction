@@ -4,6 +4,7 @@ const prisma = new PrismaClient();
 
 /**
  * 山札の動物カードを取得
+ * @param roomId ルームID
  */
 export const getDeckAnimalCards = async (roomId: string) => {
   const room = await prisma.room.findUniqueOrThrow({

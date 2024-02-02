@@ -1,5 +1,9 @@
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 
+/**
+ * idプロパティからnameプロパティを生成
+ * @param obj オブジェクト
+ */
 export const insertNameFromId = <T extends { id: number | string }>(obj: T) => {
   return {
     ...obj,

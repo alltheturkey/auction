@@ -1,5 +1,9 @@
 import type { Prisma } from '@prisma/client';
 
+/**
+ * Prismaエラーハンドラ
+ * @param err Prismaエラーオブジェクト
+ */
 export const prismaErrorHandler = (
   err: Prisma.PrismaClientKnownRequestError,
 ) => {

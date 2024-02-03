@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Room } from '@/types';
+import type { Room, UserCard } from '@/types';
 
 const runtimeConfig = useRuntimeConfig();
 const roomId = useRoute('roomId').params.roomId;
@@ -164,7 +164,7 @@ const sellAuction = () => {
   });
 };
 
-const payAuction = async () => {
+const payAuction = async (moneyUserCardIds: number[]) => {
   // auction終了
   const { status } = await useFetch(
     `/api/auctions/${room.value?.auction?.id}`,
@@ -172,11 +172,10 @@ const payAuction = async () => {
       method: 'DELETE',
       body: {
         buyerUserId: userId.value,
-        moneyUserCardIds: clickedMoneyCardIds.value,
+        moneyUserCardIds,
       },
     },
   );
-  clickedMoneyCardIds.value = [];
 
   // 支払いに失敗した場合は、オークションやり直し
   if (status.value === 'error') {
@@ -186,20 +185,6 @@ const payAuction = async () => {
         amount: 0,
       },
     });
-  }
-};
-
-const clickedMoneyCardIds = ref<number[]>([]);
-
-const clickMoneyCard = (userCardId: number) => {
-  if (!isMoneyClickable.value) return;
-
-  if (clickedMoneyCardIds.value.includes(userCardId)) {
-    clickedMoneyCardIds.value = clickedMoneyCardIds.value.filter(
-      (id) => id !== userCardId,
-    );
-  } else {
-    clickedMoneyCardIds.value = [...clickedMoneyCardIds.value, userCardId];
   }
 };
 </script>
@@ -268,30 +253,11 @@ const clickMoneyCard = (userCardId: number) => {
       <AnimalCards :user-cards="user.userCards" />
     </div>
 
-    <img
-      v-for="moneyCard of room?.users
-        .find(({ id }) => id === userId)
-        ?.userCards.filter(({ card: { type } }) => type === 'MONEY')
-        .toSorted((a, b) => a.card.point - b.card.point)"
-      :key="moneyCard.id"
-      :style="{
-        border: isMoneyClickable
-          ? clickedMoneyCardIds.includes(moneyCard.id)
-            ? '1px solid red'
-            : '1px dotted black'
-          : '1px',
-      }"
-      class="card"
-      :src="moneyCard.card.img"
-      @click="clickMoneyCard(moneyCard.id)"
+    <MoneyCards
+      :user-cards="room?.users.find(({ id }) => id === userId)?.userCards ?? []"
+      :is-money-clickable="isMoneyClickable"
+      @submit="(moneyUserCardIds) => payAuction(moneyUserCardIds)"
     />
-
-    <button
-      v-if="isMoneyClickable && clickedMoneyCardIds.length > 0"
-      @click="payAuction()"
-    >
-      submit
-    </button>
   </div>
 </template>
 

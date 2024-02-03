@@ -13,6 +13,12 @@ export type UserCard = {
   card: Card;
 };
 
+export type User = {
+  id: string;
+  name: string;
+  userCards: UserCard[];
+};
+
 export type Room = {
   auction: {
     id: string;
@@ -42,9 +48,5 @@ export type Room = {
     id: string;
     name: string;
   } | null;
-  users: {
-    id: string;
-    name: string;
-    userCards: UserCard[];
-  }[];
+  users: User[];
 };

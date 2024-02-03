@@ -5,7 +5,7 @@ const props = defineProps<{
   userCards: UserCard[];
 }>();
 
-const animalCards = computed(() =>
+const animalUserCards = computed(() =>
   props.userCards
     .filter(({ card }) => card.type === 'ANIMAL')
     .toSorted((a, b) => a.card.point - b.card.point),
@@ -13,14 +13,12 @@ const animalCards = computed(() =>
 </script>
 
 <template>
-  <div>
-    <img
-      v-for="animalCard of animalCards"
-      :key="animalCard.id"
-      class="card"
-      :src="animalCard.card.img"
-    />
-  </div>
+  <img
+    v-for="animalUserCard of animalUserCards"
+    :key="animalUserCard.id"
+    class="card"
+    :src="animalUserCard.card.img"
+  />
 </template>
 
 <style scoped>

@@ -41,6 +41,6 @@ const createRoom = async () => {
         >
       </li>
     </ul>
-    <button @click="createRoom">Create Room</button>
+    <v-btn @click="createRoom">Create Room</v-btn>
   </div>
 </template>

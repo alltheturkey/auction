@@ -54,7 +54,7 @@ const clickMoneyCard = (userCardId: number) => {
       "
     />
 
-    <button
+    <v-btn
       v-if="isMoneyClickable && clickedMoneyUserCardIds.length > 0"
       @click="
         () => {
@@ -64,7 +64,7 @@ const clickMoneyCard = (userCardId: number) => {
       "
     >
       submit
-    </button>
+    </v-btn>
   </div>
 </template>
 

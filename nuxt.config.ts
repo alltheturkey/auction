@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   experimental: {
     typedPages: true,
   },
+  modules: ['vuetify-nuxt-module'],
   runtimeConfig: {
     wsApi: process.env.NUXT_WS_API ?? 'http://localhost:4567',
     public: {

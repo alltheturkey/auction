@@ -14,6 +14,7 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "vue/require-default-prop": "off",
     "vue/require-macro-variable-name": "error",
     "vue/define-emits-declaration": ["error", "type-literal"],
     "vue/define-props-declaration": "error",
@@ -21,7 +22,7 @@
     "vue/no-loss-of-precision": "error",
     "vue/no-empty-pattern": "error",
     "vue/no-constant-condition": "error",
-    "vue/eqeqeq": "warn",
+    "vue/eqeqeq": ["error", "always", { "null": "ignore" }],
     "vue/camelcase": "warn",
     "vue/no-console": [
       "warn",

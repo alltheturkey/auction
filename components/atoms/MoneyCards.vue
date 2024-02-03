@@ -41,11 +41,11 @@ const clickMoneyCard = (userCardId: number) => {
       v-for="moneyUserCard of MoneyUserCards"
       :key="moneyUserCard.id"
       class="card"
-      :src="moneyUserCard.card.img"
       :class="{
         clickable: props.isMoneyClickable,
         clicked: clickedMoneyUserCardIds.includes(moneyUserCard.id),
       }"
+      :src="moneyUserCard.card.img"
       @click="
         () => {
           clickMoneyCard(moneyUserCard.id);

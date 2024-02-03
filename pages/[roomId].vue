@@ -63,6 +63,7 @@ onBeforeRouteLeave(() => {
   }
 });
 
+// ルーム参加処理
 void useFetch(`/api/rooms/${roomId}`).then(async ({ data: room, status }) => {
   roomName.value = room.value?.name ?? '';
   const sessionUserId = sessionStorage.getItem('userId');
@@ -124,23 +125,24 @@ const startAuction = () => {
 
 const bidAmount = ref(10);
 
-const bid = () => {
+watch(
+  () => room.value?.auction?.amount,
+  () => {
+    if (
+      room.value?.auction?.amount !== undefined &&
+      room.value.auction.amount >= bidAmount.value
+    ) {
+      bidAmount.value = room.value.auction.amount + 10;
+    }
+  },
+);
+
+const bid = async () => {
   void useFetch(`/api/auctions/${room.value?.auction?.id}`, {
     method: 'PUT',
     body: {
       topUserId: myUserId.value,
       amount: bidAmount.value,
-    },
-  });
-};
-
-const buyAuction = () => {
-  // buyerが自分でauction確定
-  void useFetch(`/api/auctions/${room.value?.auction?.id}`, {
-    method: 'DELETE',
-    body: {
-      buyerUserId: myUserId.value,
-      moneyUserCardIds: [],
     },
   });
 };
@@ -152,6 +154,17 @@ const isMoneyClickable = computed(() => {
 
   return false;
 });
+
+const buyAuction = () => {
+  // buyerが自分でauction確定
+  void useFetch(`/api/auctions/${room.value?.auction?.id}`, {
+    method: 'DELETE',
+    body: {
+      buyerUserId: myUserId.value,
+      moneyUserCardIds: [],
+    },
+  });
+};
 
 const sellAuction = () => {
   // buyerがtopUserでauction確定
@@ -187,6 +200,8 @@ const payAuction = async (moneyUserCardIds: number[]) => {
     });
   }
 };
+
+const startTrade = () => {};
 </script>
 
 <template>
@@ -207,15 +222,26 @@ const payAuction = async (moneyUserCardIds: number[]) => {
         </span>
         <span v-if="room.auction.buyerUser === null">
           <div v-if="room.turnUser?.id !== myUserId">
-            <input
-              v-model="bidAmount"
-              type="number"
-              :min="room.auction.amount + 10"
-              step="10"
-            />
-            <v-btn @click="bid()">bid</v-btn>
+            <div :style="{ width: '100px' }">
+              <v-text-field
+                append-inner-icon="mdi-arrow-up-bold-circle-outline"
+                :min="room.auction.amount + 10"
+                :model-value="bidAmount"
+                step="10"
+                type="number"
+                variant="outlined"
+                @click:append-inner="bid()"
+                @update:model-value="(e) => (bidAmount = Number(e))"
+              />
+            </div>
           </div>
-          <div v-if="room.turnUser?.id === myUserId && room.auction.amount > 0">
+          <div
+            v-if="
+              room.turnUser?.id === myUserId &&
+              room.auction === null &&
+              room.trade === null
+            "
+          >
             <v-btn @click="buyAuction()">buy</v-btn>
             <v-btn @click="sellAuction()">sell</v-btn>
           </div>
@@ -233,8 +259,10 @@ const payAuction = async (moneyUserCardIds: number[]) => {
           room?.trade === null
         "
       >
+        <!-- [] auction/tradeが可能か判定(v-if) -->
+        <!-- [] ゲーム終了ではない && auction/tradeできない場合ターンのスキップ処理が必要 -->
         <v-btn @click="startAuction()">auction</v-btn>
-        <v-btn>trade</v-btn>
+        <v-btn @click="startTrade()">trade</v-btn>
       </span>
     </div>
 
@@ -242,17 +270,17 @@ const payAuction = async (moneyUserCardIds: number[]) => {
       <MoleculesUser
         v-for="user of room?.users"
         :key="user.id"
-        :user="user"
         :turn-user-id="room?.turnUser?.id"
+        :user="user"
       />
     </section>
 
     <section>
       <AtomsMoneyCards
+        :is-money-clickable="isMoneyClickable"
         :user-cards="
           room?.users.find(({ id }) => id === myUserId)?.userCards ?? []
         "
-        :is-money-clickable="isMoneyClickable"
         @submit="(moneyUserCardIds) => payAuction(moneyUserCardIds)"
       />
     </section>

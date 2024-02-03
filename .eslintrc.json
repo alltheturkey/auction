@@ -39,6 +39,7 @@
     "vue/prefer-separate-static-class": "warn",
     "vue/static-class-names-order": "warn",
     "vue/v-for-delimiter-style": ["warn", "of"],
+    "vue/attributes-order": ["warn", { "alphabetical": true }],
     "eqeqeq": ["error", "always", { "null": "ignore" }],
     "func-style": "error",
     "guard-for-in": "error",

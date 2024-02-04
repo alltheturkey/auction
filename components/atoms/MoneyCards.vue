@@ -3,7 +3,7 @@ import type { UserCard } from '@/types';
 
 const props = defineProps<{
   userCards: UserCard[];
-  isMoneyClickable: boolean;
+  isMoneyCardClickable: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -20,7 +20,7 @@ const MoneyUserCards = computed(() =>
 const clickedMoneyUserCardIds = ref<number[]>([]);
 
 const clickMoneyCard = (userCardId: number) => {
-  if (!props.isMoneyClickable) return;
+  if (!props.isMoneyCardClickable) return;
 
   if (clickedMoneyUserCardIds.value.includes(userCardId)) {
     clickedMoneyUserCardIds.value = clickedMoneyUserCardIds.value.filter(
@@ -42,7 +42,7 @@ const clickMoneyCard = (userCardId: number) => {
       :key="moneyUserCard.id"
       class="card"
       :class="{
-        clickable: props.isMoneyClickable,
+        clickable: isMoneyCardClickable,
         clicked: clickedMoneyUserCardIds.includes(moneyUserCard.id),
       }"
       :src="moneyUserCard.card.img"
@@ -55,7 +55,7 @@ const clickMoneyCard = (userCardId: number) => {
     />
 
     <v-btn
-      v-if="isMoneyClickable && clickedMoneyUserCardIds.length > 0"
+      v-if="isMoneyCardClickable && clickedMoneyUserCardIds.length > 0"
       @click="
         () => {
           emit('submit', clickedMoneyUserCardIds);
@@ -71,14 +71,15 @@ const clickMoneyCard = (userCardId: number) => {
 <style scoped>
 .card {
   width: 75px;
+  border: 5px solid transparent;
 }
 
 .clickable {
   cursor: pointer;
-  border: 1px dotted black;
+  border: 5px dotted black;
 }
 
 .clicked {
-  border: 1px solid red;
+  border: 5px solid red;
 }
 </style>

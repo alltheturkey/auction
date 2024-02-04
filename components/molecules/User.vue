@@ -4,6 +4,7 @@ import type { User } from '@/types';
 defineProps<{
   user: User;
   turnUserId?: string;
+  isAnimalCardClickable: boolean;
 }>();
 </script>
 
@@ -22,7 +23,10 @@ defineProps<{
         user.userCards.filter(({ card: { type } }) => type === 'MONEY').length
       }}
     </div>
-    <AtomsAnimalCards :user-cards="user.userCards" />
+    <AtomsAnimalCards
+      :is-animal-card-clickable="isAnimalCardClickable"
+      :user="user"
+    />
   </div>
 </template>
 

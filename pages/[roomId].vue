@@ -125,19 +125,23 @@ const startAuction = () => {
 
 const bidAmount = ref(10);
 
+// bid額入力欄を自動更新
 watch(
   () => room.value?.auction?.amount,
   () => {
-    if (
-      room.value?.auction?.amount !== undefined &&
-      room.value.auction.amount >= bidAmount.value
-    ) {
-      bidAmount.value = room.value.auction.amount + 10;
+    if (room.value?.auction?.amount !== undefined) {
+      if (room.value.auction.amount === 0) {
+        bidAmount.value = 10;
+      }
+
+      if (room.value.auction.amount >= bidAmount.value) {
+        bidAmount.value = room.value.auction.amount + 10;
+      }
     }
   },
 );
 
-const bid = async () => {
+const bid = () => {
   void useFetch(`/api/auctions/${room.value?.auction?.id}`, {
     method: 'PUT',
     body: {
@@ -147,7 +151,7 @@ const bid = async () => {
   });
 };
 
-const isMoneyClickable = computed(() => {
+const isMoneyCardClickable = computed(() => {
   if (room.value?.auction?.buyerUser?.id === myUserId.value) {
     return true;
   }
@@ -201,7 +205,83 @@ const payAuction = async (moneyUserCardIds: number[]) => {
   }
 };
 
-const startTrade = () => {};
+const isAuctionable = computed(() => {
+  // 全ユーザの動物カードの枚数を計算
+  const userCardCounts =
+    room.value?.users
+      .map(
+        ({ userCards }) =>
+          userCards.filter(({ card: { type } }) => type === 'ANIMAL').length,
+      )
+      .reduce((acc, cur) => acc + cur, 0) ?? 0;
+
+  if (userCardCounts >= 36) {
+    return false;
+  }
+
+  return true;
+});
+
+const isTradable = computed(() => {
+  const myAnimalCardPoints =
+    room.value?.users
+      .find(({ id }) => id === myUserId.value)
+      ?.userCards.filter(({ card: { type } }) => type === 'ANIMAL')
+      .map(({ card: { point } }) => point) ?? [];
+
+  const othersAnimalCardPoints =
+    room.value?.users
+      .filter(({ id }) => id !== myUserId.value)
+      .flatMap(({ userCards }) =>
+        userCards.filter(({ card: { type } }) => type === 'ANIMAL'),
+      )
+      .map(({ card: { point } }) => point) ?? [];
+
+  if (
+    myAnimalCardPoints.some((cardId) => othersAnimalCardPoints.includes(cardId))
+  ) {
+    return true;
+  }
+
+  return false;
+});
+
+const isAnimalCardClickable = ref(false);
+const tradeAnimalUserCardIds = useTradeAnimalUserCardIds();
+const isSelectedTradeAnimalCardsSubmittable = ref(false);
+
+// 選択したトレード対象動物カードの枚数チェック
+watch(
+  () => tradeAnimalUserCardIds.value,
+  () => {
+    const tradeAnimalUserCardIdsLength = Object.values(
+      tradeAnimalUserCardIds.value,
+    ).flat().length;
+    const myTradeAnimaluserCardIdsLength =
+      tradeAnimalUserCardIds.value[myUserId.value]?.length ?? 0;
+
+    if (
+      myTradeAnimaluserCardIdsLength > 0 &&
+      tradeAnimalUserCardIdsLength === myTradeAnimaluserCardIdsLength * 2
+    ) {
+      isSelectedTradeAnimalCardsSubmittable.value = true;
+
+      return;
+    }
+
+    isSelectedTradeAnimalCardsSubmittable.value = false;
+  },
+  {
+    deep: true,
+  },
+);
+
+const startTrade = () => {
+  tradeAnimalUserCardIds.value = {};
+  isAnimalCardClickable.value = false;
+  // [] POST /trade
+  // [] if status == error 選択やり直し  isAnimalCardClickable.value  = true
+};
 </script>
 
 <template>
@@ -236,11 +316,7 @@ const startTrade = () => {};
             </div>
           </div>
           <div
-            v-if="
-              room.turnUser?.id === myUserId &&
-              room.auction === null &&
-              room.trade === null
-            "
+            v-if="room.turnUser?.id === myUserId && room.auction?.amount > 0"
           >
             <v-btn @click="buyAuction()">buy</v-btn>
             <v-btn @click="sellAuction()">sell</v-btn>
@@ -252,17 +328,24 @@ const startTrade = () => {};
         :src="room?.auction?.animalCard.img ?? '/img/back.avif'"
       />
 
+      <v-btn v-if="isSelectedTradeAnimalCardsSubmittable" @click="startTrade()"
+        >submit</v-btn
+      >
+
       <span
         v-if="
           room?.turnUser?.id === myUserId &&
           room?.auction === null &&
-          room?.trade === null
+          room?.trade === null &&
+          isAnimalCardClickable === false
         "
       >
-        <!-- [] auction/tradeが可能か判定(v-if) -->
+        <v-btn v-if="isAuctionable" @click="startAuction()">auction</v-btn>
+        <v-btn v-if="isTradable" @click="isAnimalCardClickable = true"
+          >trade</v-btn
+        >
         <!-- [] ゲーム終了ではない && auction/tradeできない場合ターンのスキップ処理が必要 -->
-        <v-btn @click="startAuction()">auction</v-btn>
-        <v-btn @click="startTrade()">trade</v-btn>
+        <v-btn>skip</v-btn>
       </span>
     </div>
 
@@ -270,6 +353,7 @@ const startTrade = () => {};
       <MoleculesUser
         v-for="user of room?.users"
         :key="user.id"
+        :is-animal-card-clickable="isAnimalCardClickable"
         :turn-user-id="room?.turnUser?.id"
         :user="user"
       />
@@ -277,7 +361,7 @@ const startTrade = () => {};
 
     <section>
       <AtomsMoneyCards
-        :is-money-clickable="isMoneyClickable"
+        :is-money-card-clickable="isMoneyCardClickable"
         :user-cards="
           room?.users.find(({ id }) => id === myUserId)?.userCards ?? []
         "

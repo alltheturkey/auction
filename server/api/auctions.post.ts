@@ -31,7 +31,8 @@ export default defineEventHandler(async (event) => {
     .$transaction(async (prisma) => {
       const auction = await prisma.auction.create({
         data: {
-          animalCardId: shuffleArr(deckAnimalCards)[0].id,
+          // [] animalCardId: shuffleArr(deckAnimalCards)[0].id,
+          animalCardId: deckAnimalCards[0].id,
         },
       });
 

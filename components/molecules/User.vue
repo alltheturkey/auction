@@ -5,6 +5,7 @@ defineProps<{
   user: User;
   turnUserId?: string;
   isAnimalCardClickable: boolean;
+  tradeBidLength?: number;
 }>();
 </script>
 
@@ -17,12 +18,8 @@ defineProps<{
     >
       {{ user.name }}
     </div>
-    <div>
-      Money:
-      {{
-        user.userCards.filter(({ card: { type } }) => type === 'MONEY').length
-      }}
-    </div>
+    <div v-if="tradeBidLength">Trade bid length: {{ tradeBidLength }}</div>
+
     <AtomsAnimalCards
       :is-animal-card-clickable="isAnimalCardClickable"
       :user="user"

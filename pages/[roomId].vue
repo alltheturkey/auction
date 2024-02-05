@@ -141,7 +141,7 @@ watch(
   },
 );
 
-const bid = () => {
+const bidAuction = () => {
   void useFetch(`/api/auctions/${room.value?.auction?.id}`, {
     method: 'PUT',
     body: {
@@ -151,13 +151,16 @@ const bid = () => {
   });
 };
 
-const isMoneyCardClickable = computed(() => {
-  if (room.value?.auction?.buyerUser?.id === myUserId.value) {
-    return true;
-  }
+const isMoneyCardClickable = ref(false);
 
-  return false;
-});
+watch(
+  () => room.value?.auction,
+  () => {
+    if (room.value?.auction?.buyerUser?.id === myUserId.value) {
+      isMoneyCardClickable.value = true;
+    }
+  },
+);
 
 const buyAuction = () => {
   // buyerが自分でauction確定
@@ -202,6 +205,8 @@ const payAuction = async (moneyUserCardIds: number[]) => {
         amount: 0,
       },
     });
+  } else if (status.value === 'success') {
+    isMoneyCardClickable.value = false;
   }
 };
 
@@ -250,23 +255,25 @@ const isAnimalCardClickable = ref(false);
 const tradeAnimalUserCardIds = useTradeAnimalUserCardIds();
 const isSelectedTradeAnimalCardsSubmittable = ref(false);
 
-// 選択したトレード対象動物カードの枚数チェック
+// 選択したトレード対象動物カードの枚数チェック -> トレード確定ボタンの表示切替
 watch(
   () => tradeAnimalUserCardIds.value,
   () => {
-    const tradeAnimalUserCardIdsLength = Object.values(
-      tradeAnimalUserCardIds.value,
-    ).flat().length;
-    const myTradeAnimaluserCardIdsLength =
-      tradeAnimalUserCardIds.value[myUserId.value]?.length ?? 0;
+    if (room.value?.trade == null) {
+      const tradeAnimalUserCardIdsLength = Object.values(
+        tradeAnimalUserCardIds.value,
+      ).flat().length;
+      const myTradeAnimaluserCardIdsLength =
+        tradeAnimalUserCardIds.value[myUserId.value]?.length ?? 0;
 
-    if (
-      myTradeAnimaluserCardIdsLength > 0 &&
-      tradeAnimalUserCardIdsLength === myTradeAnimaluserCardIdsLength * 2
-    ) {
-      isSelectedTradeAnimalCardsSubmittable.value = true;
+      if (
+        myTradeAnimaluserCardIdsLength > 0 &&
+        tradeAnimalUserCardIdsLength === myTradeAnimaluserCardIdsLength * 2
+      ) {
+        isSelectedTradeAnimalCardsSubmittable.value = true;
 
-      return;
+        return;
+      }
     }
 
     isSelectedTradeAnimalCardsSubmittable.value = false;
@@ -276,11 +283,76 @@ watch(
   },
 );
 
-const startTrade = () => {
-  tradeAnimalUserCardIds.value = {};
-  isAnimalCardClickable.value = false;
-  // [] POST /trade
-  // [] if status == error 選択やり直し  isAnimalCardClickable.value  = true
+const startTrade = async () => {
+  const targetUserId = Object.keys(tradeAnimalUserCardIds.value).find(
+    (userId) => userId !== myUserId.value,
+  );
+
+  if (targetUserId === undefined) {
+    return;
+  }
+
+  const { status } = await useFetch(`/api/trades`, {
+    method: 'POST',
+    body: {
+      roomId,
+      targetUserId,
+      targetUserAnimalUserCardIds: tradeAnimalUserCardIds.value[targetUserId],
+      turnUserAnimalUserCardIds: tradeAnimalUserCardIds.value[myUserId.value],
+    },
+  });
+
+  if (status.value === 'success') {
+    isAnimalCardClickable.value = false;
+  }
+};
+
+watch(
+  () => room.value?.trade,
+  () => {
+    // トレード対象の動物カードを表示
+    if (room.value?.trade && room.value.turnUser) {
+      tradeAnimalUserCardIds.value = {
+        [room.value.turnUser.id]: room.value.trade.turnUserAnimalUserCardIds,
+        [room.value.trade.targetUserId]:
+          room.value.trade.targetUserAnimalUserCardIds,
+      };
+
+      // トレードに参加している場合お金カードをクリック可能にする
+      if (
+        (room.value.trade.targetUserId === myUserId.value ||
+          room.value.turnUser?.id === myUserId.value) &&
+        room.value.trade.confirmedUserId !== myUserId.value
+      ) {
+        isMoneyCardClickable.value = true;
+      }
+    } else {
+      tradeAnimalUserCardIds.value = {};
+    }
+  },
+);
+
+const bidTrade = (moneyUserCardIds: number[]) => {
+  void useFetch(`/api/trades/${room.value?.trade?.id}`, {
+    method: 'PUT',
+    body: {
+      userId: myUserId.value,
+      moneyUserCardIds,
+    },
+  });
+};
+
+const payTrade = async () => {
+  const { status } = await useFetch(`/api/trades/${room.value?.trade?.id}`, {
+    method: 'DELETE',
+    body: {
+      userId: myUserId.value,
+    },
+  });
+
+  if (status.value === 'success') {
+    isMoneyCardClickable.value = false;
+  }
 };
 </script>
 
@@ -310,7 +382,7 @@ const startTrade = () => {
                 step="10"
                 type="number"
                 variant="outlined"
-                @click:append-inner="bid()"
+                @click:append-inner="bidAuction()"
                 @update:model-value="(e) => (bidAmount = Number(e))"
               />
             </div>
@@ -354,6 +426,10 @@ const startTrade = () => {
         v-for="user of room?.users"
         :key="user.id"
         :is-animal-card-clickable="isAnimalCardClickable"
+        :trade-bid-length="
+          room?.trade?.tradeBet.filter(({ userId }) => userId === user.id)
+            ?.length
+        "
         :turn-user-id="room?.turnUser?.id"
         :user="user"
       />
@@ -365,7 +441,24 @@ const startTrade = () => {
         :user-cards="
           room?.users.find(({ id }) => id === myUserId)?.userCards ?? []
         "
-        @submit="(moneyUserCardIds) => payAuction(moneyUserCardIds)"
+        @change="
+          (moneyUserCardIds) => {
+            if (isMoneyCardClickable === false) return;
+            if (room?.trade != null) {
+              bidTrade(moneyUserCardIds);
+            }
+          }
+        "
+        @submit="
+          (moneyUserCardIds) => {
+            if (room?.auction != null) {
+              payAuction(moneyUserCardIds);
+            }
+            if (room?.trade != null) {
+              payTrade();
+            }
+          }
+        "
       />
     </section>
   </div>

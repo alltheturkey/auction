@@ -35,8 +35,10 @@ export default defineEventHandler(async (event) => {
   }
 
   if (
-    tradeRequest.userId !== trade.targetUserId ||
-    tradeRequest.userId !== trade.room.turnUserId
+    !(
+      tradeRequest.userId === trade.targetUserId ||
+      tradeRequest.userId === trade.room.turnUserId
+    )
   ) {
     throw createError({
       statusCode: 400,
@@ -85,15 +87,6 @@ export default defineEventHandler(async (event) => {
           },
         });
 
-        // turnUserから掛け金を削除
-        await prisma.userCard.deleteMany({
-          where: {
-            id: {
-              in: turnUserTradeBets.map((tradeBet) => tradeBet.moneyUserCardId),
-            },
-          },
-        });
-
         // targetUserにturnUserの掛け金を追加
         await prisma.userCard.createMany({
           data: turnUserTradeBets.map((tradeBet) => ({
@@ -122,17 +115,6 @@ export default defineEventHandler(async (event) => {
               include: {
                 card: true,
               },
-            },
-          },
-        });
-
-        // targetUserから掛け金を削除
-        await prisma.userCard.deleteMany({
-          where: {
-            id: {
-              in: targetUserTradeBets.map(
-                (tradeBet) => tradeBet.moneyUserCardId,
-              ),
             },
           },
         });
@@ -196,6 +178,26 @@ export default defineEventHandler(async (event) => {
         await prisma.tradeBet.deleteMany({
           where: {
             tradeId: tradeId,
+          },
+        });
+
+        // turnUserから掛け金を削除
+        await prisma.userCard.deleteMany({
+          where: {
+            id: {
+              in: turnUserTradeBets.map((tradeBet) => tradeBet.moneyUserCardId),
+            },
+          },
+        });
+
+        // targetUserから掛け金を削除
+        await prisma.userCard.deleteMany({
+          where: {
+            id: {
+              in: targetUserTradeBets.map(
+                (tradeBet) => tradeBet.moneyUserCardId,
+              ),
+            },
           },
         });
 

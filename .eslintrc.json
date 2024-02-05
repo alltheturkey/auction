@@ -14,6 +14,8 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "vue/no-multiple-template-root": "off",
+    "vue/require-default-prop": "off",
     "vue/require-macro-variable-name": "error",
     "vue/define-emits-declaration": ["error", "type-literal"],
     "vue/define-props-declaration": "error",
@@ -21,7 +23,7 @@
     "vue/no-loss-of-precision": "error",
     "vue/no-empty-pattern": "error",
     "vue/no-constant-condition": "error",
-    "vue/eqeqeq": "warn",
+    "vue/eqeqeq": ["error", "always", { "null": "ignore" }],
     "vue/camelcase": "warn",
     "vue/no-console": [
       "warn",
@@ -38,12 +40,12 @@
     "vue/prefer-separate-static-class": "warn",
     "vue/static-class-names-order": "warn",
     "vue/v-for-delimiter-style": ["warn", "of"],
+    "vue/attributes-order": ["warn", { "alphabetical": true }],
     "eqeqeq": ["error", "always", { "null": "ignore" }],
     "func-style": "error",
     "guard-for-in": "error",
     "spaced-comment": ["warn", "always"],
     "camelcase": "warn",
-    "max-params": "warn",
     "max-depth": "warn",
     "array-callback-return": "warn",
     "no-return-await": "warn",
@@ -120,6 +122,7 @@
     "unicorn/prefer-dom-node-text-content": "off",
     "unicorn/prefer-includes": "off",
     "unicorn/prefer-string-replace-all": "off",
+    "unicorn/text-encoding-identifier-case": "off",
     "unicorn/catch-error-name": [
       "warn",
       {
@@ -169,15 +172,13 @@
     {
       "files": ["*.{spec,test}.{js,ts}"],
       "rules": {
-        "no-console": "off",
-        "unicorn/prefer-module": "off"
+        "no-console": "off"
       }
     },
     {
       "files": ["*.config.{js,ts}"],
       "rules": {
-        "import/no-default-export": "off",
-        "unicorn/prefer-module": "off"
+        "import/no-default-export": "off"
       }
     },
     {

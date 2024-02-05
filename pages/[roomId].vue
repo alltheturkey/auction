@@ -4,14 +4,14 @@ import type { Room } from '@/types';
 const runtimeConfig = useRuntimeConfig();
 const roomId = useRoute('roomId').params.roomId;
 const ws = new WebSocket(new URL(roomId, runtimeConfig.public.ws).href);
-const userId = ref('');
+const myUserId = ref('');
 const roomName = ref('');
 const room: Ref<Room | undefined> = ref();
 
 const beforeunloadHandler = (e: BeforeUnloadEvent) => {
   if (
     room.value?.turnUser &&
-    room.value?.users.some(({ id }) => id === userId.value)
+    room.value?.users.some(({ id }) => id === myUserId.value)
   ) {
     e.preventDefault();
     // eslint-disable-next-line no-param-reassign
@@ -20,9 +20,9 @@ const beforeunloadHandler = (e: BeforeUnloadEvent) => {
 };
 
 const unloadHandler = () => {
-  if (userId.value) {
+  if (myUserId.value) {
     // ユーザ削除(ルーム退出)
-    navigator.sendBeacon(`/api/users/${userId.value}`);
+    navigator.sendBeacon(`/api/users/${myUserId.value}`);
   }
 };
 
@@ -44,16 +44,16 @@ onUnmounted(() => {
   ws.close();
 
   // ユーザ削除(ルーム退出)
-  if (userId.value) {
+  if (myUserId.value) {
     // ゲーム開始後はリレーションが存在するので失敗する(同じタブなら再接続できる)
-    navigator.sendBeacon(`/api/users/${userId.value}`);
+    navigator.sendBeacon(`/api/users/${myUserId.value}`);
   }
 });
 
 onBeforeRouteLeave(() => {
   if (
     room.value?.turnUser &&
-    room.value?.users.some(({ id }) => id === userId.value)
+    room.value?.users.some(({ id }) => id === myUserId.value)
   ) {
     const answer = confirm('Do you want to leave?');
 
@@ -63,6 +63,7 @@ onBeforeRouteLeave(() => {
   }
 });
 
+// ルーム参加処理
 void useFetch(`/api/rooms/${roomId}`).then(async ({ data: room, status }) => {
   roomName.value = room.value?.name ?? '';
   const sessionUserId = sessionStorage.getItem('userId');
@@ -73,7 +74,7 @@ void useFetch(`/api/rooms/${roomId}`).then(async ({ data: room, status }) => {
       sessionUserId !== null &&
       (room.value?.users.some(({ id }) => id === sessionUserId) ?? false)
     ) {
-      userId.value = sessionUserId;
+      myUserId.value = sessionUserId;
 
       return;
     } else {
@@ -101,8 +102,8 @@ void useFetch(`/api/rooms/${roomId}`).then(async ({ data: room, status }) => {
     },
   }).then(({ data: user }) => {
     if (user.value) {
-      userId.value = user.value.id;
-      sessionStorage.setItem('userId', userId.value);
+      myUserId.value = user.value.id;
+      sessionStorage.setItem('userId', myUserId.value);
     }
   });
 });
@@ -124,34 +125,53 @@ const startAuction = () => {
 
 const bidAmount = ref(10);
 
-const bid = () => {
+// bid額入力欄を自動更新
+watch(
+  () => room.value?.auction?.amount,
+  () => {
+    if (room.value?.auction?.amount !== undefined) {
+      if (room.value.auction.amount === 0) {
+        bidAmount.value = 10;
+      }
+
+      if (room.value.auction.amount >= bidAmount.value) {
+        bidAmount.value = room.value.auction.amount + 10;
+      }
+    }
+  },
+);
+
+const bidAuction = () => {
   void useFetch(`/api/auctions/${room.value?.auction?.id}`, {
     method: 'PUT',
     body: {
-      topUserId: userId.value,
+      topUserId: myUserId.value,
       amount: bidAmount.value,
     },
   });
 };
+
+const isMoneyCardClickable = ref(false);
+
+watch(
+  () => room.value?.auction,
+  () => {
+    if (room.value?.auction?.buyerUser?.id === myUserId.value) {
+      isMoneyCardClickable.value = true;
+    }
+  },
+);
 
 const buyAuction = () => {
   // buyerが自分でauction確定
   void useFetch(`/api/auctions/${room.value?.auction?.id}`, {
     method: 'DELETE',
     body: {
-      buyerUserId: userId.value,
+      buyerUserId: myUserId.value,
       moneyUserCardIds: [],
     },
   });
 };
-
-const isMoneyClickable = computed(() => {
-  if (room.value?.auction?.buyerUser?.id === userId.value) {
-    return true;
-  }
-
-  return false;
-});
 
 const sellAuction = () => {
   // buyerがtopUserでauction確定
@@ -164,19 +184,18 @@ const sellAuction = () => {
   });
 };
 
-const payAuction = async () => {
+const payAuction = async (moneyUserCardIds: number[]) => {
   // auction終了
   const { status } = await useFetch(
     `/api/auctions/${room.value?.auction?.id}`,
     {
       method: 'DELETE',
       body: {
-        buyerUserId: userId.value,
-        moneyUserCardIds: clickedMoneyCardIds.value,
+        buyerUserId: myUserId.value,
+        moneyUserCardIds,
       },
     },
   );
-  clickedMoneyCardIds.value = [];
 
   // 支払いに失敗した場合は、オークションやり直し
   if (status.value === 'error') {
@@ -186,20 +205,153 @@ const payAuction = async () => {
         amount: 0,
       },
     });
+  } else if (status.value === 'success') {
+    isMoneyCardClickable.value = false;
   }
 };
 
-const clickedMoneyCardIds = ref<number[]>([]);
+const isAuctionable = computed(() => {
+  // 全ユーザの動物カードの枚数を計算
+  const userCardCounts =
+    room.value?.users
+      .map(
+        ({ userCards }) =>
+          userCards.filter(({ card: { type } }) => type === 'ANIMAL').length,
+      )
+      .reduce((acc, cur) => acc + cur, 0) ?? 0;
 
-const clickMoneyCard = (userCardId: number) => {
-  if (!isMoneyClickable.value) return;
+  if (userCardCounts >= 36) {
+    return false;
+  }
 
-  if (clickedMoneyCardIds.value.includes(userCardId)) {
-    clickedMoneyCardIds.value = clickedMoneyCardIds.value.filter(
-      (id) => id !== userCardId,
-    );
-  } else {
-    clickedMoneyCardIds.value = [...clickedMoneyCardIds.value, userCardId];
+  return true;
+});
+
+const isTradable = computed(() => {
+  const myAnimalCardPoints =
+    room.value?.users
+      .find(({ id }) => id === myUserId.value)
+      ?.userCards.filter(({ card: { type } }) => type === 'ANIMAL')
+      .map(({ card: { point } }) => point) ?? [];
+
+  const othersAnimalCardPoints =
+    room.value?.users
+      .filter(({ id }) => id !== myUserId.value)
+      .flatMap(({ userCards }) =>
+        userCards.filter(({ card: { type } }) => type === 'ANIMAL'),
+      )
+      .map(({ card: { point } }) => point) ?? [];
+
+  if (
+    myAnimalCardPoints.some((cardId) => othersAnimalCardPoints.includes(cardId))
+  ) {
+    return true;
+  }
+
+  return false;
+});
+
+const isAnimalCardClickable = ref(false);
+const tradeAnimalUserCardIds = useTradeAnimalUserCardIds();
+const isSelectedTradeAnimalCardsSubmittable = ref(false);
+
+// 選択したトレード対象動物カードの枚数チェック -> トレード確定ボタンの表示切替
+watch(
+  () => tradeAnimalUserCardIds.value,
+  () => {
+    if (room.value?.trade == null) {
+      const tradeAnimalUserCardIdsLength = Object.values(
+        tradeAnimalUserCardIds.value,
+      ).flat().length;
+      const myTradeAnimaluserCardIdsLength =
+        tradeAnimalUserCardIds.value[myUserId.value]?.length ?? 0;
+
+      if (
+        myTradeAnimaluserCardIdsLength > 0 &&
+        tradeAnimalUserCardIdsLength === myTradeAnimaluserCardIdsLength * 2
+      ) {
+        isSelectedTradeAnimalCardsSubmittable.value = true;
+
+        return;
+      }
+    }
+
+    isSelectedTradeAnimalCardsSubmittable.value = false;
+  },
+  {
+    deep: true,
+  },
+);
+
+const startTrade = async () => {
+  const targetUserId = Object.keys(tradeAnimalUserCardIds.value).find(
+    (userId) => userId !== myUserId.value,
+  );
+
+  if (targetUserId === undefined) {
+    return;
+  }
+
+  const { status } = await useFetch(`/api/trades`, {
+    method: 'POST',
+    body: {
+      roomId,
+      targetUserId,
+      targetUserAnimalUserCardIds: tradeAnimalUserCardIds.value[targetUserId],
+      turnUserAnimalUserCardIds: tradeAnimalUserCardIds.value[myUserId.value],
+    },
+  });
+
+  if (status.value === 'success') {
+    isAnimalCardClickable.value = false;
+  }
+};
+
+watch(
+  () => room.value?.trade,
+  () => {
+    // トレード対象の動物カードを表示
+    if (room.value?.trade && room.value.turnUser) {
+      tradeAnimalUserCardIds.value = {
+        [room.value.turnUser.id]: room.value.trade.turnUserAnimalUserCardIds,
+        [room.value.trade.targetUserId]:
+          room.value.trade.targetUserAnimalUserCardIds,
+      };
+
+      // トレードに参加している場合お金カードをクリック可能にする
+      if (
+        (room.value.trade.targetUserId === myUserId.value ||
+          room.value.turnUser?.id === myUserId.value) &&
+        room.value.trade.confirmedUserId !== myUserId.value
+      ) {
+        isMoneyCardClickable.value = true;
+      }
+    } else {
+      tradeAnimalUserCardIds.value = {};
+    }
+  },
+);
+
+const bidTrade = (moneyUserCardIds: number[]) => {
+  void useFetch(`/api/trades/${room.value?.trade?.id}`, {
+    method: 'PUT',
+    body: {
+      userId: myUserId.value,
+      moneyUserCardIds,
+    },
+  });
+};
+
+const payTrade = async () => {
+  const { status } = await useFetch(`/api/trades/${room.value?.trade?.id}`, {
+    method: 'DELETE',
+    body: {
+      userId: myUserId.value,
+    },
+  });
+
+  if (status.value === 'success') {
+    isMoneyCardClickable.value = false;
   }
 };
 </script>
@@ -207,12 +359,12 @@ const clickMoneyCard = (userCardId: number) => {
 <template>
   <div>
     <h1>{{ roomName }}</h1>
-    <button
+    <v-btn
       v-if="room?.turnUser === null && room?.users.length >= 2"
       @click="startGame()"
     >
       Start
-    </button>
+    </v-btn>
 
     <div>
       <div v-if="room?.auction">
@@ -221,18 +373,25 @@ const clickMoneyCard = (userCardId: number) => {
           {{ room.auction.amount }}
         </span>
         <span v-if="room.auction.buyerUser === null">
-          <div v-if="room.turnUser?.id !== userId">
-            <input
-              v-model="bidAmount"
-              type="number"
-              :min="room.auction.amount + 10"
-              step="10"
-            />
-            <button @click="bid()">bid</button>
+          <div v-if="room.turnUser?.id !== myUserId">
+            <div :style="{ width: '100px' }">
+              <v-text-field
+                append-inner-icon="mdi-arrow-up-bold-circle-outline"
+                :min="room.auction.amount + 10"
+                :model-value="bidAmount"
+                step="10"
+                type="number"
+                variant="outlined"
+                @click:append-inner="bidAuction()"
+                @update:model-value="(e) => (bidAmount = Number(e))"
+              />
+            </div>
           </div>
-          <div v-if="room.turnUser?.id === userId && room.auction.amount > 0">
-            <button @click="buyAuction()">buy</button>
-            <button @click="sellAuction()">sell</button>
+          <div
+            v-if="room.turnUser?.id === myUserId && room.auction?.amount > 0"
+          >
+            <v-btn @click="buyAuction()">buy</v-btn>
+            <v-btn @click="sellAuction()">sell</v-btn>
           </div>
         </span>
       </div>
@@ -241,57 +400,67 @@ const clickMoneyCard = (userCardId: number) => {
         :src="room?.auction?.animalCard.img ?? '/img/back.avif'"
       />
 
+      <v-btn v-if="isSelectedTradeAnimalCardsSubmittable" @click="startTrade()"
+        >submit</v-btn
+      >
+
       <span
         v-if="
-          room?.turnUser?.id === userId &&
+          room?.turnUser?.id === myUserId &&
           room?.auction === null &&
-          room?.trade === null
+          room?.trade === null &&
+          isAnimalCardClickable === false
         "
       >
-        <button @click="startAuction()">auction</button>
-        <button>trade</button>
+        <v-btn v-if="isAuctionable" @click="startAuction()">auction</v-btn>
+        <v-btn v-if="isTradable" @click="isAnimalCardClickable = true"
+          >trade</v-btn
+        >
+        <!-- [] ゲーム終了ではない && auction/tradeできない場合ターンのスキップ処理が必要 -->
+        <v-btn>skip</v-btn>
       </span>
     </div>
 
-    <div v-for="user of room?.users" :key="user.id">
-      <div
-        :style="{ color: user.id === room?.turnUser?.id ? 'green' : 'black' }"
-      >
-        {{ user.name }}
-      </div>
-      <div>
-        Money:
-        {{
-          user.userCards.filter(({ card: { type } }) => type === 'MONEY').length
-        }}
-      </div>
-      <AnimalCards :user-cards="user.userCards" />
-    </div>
+    <section>
+      <MoleculesUser
+        v-for="user of room?.users"
+        :key="user.id"
+        :is-animal-card-clickable="isAnimalCardClickable"
+        :trade-bid-length="
+          room?.trade?.tradeBet.filter(({ userId }) => userId === user.id)
+            ?.length
+        "
+        :turn-user-id="room?.turnUser?.id"
+        :user="user"
+      />
+    </section>
 
-    <img
-      v-for="moneyCard of room?.users
-        .find(({ id }) => id === userId)
-        ?.userCards.filter(({ card: { type } }) => type === 'MONEY')
-        .toSorted((a, b) => a.card.point - b.card.point)"
-      :key="moneyCard.id"
-      :style="{
-        border: isMoneyClickable
-          ? clickedMoneyCardIds.includes(moneyCard.id)
-            ? '1px solid red'
-            : '1px dotted black'
-          : '1px',
-      }"
-      class="card"
-      :src="moneyCard.card.img"
-      @click="clickMoneyCard(moneyCard.id)"
-    />
-
-    <button
-      v-if="isMoneyClickable && clickedMoneyCardIds.length > 0"
-      @click="payAuction()"
-    >
-      submit
-    </button>
+    <section>
+      <AtomsMoneyCards
+        :is-money-card-clickable="isMoneyCardClickable"
+        :user-cards="
+          room?.users.find(({ id }) => id === myUserId)?.userCards ?? []
+        "
+        @change="
+          (moneyUserCardIds) => {
+            if (isMoneyCardClickable === false) return;
+            if (room?.trade != null) {
+              bidTrade(moneyUserCardIds);
+            }
+          }
+        "
+        @submit="
+          (moneyUserCardIds) => {
+            if (room?.auction != null) {
+              payAuction(moneyUserCardIds);
+            }
+            if (room?.trade != null) {
+              payTrade();
+            }
+          }
+        "
+      />
+    </section>
   </div>
 </template>
 

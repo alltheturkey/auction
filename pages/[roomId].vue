@@ -205,12 +205,12 @@ const payAuction = async (moneyUserCardIds: number[]) => {
         amount: 0,
       },
     });
-  } else if (status.value === 'success') {
-    isMoneyCardClickable.value = false;
   }
+
+  isMoneyCardClickable.value = false;
 };
 
-const isAuctionable = computed(() => {
+const deckAnimalCardsLen = computed(() => {
   // 全ユーザの動物カードの枚数を計算
   const userCardCounts =
     room.value?.users
@@ -220,7 +220,11 @@ const isAuctionable = computed(() => {
       )
       .reduce((acc, cur) => acc + cur, 0) ?? 0;
 
-  if (userCardCounts >= 36) {
+  return 36 - userCardCounts;
+});
+
+const isAuctionable = computed(() => {
+  if (deckAnimalCardsLen.value <= 0) {
     return false;
   }
 
@@ -354,6 +358,30 @@ const payTrade = async () => {
     isMoneyCardClickable.value = false;
   }
 };
+
+const isGameEnd = computed(() => {
+  if (isAuctionable.value === false) {
+    return (
+      room.value?.users.every((user) => {
+        const animalUserCards = user.userCards.filter(
+          ({ card: { type } }) => type === 'ANIMAL',
+        );
+
+        const kindsOfAnimal = new Set(
+          animalUserCards.map(({ card: { point } }) => point),
+        ).size;
+
+        return kindsOfAnimal * 4 === animalUserCards.length;
+      }) ?? false
+    );
+  }
+
+  return false;
+});
+
+const skipTurn = () => {
+  void useFetch(`/api/next-turn/${roomId}`);
+};
 </script>
 
 <template>
@@ -399,6 +427,7 @@ const payTrade = async () => {
         class="card"
         :src="room?.auction?.animalCard.img ?? '/img/back.avif'"
       />
+      <div>{{ deckAnimalCardsLen }}</div>
 
       <v-btn v-if="isSelectedTradeAnimalCardsSubmittable" @click="startTrade()"
         >submit</v-btn
@@ -409,15 +438,22 @@ const payTrade = async () => {
           room?.turnUser?.id === myUserId &&
           room?.auction === null &&
           room?.trade === null &&
-          isAnimalCardClickable === false
+          isAnimalCardClickable === false &&
+          isGameEnd === false
         "
       >
         <v-btn v-if="isAuctionable" @click="startAuction()">auction</v-btn>
         <v-btn v-if="isTradable" @click="isAnimalCardClickable = true"
           >trade</v-btn
         >
-        <!-- [] ゲーム終了ではない && auction/tradeできない場合ターンのスキップ処理が必要 -->
-        <v-btn>skip</v-btn>
+        <v-btn
+          v-if="isAuctionable === false && isTradable === false"
+          @click="skipTurn()"
+          >skip</v-btn
+        >
+      </span>
+      <span v-if="isGameEnd">
+        <v-btn @click="startGame()">restart</v-btn>
       </span>
     </div>
 
@@ -426,6 +462,7 @@ const payTrade = async () => {
         v-for="user of room?.users"
         :key="user.id"
         :is-animal-card-clickable="isAnimalCardClickable"
+        :is-game-end="isGameEnd"
         :trade-bid-length="
           room?.trade?.tradeBet.filter(({ userId }) => userId === user.id)
             ?.length

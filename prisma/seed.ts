@@ -2,6 +2,20 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+const flush = async () => {
+  const tablenames = await prisma.$queryRaw<
+    { tablename: string }[]
+  >`SELECT tablename FROM pg_tables WHERE schemaname='public'`;
+
+  const tables = tablenames
+    .map(({ tablename }) => tablename)
+    .filter((name) => name !== '_prisma_migrations')
+    .map((name) => `"public"."${name}"`)
+    .join(', ');
+
+  await prisma.$executeRawUnsafe(`TRUNCATE TABLE ${tables} CASCADE;`);
+};
+
 /**
  * シードデータを投入
  */
@@ -9,9 +23,24 @@ export const seed = async () => {
   // お金カード
   await prisma.card.createMany({
     data: [
-      { type: 'MONEY', name: 'money-0', point: 0, img: '/img/money-0.avif' },
-      { type: 'MONEY', name: 'money-10', point: 10, img: '/img/money-10.avif' },
-      { type: 'MONEY', name: 'money-50', point: 50, img: '/img/money-50.avif' },
+      {
+        type: 'MONEY',
+        name: 'money-0',
+        point: 0,
+        img: '/img/money-0.avif',
+      },
+      {
+        type: 'MONEY',
+        name: 'money-10',
+        point: 10,
+        img: '/img/money-10.avif',
+      },
+      {
+        type: 'MONEY',
+        name: 'money-50',
+        point: 50,
+        img: '/img/money-50.avif',
+      },
       {
         type: 'MONEY',
         name: 'money-100',
@@ -256,6 +285,7 @@ export const seed = async () => {
   });
 };
 
+await flush();
 seed()
   .then(async () => {
     await prisma.$disconnect();

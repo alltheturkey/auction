@@ -220,7 +220,7 @@ const deckAnimalCardsLen = computed(() => {
       )
       .reduce((acc, cur) => acc + cur, 0) ?? 0;
 
-  return 36 - userCardCounts;
+  return 40 - userCardCounts;
 });
 
 const isAuctionable = computed(() => {
@@ -308,6 +308,8 @@ const startTrade = async () => {
 
   if (status.value === 'success') {
     isAnimalCardClickable.value = false;
+  } else if (status.value === 'error') {
+    tradeAnimalUserCardIds.value = {};
   }
 };
 

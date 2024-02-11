@@ -213,6 +213,30 @@ export const seed = async () => {
       },
       {
         type: 'ANIMAL',
+        name: 'animal-500',
+        point: 500,
+        img: '/img/animal-500.avif',
+      },
+      {
+        type: 'ANIMAL',
+        name: 'animal-500',
+        point: 500,
+        img: '/img/animal-500.avif',
+      },
+      {
+        type: 'ANIMAL',
+        name: 'animal-500',
+        point: 500,
+        img: '/img/animal-500.avif',
+      },
+      {
+        type: 'ANIMAL',
+        name: 'animal-500',
+        point: 500,
+        img: '/img/animal-500.avif',
+      },
+      {
+        type: 'ANIMAL',
         name: 'animal-650',
         point: 650,
         img: '/img/animal-650.avif',

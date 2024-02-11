@@ -14,6 +14,7 @@
     "lint:check": "eslint . --ext .js,.ts,.vue --ignore-path .gitignore --cache --cache-location node_modules/.cache/.eslintcache",
     "format:check": "prettier . --cache --check --ignore-path .gitignore",
     "fix": "npm run lint:check -- --fix; prettier . --cache --write --log-level warn --ignore-path .gitignore",
+    "seed": "prisma db seed",
     "migrate": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
     "migrate:reset": "prisma migrate reset",

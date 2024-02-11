@@ -29,12 +29,69 @@ export default defineEventHandler(async (event) => {
 
   await prisma
     .$transaction(async (prisma) => {
+      const animalCard = shuffleArr(deckAnimalCards)[0];
+
       const auction = await prisma.auction.create({
         data: {
-          // [] ヤギカードが引かれたときにお金配布
-          animalCardId: shuffleArr(deckAnimalCards)[0].id,
+          animalCardId: animalCard.id,
         },
       });
+
+      // ロバカードが引かれたときにお金配布
+      if (animalCard.point === 500) {
+        const remaining500PointAnimalCardsLength = deckAnimalCards.filter(
+          ({ point }) => point === 500,
+        ).length;
+        let moneyCardPoint: number | undefined;
+
+        switch (remaining500PointAnimalCardsLength) {
+          case 1: {
+            moneyCardPoint = 500;
+
+            break;
+          }
+          case 2: {
+            moneyCardPoint = 200;
+
+            break;
+          }
+          case 3: {
+            moneyCardPoint = 100;
+
+            break;
+          }
+          default: {
+            moneyCardPoint = 50;
+
+            break;
+          }
+        }
+
+        const moneyCard = await prisma.card.findFirstOrThrow({
+          where: {
+            type: 'MONEY',
+            point: moneyCardPoint,
+          },
+        });
+
+        const userIdsInRoom = await prisma.user.findMany({
+          where: {
+            roomId: auctionRequest.roomId,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        for (const userId of userIdsInRoom) {
+          await prisma.userCard.create({
+            data: {
+              userId: userId.id,
+              cardId: moneyCard.id,
+            },
+          });
+        }
+      }
 
       await prisma.room.update({
         where: {

@@ -13,7 +13,9 @@ const flush = async () => {
     .map((name) => `"public"."${name}"`)
     .join(', ');
 
-  await prisma.$executeRawUnsafe(`TRUNCATE TABLE ${tables} CASCADE;`);
+  await prisma.$executeRawUnsafe(
+    `TRUNCATE TABLE ${tables} RESTART IDENTITY CASCADE ;`,
+  );
 };
 
 /**
@@ -67,25 +69,25 @@ export const seed = async () => {
     data: [
       {
         type: 'ANIMAL',
-        name: 'animal-10.',
+        name: 'animal-10',
         point: 10,
         img: '/img/animal-10.avif',
       },
       {
         type: 'ANIMAL',
-        name: 'animal-10.',
+        name: 'animal-10',
         point: 10,
         img: '/img/animal-10.avif',
       },
       {
         type: 'ANIMAL',
-        name: 'animal-10.',
+        name: 'animal-10',
         point: 10,
         img: '/img/animal-10.avif',
       },
       {
         type: 'ANIMAL',
-        name: 'animal-10.',
+        name: 'animal-10',
         point: 10,
         img: '/img/animal-10.avif',
       },

@@ -8,8 +8,7 @@ https://de.wikipedia.org/wiki/Kuhhandel_(Spiel)
 docker compose up -d
 cp .env.example .env
 npm install
-npm run migrate
-npm run seed
+npm run migrate:reset
 npm run dev
 
 # another terminal

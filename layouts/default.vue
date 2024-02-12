@@ -1,5 +1,9 @@
 <template>
-  <v-app>
+  <v-app
+    :style="{
+      background: '#e1e1e1',
+    }"
+  >
     <slot />
   </v-app>
 </template>
@@ -15,3 +19,9 @@ useHead({
   ],
 });
 </script>
+
+<style>
+html {
+  font-family: 'Chakra Petch', monospace;
+}
+</style>

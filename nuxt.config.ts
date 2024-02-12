@@ -15,6 +15,7 @@ export default defineNuxtConfig({
   },
   googleFonts: {
     families: {
+      'Noto Color Emoji': true,
       'Chakra Petch': true,
     },
   },

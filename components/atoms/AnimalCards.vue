@@ -46,8 +46,14 @@ const clickAnimalCard = (animalCardId: number) => {
 
 <style scoped>
 .card {
+  margin: 3px;
   width: 75px;
-  border: 5px solid transparent;
+  border: 5px solid white;
+  border-radius: 10px;
+  box-shadow:
+    0px 3px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
+    0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
+    0px 1px 5px 0px var(--v-shadow-key-ambient-opacity, rgba(0, 0, 0, 0.12));
 }
 
 .clickable {

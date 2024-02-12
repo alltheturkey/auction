@@ -384,24 +384,89 @@ const isGameEnd = computed(() => {
 const skipTurn = () => {
   void useFetch(`/api/next-turn/${roomId}`);
 };
+
+const badgeContent = computed(() => {
+  if (room.value?.auction) {
+    if (room.value.auction?.buyerUser) {
+      return `💸${room.value.auction.buyerUser.name}`;
+    } else {
+      if (room.value.auction.topUser) {
+        return `👑${room.value.auction.topUser.name}`;
+      } else {
+        return 'Bid!';
+      }
+    }
+  }
+
+  if (room.value?.turnUser) {
+    return `🙍${room.value?.turnUser?.name}`;
+  }
+
+  return '';
+});
 </script>
 
 <template>
   <div>
     <h1>{{ roomName }}</h1>
-    <v-btn
-      v-if="room?.turnUser === null && room?.users.length >= 2"
-      @click="startGame()"
-    >
-      Start
-    </v-btn>
 
-    <div>
-      <div v-if="room?.auction">
-        <span>
-          {{ room.auction.topUser?.name }}
-          {{ room.auction.amount }}
+    <section
+      :style="{
+        position: 'relative',
+        display: 'flex',
+        justifyContent: 'center',
+        marginBottom: '15px',
+      }"
+    >
+      <v-badge :content="badgeContent" location="bottom">
+        <img
+          class="card"
+          :src="room?.auction?.animalCard.img ?? '/img/back.avif'"
+        />
+      </v-badge>
+      <div
+        v-if="room?.auction?.animalCard.img === undefined"
+        :style="{
+          position: 'absolute',
+          top: '0',
+          width: '100px',
+          height: '142.292px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }"
+      >
+        <span
+          :style="{
+            fontSize: '2rem',
+            width: '100%',
+            height: '50px',
+            textAlign: 'center',
+            lineHeight: '50px',
+            backgroundColor: 'rgba(240, 240, 240, 0.5)',
+            backdropFilter: 'blur(12px)',
+            fontWeight: 'bold',
+          }"
+        >
+          {{ deckAnimalCardsLen }}
         </span>
+      </div>
+    </section>
+
+    <section
+      :style="{
+        display: 'flex',
+        justifyContent: 'center',
+        margin: '10px',
+      }"
+    >
+      <div v-if="room?.auction">
+        <div :style="{ fontSize: '1.5rem', textAlign: 'center' }">
+          <span>
+            {{ `💰${room.auction.amount}` }}
+          </span>
+        </div>
+
         <span v-if="room.auction.buyerUser === null">
           <div v-if="room.turnUser?.id !== myUserId">
             <div :style="{ width: '100px' }">
@@ -420,21 +485,34 @@ const skipTurn = () => {
           <div
             v-if="room.turnUser?.id === myUserId && room.auction?.amount > 0"
           >
-            <v-btn @click="buyAuction()">buy</v-btn>
-            <v-btn @click="sellAuction()">sell</v-btn>
+            <v-btn
+              color="red-accent-2"
+              :style="{ margin: '0 5px' }"
+              @click="buyAuction()"
+              >buy</v-btn
+            >
+            <v-btn
+              color="blue-accent-2"
+              :style="{ margin: '0 5px' }"
+              @click="sellAuction()"
+              >sell</v-btn
+            >
           </div>
         </span>
       </div>
-      <img
-        class="card"
-        :src="room?.auction?.animalCard.img ?? '/img/back.avif'"
-      />
-      <div>{{ deckAnimalCardsLen }}</div>
 
       <v-btn v-if="isSelectedTradeAnimalCardsSubmittable" @click="startTrade()"
         >submit</v-btn
       >
-
+      <v-btn
+        v-if="room?.turnUser === null && room?.users.length >= 2"
+        color="amber-lighten-1"
+        prepend-icon="mdi-play"
+        @click="startGame()"
+      >
+        Start
+      </v-btn>
+      <v-btn v-if="isGameEnd" @click="startGame()">restart</v-btn>
       <span
         v-if="
           room?.turnUser?.id === myUserId &&
@@ -444,7 +522,12 @@ const skipTurn = () => {
           isGameEnd === false
         "
       >
-        <v-btn v-if="isAuctionable" @click="startAuction()">auction</v-btn>
+        <v-btn
+          v-if="isAuctionable"
+          prepend-icon="mdi-gavel"
+          @click="startAuction()"
+          >auction</v-btn
+        >
         <v-btn v-if="isTradable" @click="isAnimalCardClickable = true"
           >trade</v-btn
         >
@@ -454,10 +537,7 @@ const skipTurn = () => {
           >skip</v-btn
         >
       </span>
-      <span v-if="isGameEnd">
-        <v-btn @click="startGame()">restart</v-btn>
-      </span>
-    </div>
+    </section>
 
     <section>
       <MoleculesUser
@@ -505,6 +585,12 @@ const skipTurn = () => {
 
 <style scoped>
 .card {
-  width: 75px;
+  width: 100px;
+  border-radius: 10px;
+  border: 4px solid white;
+  box-shadow:
+    0px 3px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
+    0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
+    0px 1px 5px 0px var(--v-shadow-key-ambient-opacity, rgba(0, 0, 0, 0.12));
 }
 </style>

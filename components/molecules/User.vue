@@ -5,7 +5,6 @@ const props = defineProps<{
   user: User;
   turnUserId?: string;
   isAnimalCardClickable: boolean;
-  tradeBidLength?: number;
   isGameEnd: boolean;
 }>();
 
@@ -35,7 +34,6 @@ const score = computed(() => {
       </span>
       <span v-if="isGameEnd"> ({{ score }})</span>
     </div>
-    <div v-if="tradeBidLength">Trade bid length: {{ tradeBidLength }}</div>
 
     <AtomsAnimalCards
       :is-animal-card-clickable="isAnimalCardClickable"

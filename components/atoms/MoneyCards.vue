@@ -54,17 +54,20 @@ const clickMoneyCard = (userCardId: number) => {
       "
     />
   </div>
-  <v-btn
-    v-if="isMoneyCardClickable && clickedMoneyUserCardIds.length > 0"
-    @click="
-      () => {
-        emit('submit', clickedMoneyUserCardIds);
-        clickedMoneyUserCardIds = [];
-      }
-    "
-  >
-    submit
-  </v-btn>
+  <div :style="{ width: '100%', display: 'flex', justifyContent: 'center' }">
+    <v-btn
+      v-if="isMoneyCardClickable && clickedMoneyUserCardIds.length > 0"
+      color="pink-lighten-2"
+      @click="
+        () => {
+          emit('submit', clickedMoneyUserCardIds);
+          clickedMoneyUserCardIds = [];
+        }
+      "
+    >
+      submit
+    </v-btn>
+  </div>
 </template>
 
 <style scoped>
@@ -85,6 +88,6 @@ const clickMoneyCard = (userCardId: number) => {
 }
 
 .clicked {
-  border: 5px solid rgb(255, 82, 82);
+  border: 5px solid #f06292;
 }
 </style>

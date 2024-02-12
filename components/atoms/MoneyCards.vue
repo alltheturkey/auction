@@ -81,10 +81,10 @@ const clickMoneyCard = (userCardId: number) => {
 
 .clickable {
   cursor: pointer;
-  border: 5px dotted black;
+  border: 5px dashed rgb(65, 65, 65);
 }
 
 .clicked {
-  border: 5px solid red;
+  border: 5px solid rgb(255, 82, 82);
 }
 </style>

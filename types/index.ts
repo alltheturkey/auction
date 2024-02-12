@@ -22,15 +22,21 @@ export type User = {
 export type Room = {
   auction: {
     id: string;
-    buyerUser: {
-      id: string;
-      name: string;
-    } | null;
     topUser: {
       id: string;
       name: string;
     } | null;
-    animalCard: Card;
+    buyerUser: {
+      id: string;
+      name: string;
+    } | null;
+    animalCard: {
+      id: number;
+      type: CardType;
+      name: string;
+      img: string;
+      point: number;
+    };
     amount: number;
   } | null;
   trade: {
@@ -39,8 +45,11 @@ export type Room = {
       moneyUserCard: UserCard;
       userId: string;
     }[];
+    targetUser: {
+      id: string;
+      name: string;
+    };
     confirmedUserId: string | null;
-    targetUserId: string;
     targetUserAnimalUserCardIds: number[];
     turnUserAnimalUserCardIds: number[];
   } | null;

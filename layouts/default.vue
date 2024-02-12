@@ -25,7 +25,7 @@ html {
   font-family: 'Chakra Petch', 'Noto Color Emoji', monospace;
 }
 
-.v-input__control {
+.v-input__control > .v-field {
   background-color: white;
 }
 

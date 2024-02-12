@@ -320,13 +320,13 @@ watch(
     if (room.value?.trade && room.value.turnUser) {
       tradeAnimalUserCardIds.value = {
         [room.value.turnUser.id]: room.value.trade.turnUserAnimalUserCardIds,
-        [room.value.trade.targetUserId]:
+        [room.value.trade.targetUser.id]:
           room.value.trade.targetUserAnimalUserCardIds,
       };
 
       // トレードに参加している場合お金カードをクリック可能にする
       if (
-        (room.value.trade.targetUserId === myUserId.value ||
+        (room.value.trade.targetUser.id === myUserId.value ||
           room.value.turnUser?.id === myUserId.value) &&
         room.value.trade.confirmedUserId !== myUserId.value
       ) {
@@ -393,9 +393,13 @@ const badgeContent = computed(() => {
       if (room.value.auction.topUser) {
         return `👑${room.value.auction.topUser.name}`;
       } else {
-        return 'Bid!';
+        return 'Auction';
       }
     }
+  }
+
+  if (room.value?.trade) {
+    return `${room.value?.turnUser?.name}🆚${room.value.trade.targetUser.name}`;
   }
 
   if (room.value?.turnUser) {
@@ -408,14 +412,14 @@ const badgeContent = computed(() => {
 
 <template>
   <div>
-    <h1>{{ roomName }}</h1>
+    <h1 :style="{ margin: '0 10px' }">{{ roomName }}</h1>
 
     <section
       :style="{
         position: 'relative',
         display: 'flex',
         justifyContent: 'center',
-        marginBottom: '15px',
+        marginBottom: '10px',
       }"
     >
       <v-badge :content="badgeContent" location="bottom">
@@ -457,11 +461,19 @@ const badgeContent = computed(() => {
       :style="{
         display: 'flex',
         justifyContent: 'center',
-        margin: '10px',
+        margin: '15px',
+        minHeight: '36px',
+        maxHeight: '75px',
       }"
     >
       <div v-if="room?.auction">
-        <div :style="{ fontSize: '1.5rem', textAlign: 'center' }">
+        <div
+          :style="{
+            fontSize: '1.5rem',
+            textAlign: 'center',
+            marginBottom: '2px',
+          }"
+        >
           <span>
             {{ `💰${room.auction.amount}` }}
           </span>
@@ -524,11 +536,18 @@ const badgeContent = computed(() => {
       >
         <v-btn
           v-if="isAuctionable"
+          color="brown"
           prepend-icon="mdi-gavel"
+          :style="{ margin: '0 5px' }"
           @click="startAuction()"
           >auction</v-btn
         >
-        <v-btn v-if="isTradable" @click="isAnimalCardClickable = true"
+        <v-btn
+          v-if="isTradable"
+          color="teal-lighten-1"
+          prepend-icon="mdi-swap-horizontal-bold"
+          :style="{ margin: '0 5px' }"
+          @click="isAnimalCardClickable = true"
           >trade</v-btn
         >
         <v-btn

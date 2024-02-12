@@ -53,7 +53,12 @@ export const broadcastRoom = async (roomId: string) => {
         trade: {
           select: {
             id: true,
-            targetUserId: true,
+            targetUser: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
             targetUserAnimalUserCardIds: true,
             turnUserAnimalUserCardIds: true,
             confirmedUserId: true,
@@ -96,5 +101,5 @@ export const broadcastRoom = async (roomId: string) => {
       });
     });
 
-  return;
+  return room;
 };

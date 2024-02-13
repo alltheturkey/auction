@@ -39,7 +39,7 @@
     "vue/padding-line-between-blocks": "warn",
     "vue/prefer-separate-static-class": "warn",
     "vue/static-class-names-order": "warn",
-    "vue/v-for-delimiter-style": ["warn", "of"],
+    "vue/v-for-delimiter-style": "warn",
     "vue/attributes-order": ["warn", { "alphabetical": true }],
     "eqeqeq": ["error", "always", { "null": "ignore" }],
     "func-style": "error",

@@ -32,7 +32,7 @@ const clickAnimalCard = (animalCardId: number) => {
 
 <template>
   <img
-    v-for="animalUserCard of animalUserCards"
+    v-for="animalUserCard in animalUserCards"
     :key="animalUserCard.id"
     class="card"
     :class="{

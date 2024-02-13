@@ -38,7 +38,7 @@ const clickMoneyCard = (userCardId: number) => {
 <template>
   <div class="money-card-container">
     <img
-      v-for="moneyUserCard of MoneyUserCards"
+      v-for="moneyUserCard in MoneyUserCards"
       :key="moneyUserCard.id"
       class="card"
       :class="{

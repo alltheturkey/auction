@@ -576,7 +576,7 @@ const badgeContent = computed(() => {
 
     <section>
       <MoleculesUser
-        v-for="user of room?.users"
+        v-for="user in room?.users"
         :key="user.id"
         :is-animal-card-clickable="isAnimalCardClickable"
         :is-game-end="isGameEnd"

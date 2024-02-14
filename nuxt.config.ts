@@ -6,7 +6,12 @@ export default defineNuxtConfig({
   experimental: {
     typedPages: true,
   },
-  modules: ['vuetify-nuxt-module', '@nuxtjs/robots', '@nuxtjs/google-fonts'],
+  modules: [
+    'vuetify-nuxt-module',
+    '@nuxtjs/robots',
+    '@nuxtjs/google-fonts',
+    '@formkit/auto-animate/nuxt',
+  ],
   runtimeConfig: {
     wsApi: process.env.NUXT_WS_API ?? 'http://localhost:4567',
     public: {

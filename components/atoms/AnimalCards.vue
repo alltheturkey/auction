@@ -31,23 +31,38 @@ const clickAnimalCard = (animalCardId: number) => {
 </script>
 
 <template>
-  <img
-    v-for="animalUserCard in animalUserCards"
-    :key="animalUserCard.id"
-    class="card"
-    :class="{
-      clickable: isAnimalCardClickable,
-      clicked: tradeAnimalUserCardIds[user.id]?.includes(animalUserCard.id),
-    }"
-    :src="animalUserCard.card.img"
-    @click="clickAnimalCard(animalUserCard.id)"
-  />
+  <div v-auto-animate class="animal-card-container">
+    <img
+      v-for="animalUserCard in animalUserCards"
+      :key="animalUserCard.id"
+      class="card"
+      :class="{
+        clickable: isAnimalCardClickable,
+        clicked: tradeAnimalUserCardIds[user.id]?.includes(animalUserCard.id),
+      }"
+      :src="animalUserCard.card.img"
+      @click="clickAnimalCard(animalUserCard.id)"
+    />
+  </div>
 </template>
 
 <style scoped>
+.animal-card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  background: rgb(246, 246, 246);
+  padding: 10px 0;
+  min-height: 136.5px;
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  margin: 0 10px;
+}
+
 .card {
   margin: 3px;
-  width: 75px;
+  width: 80px;
   border: 5px solid white;
   border-radius: 10px;
   box-shadow:
@@ -58,10 +73,10 @@ const clickAnimalCard = (animalCardId: number) => {
 
 .clickable {
   cursor: pointer;
-  border: 5px dashed rgb(65, 65, 65);
+  border: 5px dashed white;
 }
 
 .clicked {
-  border: 5px solid rgb(135, 100, 252);
+  border: 5px solid #7c4dff;
 }
 </style>

@@ -24,7 +24,7 @@ const score = computed(() => {
 
 <template>
   <div>
-    <div>
+    <div class="user-name-container">
       <span
         :class="{
           'turn-user-name': user.id === turnUserId,
@@ -43,6 +43,13 @@ const score = computed(() => {
 </template>
 
 <style>
+.user-name-container {
+  display: flex;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: rgb(82, 82, 82);
+}
+
 .turn-user-name {
   color: green;
 }

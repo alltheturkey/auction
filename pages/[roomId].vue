@@ -419,17 +419,19 @@ const badgeContent = computed(() => {
 
 <template>
   <div>
-    <h1 class="room-name">{{ roomName }}</h1>
+    <h2 class="room-name">{{ roomName }}</h2>
 
-    <div
+    <section
+      v-auto-animate
       :style="{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         gap: '20px',
+        margin: '5px 0',
       }"
     >
-      <section>
+      <div>
         <v-badge :content="badgeContent" location="bottom">
           <img
             class="card"
@@ -440,7 +442,7 @@ const badgeContent = computed(() => {
           v-if="room?.auction?.animalCard.img === undefined"
           :style="{
             position: 'absolute',
-            top: '50px',
+            top: '0',
             width: '100px',
             height: '138.91px',
             display: 'flex',
@@ -463,118 +465,117 @@ const badgeContent = computed(() => {
             {{ deckAnimalCardsLen }}
           </span>
         </div>
-      </section>
+      </div>
 
-      <section>
-        <div v-if="room?.auction">
+      <div v-if="room?.auction">
+        <div
+          :style="{
+            fontSize: '1.5rem',
+            textAlign: 'center',
+          }"
+        >
           <div
             :style="{
-              fontSize: '1.5rem',
+              fontWeight: 'bold',
+              backgroundColor: 'white',
+              borderRadius: '10px',
+              paddingRight: '5px',
+              minWidth: '120.8px',
               textAlign: 'center',
             }"
           >
-            <div
-              :style="{
-                fontWeight: 'bold',
-                backgroundColor: 'white',
-                borderRadius: '10px',
-                paddingRight: '5px',
-                minWidth: '100px',
-                textAlign: 'center',
-              }"
-            >
-              {{ `💰${room.auction.amount}` }}
-            </div>
+            {{ `💰${room.auction.amount}` }}
           </div>
-
-          <span v-if="room.auction.buyerUser === null">
-            <div v-if="room.turnUser?.id !== myUserId">
-              <div :style="{ width: '100px', marginTop: '15px' }">
-                <v-text-field
-                  append-inner-icon="mdi-arrow-up-bold-circle-outline"
-                  :min="room.auction.amount + 10"
-                  :model-value="bidAmount"
-                  step="10"
-                  type="number"
-                  variant="outlined"
-                  @click:append-inner="bidAuction()"
-                  @update:model-value="(e) => (bidAmount = Number(e))"
-                />
-              </div>
-            </div>
-            <div
-              v-if="room.turnUser?.id === myUserId && room.auction?.amount > 0"
-            >
-              <v-btn
-                block
-                color="red-accent-2"
-                :style="{ margin: '10px 0' }"
-                @click="buyAuction()"
-                >buy</v-btn
-              >
-              <v-btn
-                block
-                color="blue-accent-2"
-                :style="{ margin: '10px 0' }"
-                @click="sellAuction()"
-                >sell</v-btn
-              >
-            </div>
-          </span>
         </div>
 
-        <v-btn
-          v-if="isSelectedTradeAnimalCardsSubmittable"
-          @click="startTrade()"
-          >submit</v-btn
-        >
-        <v-btn
-          v-if="room?.turnUser === null && room?.users.length >= 2"
-          color="amber-lighten-1"
-          prepend-icon="mdi-play"
-          @click="startGame()"
-        >
-          Start
-        </v-btn>
-        <v-btn v-if="isGameEnd" @click="startGame()">restart</v-btn>
-        <span
-          v-if="
-            room?.turnUser?.id === myUserId &&
-            room?.auction === null &&
-            room?.trade === null &&
-            isAnimalCardClickable === false &&
-            isGameEnd === false
-          "
-        >
-          <v-btn
-            v-if="isAuctionable"
-            block
-            color="brown"
-            prepend-icon="mdi-gavel"
-            :style="{ margin: '10px 0' }"
-            @click="startAuction()"
-            >auction</v-btn
-          >
-          <v-btn
-            v-if="isTradable"
-            block
-            color="teal-lighten-1"
-            prepend-icon="mdi-swap-horizontal-bold"
-            :style="{ margin: '10px 0' }"
-            @click="isAnimalCardClickable = true"
-            >trade</v-btn
-          >
-          <v-btn
-            v-if="isAuctionable === false && isTradable === false"
-            block
-            @click="skipTurn()"
-            >skip</v-btn
-          >
-        </span>
-      </section>
-    </div>
+        <span v-if="room.auction.buyerUser === null">
+          <v-text-field
+            v-if="room.turnUser?.id !== myUserId"
+            append-inner-icon="mdi-arrow-up-bold-circle-outline"
+            :min="room.auction.amount + 10"
+            :model-value="bidAmount"
+            step="10"
+            :style="{ width: '120.8px', marginTop: '15px' }"
+            type="number"
+            variant="outlined"
+            @click:append-inner="bidAuction()"
+            @update:model-value="(e) => (bidAmount = Number(e))"
+          />
 
-    <section>
+          <div
+            v-if="room.turnUser?.id === myUserId && room.auction?.amount > 0"
+          >
+            <v-btn
+              block
+              color="red-accent-2"
+              :style="{ margin: '10px 0' }"
+              @click="buyAuction()"
+              >buy</v-btn
+            >
+            <v-btn
+              block
+              color="blue-accent-2"
+              :style="{ margin: '10px 0' }"
+              @click="sellAuction()"
+              >sell</v-btn
+            >
+          </div>
+        </span>
+      </div>
+
+      <v-btn
+        v-if="isSelectedTradeAnimalCardsSubmittable"
+        color="deep-purple-accent-2"
+        @click="startTrade()"
+        >submit</v-btn
+      >
+      <v-btn
+        v-if="room?.turnUser === null && room?.users.length >= 2"
+        color="amber-lighten-1"
+        prepend-icon="mdi-play"
+        @click="startGame()"
+      >
+        Start
+      </v-btn>
+      <v-btn v-if="isGameEnd" @click="startGame()">restart</v-btn>
+
+      <span
+        v-if="
+          room?.turnUser?.id === myUserId &&
+          room?.auction === null &&
+          room?.trade === null &&
+          isAnimalCardClickable === false &&
+          isGameEnd === false
+        "
+      >
+        <v-btn
+          v-if="isAuctionable"
+          block
+          color="brown"
+          prepend-icon="mdi-gavel"
+          :style="{ margin: '10px 0' }"
+          @click="startAuction()"
+          >auction</v-btn
+        >
+        <v-btn
+          v-if="isTradable"
+          block
+          color="teal-lighten-1"
+          prepend-icon="mdi-swap-horizontal-bold"
+          :style="{ margin: '10px 0' }"
+          @click="isAnimalCardClickable = true"
+          >trade</v-btn
+        >
+        <v-btn
+          v-if="isAuctionable === false && isTradable === false"
+          block
+          @click="skipTurn()"
+          >skip</v-btn
+        >
+      </span>
+    </section>
+
+    <section v-auto-animate>
       <MoleculesUser
         v-for="user in room?.users"
         :key="user.id"

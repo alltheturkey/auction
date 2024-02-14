@@ -36,44 +36,60 @@ const clickMoneyCard = (userCardId: number) => {
 </script>
 
 <template>
-  <div class="money-card-container">
-    <img
-      v-for="moneyUserCard in MoneyUserCards"
-      :key="moneyUserCard.id"
-      class="card"
-      :class="{
-        clickable: isMoneyCardClickable,
-        clicked: clickedMoneyUserCardIds.includes(moneyUserCard.id),
+  <div>
+    <div v-auto-animate class="money-card-container">
+      <img
+        v-for="moneyUserCard in MoneyUserCards"
+        :key="moneyUserCard.id"
+        class="card"
+        :class="{
+          clickable: isMoneyCardClickable,
+          clicked: clickedMoneyUserCardIds.includes(moneyUserCard.id),
+        }"
+        :src="moneyUserCard.card.img"
+        @click="
+          () => {
+            clickMoneyCard(moneyUserCard.id);
+            emit('change', clickedMoneyUserCardIds);
+          }
+        "
+      />
+    </div>
+    <div
+      :style="{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
       }"
-      :src="moneyUserCard.card.img"
-      @click="
-        () => {
-          clickMoneyCard(moneyUserCard.id);
-          emit('change', clickedMoneyUserCardIds);
-        }
-      "
-    />
-  </div>
-  <div :style="{ width: '100%', display: 'flex', justifyContent: 'center' }">
-    <v-btn
-      v-if="isMoneyCardClickable && clickedMoneyUserCardIds.length > 0"
-      color="pink-lighten-2"
-      @click="
-        () => {
-          emit('submit', clickedMoneyUserCardIds);
-          clickedMoneyUserCardIds = [];
-        }
-      "
     >
-      submit
-    </v-btn>
+      <v-btn
+        v-if="isMoneyCardClickable && clickedMoneyUserCardIds.length > 0"
+        color="pink-lighten-2"
+        @click="
+          () => {
+            emit('submit', clickedMoneyUserCardIds);
+            clickedMoneyUserCardIds = [];
+          }
+        "
+      >
+        submit
+      </v-btn>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.money-card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 136.5px;
+  padding: 10px 0;
+}
 .card {
   margin: 3px;
-  width: 75px;
+  width: 80px;
   border: 5px solid white;
   border-radius: 10px;
   box-shadow:
@@ -84,7 +100,7 @@ const clickMoneyCard = (userCardId: number) => {
 
 .clickable {
   cursor: pointer;
-  border: 5px dashed rgb(65, 65, 65);
+  border: 5px dashed rgb(125, 125, 125);
 }
 
 .clicked {

@@ -21,6 +21,7 @@
     "studio": "prisma studio"
   },
   "devDependencies": {
+    "@formkit/auto-animate": "^0.8.1",
     "@nuxt/eslint-config": "^0.2.0",
     "@nuxt/test-utils": "^3.10.0",
     "@nuxtjs/google-fonts": "^3.1.3",

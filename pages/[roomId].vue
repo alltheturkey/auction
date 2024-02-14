@@ -386,6 +386,11 @@ const skipTurn = () => {
 };
 
 const badgeContent = computed(() => {
+  if (isGameEnd.value) {
+    // 勝者表示
+    return '🏆';
+  }
+
   if (room.value?.auction) {
     if (room.value.auction?.buyerUser) {
       return `💸${room.value.auction.buyerUser.name}`;
@@ -579,8 +584,11 @@ const badgeContent = computed(() => {
       <MoleculesUser
         v-for="user in room?.users"
         :key="user.id"
+        :buyer-user="room?.auction?.buyerUser ?? undefined"
         :is-animal-card-clickable="isAnimalCardClickable"
         :is-game-end="isGameEnd"
+        :target-user="room?.trade?.targetUser ?? undefined"
+        :top-user="room?.auction?.topUser ?? undefined"
         :turn-user-id="room?.turnUser?.id"
         :user="user"
       />

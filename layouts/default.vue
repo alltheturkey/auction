@@ -36,6 +36,6 @@ html {
 }
 
 .v-badge__badge {
-  font-size: 1.1rem !important;
+  font-size: 1.2rem !important;
 }
 </style>

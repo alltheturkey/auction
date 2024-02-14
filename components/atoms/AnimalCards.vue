@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import type { User } from '@/types';
+import type { User, UserCard } from '@/types';
 
 const props = defineProps<{
-  user: User;
+  user: User & { userCards: UserCard[] };
   isAnimalCardClickable: boolean;
 }>();
 
@@ -53,11 +53,12 @@ const clickAnimalCard = (animalCardId: number) => {
   align-items: center;
   flex-wrap: wrap;
   background: rgb(246, 246, 246);
-  padding: 10px 0;
-  min-height: 136.5px;
+  padding: 5px 0 15px 0;
+  min-height: 136.47px;
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   margin: 0 10px;
+  width: 100%;
 }
 
 .card {
@@ -73,7 +74,7 @@ const clickAnimalCard = (animalCardId: number) => {
 
 .clickable {
   cursor: pointer;
-  border: 5px dashed white;
+  border: 5px dashed rgb(125, 125, 125);
 }
 
 .clicked {

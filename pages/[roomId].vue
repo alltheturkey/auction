@@ -447,7 +447,7 @@ const badgeContent = computed(() => {
           v-if="room?.auction?.animalCard.img === undefined"
           :style="{
             position: 'absolute',
-            top: '0',
+            top: '40px',
             width: '100px',
             height: '138.91px',
             display: 'flex',

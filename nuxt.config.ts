@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   spaLoadingTemplate: false,
   experimental: {
     typedPages: true,
+    viewTransition: true,
   },
   modules: [
     'vuetify-nuxt-module',

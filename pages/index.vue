@@ -45,6 +45,7 @@ const createRoom = async () => {
                 },
               }))
             "
+            :style="{ viewTransitionName: 'room-name' }"
             @click:select="
               ({ id: roomId }) => {
                 router.push({

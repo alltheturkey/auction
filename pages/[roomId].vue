@@ -637,5 +637,6 @@ const badgeContent = computed(() => {
 .room-name {
   color: rgb(162, 162, 162);
   margin: 0 10px;
+  view-transition-name: room-name;
 }
 </style>

@@ -320,13 +320,13 @@ watch(
     if (room.value?.trade && room.value.turnUser) {
       tradeAnimalUserCardIds.value = {
         [room.value.turnUser.id]: room.value.trade.turnUserAnimalUserCardIds,
-        [room.value.trade.targetUserId]:
+        [room.value.trade.targetUser.id]:
           room.value.trade.targetUserAnimalUserCardIds,
       };
 
       // トレードに参加している場合お金カードをクリック可能にする
       if (
-        (room.value.trade.targetUserId === myUserId.value ||
+        (room.value.trade.targetUser.id === myUserId.value ||
           room.value.turnUser?.id === myUserId.value) &&
         room.value.trade.confirmedUserId !== myUserId.value
       ) {
@@ -384,56 +384,165 @@ const isGameEnd = computed(() => {
 const skipTurn = () => {
   void useFetch(`/api/next-turn/${roomId}`);
 };
+
+const badgeContent = computed(() => {
+  if (isGameEnd.value) {
+    // 勝者表示
+    return '🏆';
+  }
+
+  if (room.value?.auction) {
+    if (room.value.auction?.buyerUser) {
+      return `💸${room.value.auction.buyerUser.name}`;
+    } else {
+      if (room.value.auction.topUser) {
+        return `👑${room.value.auction.topUser.name}`;
+      } else {
+        return 'Auction';
+      }
+    }
+  }
+
+  if (room.value?.trade) {
+    const turnUserTradeBetLength = room.value.trade.tradeBet.filter(
+      ({ userId }) => userId === room.value?.turnUser?.id,
+    ).length;
+    const targetUserTradeBetLength = room.value.trade.tradeBet.filter(
+      ({ userId }) => userId === room.value?.trade?.targetUser.id,
+    ).length;
+
+    return `${room.value?.turnUser?.name}(${turnUserTradeBetLength})⚔️${room.value.trade.targetUser.name}(${targetUserTradeBetLength})`;
+  }
+
+  if (room.value?.turnUser) {
+    return `🙍${room.value?.turnUser?.name}`;
+  }
+
+  return '';
+});
 </script>
 
 <template>
   <div>
-    <h1>{{ roomName }}</h1>
-    <v-btn
-      v-if="room?.turnUser === null && room?.users.length >= 2"
-      @click="startGame()"
-    >
-      Start
-    </v-btn>
+    <h2 class="room-name">{{ roomName }}</h2>
 
-    <div>
+    <section
+      v-auto-animate
+      :style="{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '20px',
+        margin: '5px 0',
+      }"
+    >
+      <div>
+        <v-badge :content="badgeContent" location="bottom">
+          <img
+            class="card"
+            :src="room?.auction?.animalCard.img ?? '/img/back.avif'"
+          />
+        </v-badge>
+        <div
+          v-if="room?.auction?.animalCard.img === undefined"
+          :style="{
+            position: 'absolute',
+            top: '40px',
+            width: '100px',
+            height: '138.91px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }"
+        >
+          <span
+            :style="{
+              fontSize: '2rem',
+              width: '100%',
+              height: '50px',
+              textAlign: 'center',
+              lineHeight: '50px',
+              backgroundColor: 'rgba(240, 240, 240, 0.5)',
+              backdropFilter: 'blur(12px)',
+              fontWeight: 'bold',
+            }"
+          >
+            {{ deckAnimalCardsLen }}
+          </span>
+        </div>
+      </div>
+
       <div v-if="room?.auction">
-        <span>
-          {{ room.auction.topUser?.name }}
-          {{ room.auction.amount }}
-        </span>
-        <span v-if="room.auction.buyerUser === null">
-          <div v-if="room.turnUser?.id !== myUserId">
-            <div :style="{ width: '100px' }">
-              <v-text-field
-                append-inner-icon="mdi-arrow-up-bold-circle-outline"
-                :min="room.auction.amount + 10"
-                :model-value="bidAmount"
-                step="10"
-                type="number"
-                variant="outlined"
-                @click:append-inner="bidAuction()"
-                @update:model-value="(e) => (bidAmount = Number(e))"
-              />
-            </div>
+        <div
+          :style="{
+            fontSize: '1.5rem',
+            textAlign: 'center',
+          }"
+        >
+          <div
+            :style="{
+              fontWeight: 'bold',
+              backgroundColor: 'white',
+              borderRadius: '10px',
+              paddingRight: '5px',
+              minWidth: '120.8px',
+              textAlign: 'center',
+            }"
+          >
+            {{ `💰${room.auction.amount}` }}
           </div>
+        </div>
+
+        <span v-if="room.auction.buyerUser === null">
+          <v-text-field
+            v-if="room.turnUser?.id !== myUserId"
+            append-inner-icon="mdi-arrow-up-bold-circle-outline"
+            :min="room.auction.amount + 10"
+            :model-value="bidAmount"
+            step="10"
+            :style="{ width: '120.8px', marginTop: '15px' }"
+            type="number"
+            variant="outlined"
+            @click:append-inner="bidAuction()"
+            @update:model-value="(e) => (bidAmount = Number(e))"
+          />
+
           <div
             v-if="room.turnUser?.id === myUserId && room.auction?.amount > 0"
           >
-            <v-btn @click="buyAuction()">buy</v-btn>
-            <v-btn @click="sellAuction()">sell</v-btn>
+            <v-btn
+              block
+              color="red-accent-2"
+              :style="{ margin: '10px 0' }"
+              @click="buyAuction()"
+              >buy</v-btn
+            >
+            <v-btn
+              block
+              color="blue-accent-2"
+              :style="{ margin: '10px 0' }"
+              @click="sellAuction()"
+              >sell</v-btn
+            >
           </div>
         </span>
       </div>
-      <img
-        class="card"
-        :src="room?.auction?.animalCard.img ?? '/img/back.avif'"
-      />
-      <div>{{ deckAnimalCardsLen }}</div>
 
-      <v-btn v-if="isSelectedTradeAnimalCardsSubmittable" @click="startTrade()"
+      <v-btn
+        v-if="isSelectedTradeAnimalCardsSubmittable"
+        color="deep-purple-accent-2"
+        @click="startTrade()"
         >submit</v-btn
       >
+      <v-btn
+        v-if="room?.turnUser === null && room?.users.length >= 2"
+        color="amber-lighten-1"
+        prepend-icon="mdi-play"
+        @click="startGame()"
+      >
+        Start
+      </v-btn>
+      <v-btn v-if="isGameEnd" @click="startGame()">restart</v-btn>
 
       <span
         v-if="
@@ -444,31 +553,42 @@ const skipTurn = () => {
           isGameEnd === false
         "
       >
-        <v-btn v-if="isAuctionable" @click="startAuction()">auction</v-btn>
-        <v-btn v-if="isTradable" @click="isAnimalCardClickable = true"
+        <v-btn
+          v-if="isAuctionable"
+          block
+          color="brown"
+          prepend-icon="mdi-gavel"
+          :style="{ margin: '10px 0' }"
+          @click="startAuction()"
+          >auction</v-btn
+        >
+        <v-btn
+          v-if="isTradable"
+          block
+          color="teal-lighten-1"
+          prepend-icon="mdi-swap-horizontal-bold"
+          :style="{ margin: '10px 0' }"
+          @click="isAnimalCardClickable = true"
           >trade</v-btn
         >
         <v-btn
           v-if="isAuctionable === false && isTradable === false"
+          block
           @click="skipTurn()"
           >skip</v-btn
         >
       </span>
-      <span v-if="isGameEnd">
-        <v-btn @click="startGame()">restart</v-btn>
-      </span>
-    </div>
+    </section>
 
-    <section>
+    <section v-auto-animate>
       <MoleculesUser
-        v-for="user of room?.users"
+        v-for="user in room?.users"
         :key="user.id"
+        :buyer-user="room?.auction?.buyerUser ?? undefined"
         :is-animal-card-clickable="isAnimalCardClickable"
         :is-game-end="isGameEnd"
-        :trade-bid-length="
-          room?.trade?.tradeBet.filter(({ userId }) => userId === user.id)
-            ?.length
-        "
+        :target-user="room?.trade?.targetUser ?? undefined"
+        :top-user="room?.auction?.topUser ?? undefined"
         :turn-user-id="room?.turnUser?.id"
         :user="user"
       />
@@ -505,6 +625,18 @@ const skipTurn = () => {
 
 <style scoped>
 .card {
-  width: 75px;
+  width: 100px;
+  border-radius: 10px;
+  border: 4px solid white;
+  box-shadow:
+    0px 3px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
+    0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
+    0px 1px 5px 0px var(--v-shadow-key-ambient-opacity, rgba(0, 0, 0, 0.12));
+}
+
+.room-name {
+  color: rgb(162, 162, 162);
+  margin: 0 10px;
+  view-transition-name: room-name;
 }
 </style>

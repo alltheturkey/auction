@@ -27,20 +27,41 @@ const createRoom = async () => {
 </script>
 
 <template>
-  <div>
-    <ul>
-      <li v-for="room of rooms" :key="room.id">
-        <NuxtLink
-          :to="{
-            name: 'roomId',
-            params: {
-              roomId: room.id,
-            },
-          }"
-          >{{ `${room.name}(${room.users.length})` }}</NuxtLink
-        >
-      </li>
-    </ul>
-    <v-btn @click="createRoom">Create Room</v-btn>
-  </div>
+  <v-container>
+    <v-row>
+      <v-col>
+        <v-card class="mx-auto" max-width="220">
+          <v-list
+            v-if="(rooms?.length ?? 0) > 0"
+            :items="
+              rooms?.map((room) => ({
+                title: room.name,
+                value: room.id,
+                props: {
+                  appendIcon:
+                    room.users.length > 0
+                      ? `mdi-numeric-${room.users.length}-circle`
+                      : undefined,
+                },
+              }))
+            "
+            :style="{ viewTransitionName: 'room-name' }"
+            @click:select="
+              ({ id: roomId }) => {
+                router.push({
+                  name: 'roomId',
+                  params: {
+                    roomId: roomId as string,
+                  },
+                });
+              }
+            "
+          ></v-list>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row justify="center">
+      <v-btn color="amber-lighten-1" @click="createRoom">Create Room</v-btn>
+    </v-row>
+  </v-container>
 </template>

@@ -13,6 +13,7 @@ export const broadcastRoom = async (roomId: string) => {
     .findUniqueOrThrow({
       where: { id: roomId },
       select: {
+        userOrder: true,
         turnUser: {
           select: {
             id: true,

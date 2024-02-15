@@ -19,6 +19,7 @@ export type User = {
 };
 
 export type Room = {
+  userOrder: string[];
   auction: {
     id: string;
     topUser: User | null;

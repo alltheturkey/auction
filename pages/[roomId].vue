@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Room } from '@/types';
+import type { Room, User, UserCard } from '@/types';
 
 const runtimeConfig = useRuntimeConfig();
 const roomId = useRoute('roomId').params.roomId;
@@ -27,7 +27,7 @@ const unloadHandler = () => {
 };
 
 const onMessageHandler = (event: MessageEvent<string>) => {
-  console.log(JSON.parse(event.data));
+  // console.log(JSON.parse(event.data));
   room.value = JSON.parse(event.data) as Room;
 };
 
@@ -456,6 +456,21 @@ const confirmedTradeBetUserCardIds = computed(() => {
 
   return [];
 });
+
+const sortedUsers = computed(() => {
+  if ((room.value?.userOrder ?? []).length > 0) {
+    return (
+      room.value?.userOrder.map(
+        (userId) =>
+          room.value?.users.find(({ id }) => id === userId) as User & {
+            userCards: UserCard[];
+          },
+      ) ?? []
+    );
+  }
+
+  return room.value?.users ?? [];
+});
 </script>
 
 <template>
@@ -620,7 +635,7 @@ const confirmedTradeBetUserCardIds = computed(() => {
 
     <section v-auto-animate>
       <MoleculesUser
-        v-for="user in room?.users"
+        v-for="user in sortedUsers"
         :key="user.id"
         :buyer-user="room?.auction?.buyerUser ?? undefined"
         :is-animal-card-clickable="isAnimalCardClickable"

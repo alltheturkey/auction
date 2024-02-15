@@ -151,17 +151,6 @@ const bidAuction = () => {
   });
 };
 
-const isMoneyCardClickable = ref(false);
-
-watch(
-  () => room.value?.auction,
-  () => {
-    if (room.value?.auction?.buyerUser?.id === myUserId.value) {
-      isMoneyCardClickable.value = true;
-    }
-  },
-);
-
 const buyAuction = () => {
   // buyerが自分でauction確定
   void useFetch(`/api/auctions/${room.value?.auction?.id}`, {
@@ -313,30 +302,51 @@ const startTrade = async () => {
   }
 };
 
-watch(
-  () => room.value?.trade,
-  () => {
-    // トレード対象の動物カードを表示
-    if (room.value?.trade && room.value.turnUser) {
-      tradeAnimalUserCardIds.value = {
-        [room.value.turnUser.id]: room.value.trade.turnUserAnimalUserCardIds,
-        [room.value.trade.targetUser.id]:
-          room.value.trade.targetUserAnimalUserCardIds,
-      };
+const isMoneyCardClickable = ref(false);
+const newUserCardIds = useNewUserCardIds();
 
-      // トレードに参加している場合お金カードをクリック可能にする
-      if (
-        (room.value.trade.targetUser.id === myUserId.value ||
-          room.value.turnUser?.id === myUserId.value) &&
-        room.value.trade.confirmedUserId !== myUserId.value
-      ) {
-        isMoneyCardClickable.value = true;
-      }
-    } else {
-      tradeAnimalUserCardIds.value = {};
+watch(room, (newRoom, oldRoom) => {
+  // auction買い取りの場合、お金カードをクリック可能にする
+  if (room.value?.auction?.buyerUser?.id === myUserId.value) {
+    isMoneyCardClickable.value = true;
+  }
+
+  // トレード対象の動物カードを表示
+  if (room.value?.trade && room.value.turnUser) {
+    tradeAnimalUserCardIds.value = {
+      [room.value.turnUser.id]: room.value.trade.turnUserAnimalUserCardIds,
+      [room.value.trade.targetUser.id]:
+        room.value.trade.targetUserAnimalUserCardIds,
+    };
+
+    // トレードに参加している場合お金カードをクリック可能にする
+    if (
+      (room.value.trade.targetUser.id === myUserId.value ||
+        room.value.turnUser?.id === myUserId.value) &&
+      room.value.trade.confirmedUserId !== myUserId.value
+    ) {
+      isMoneyCardClickable.value = true;
     }
-  },
-);
+  } else {
+    tradeAnimalUserCardIds.value = {};
+  }
+
+  // 差分から新規UserCardを取得
+  for (const user of newRoom?.users ?? []) {
+    newUserCardIds.value[user.id] = user.userCards.map(({ id }) => id);
+    const oldUser = oldRoom?.users.find(({ id }) => id === user.id);
+
+    if (oldUser) {
+      newUserCardIds.value[user.id] = user.userCards
+        .filter(
+          ({ id }) => !oldUser.userCards.some(({ id: oldId }) => oldId === id),
+        )
+        .map(({ id }) => id);
+    } else {
+      newUserCardIds.value = {};
+    }
+  }
+});
 
 const bidTrade = (moneyUserCardIds: number[]) => {
   void useFetch(`/api/trades/${room.value?.trade?.id}`, {
@@ -420,6 +430,17 @@ const badgeContent = computed(() => {
 
   return '';
 });
+
+// トレード確定時のお金カードのidを取得(submitすると何を選択したかわからなくなるため)
+const confirmedTradeBetUserCardIds = computed(() => {
+  if (room.value?.trade?.confirmedUserId === myUserId.value) {
+    return room.value.trade.tradeBet
+      .filter(({ userId }) => userId === myUserId.value)
+      .map(({ moneyUserCard }) => moneyUserCard.id);
+  }
+
+  return [];
+});
 </script>
 
 <template>
@@ -447,7 +468,7 @@ const badgeContent = computed(() => {
           v-if="room?.auction?.animalCard.img === undefined"
           :style="{
             position: 'absolute',
-            top: '40px',
+            top: '0',
             width: '100px',
             height: '138.91px',
             display: 'flex',
@@ -587,6 +608,7 @@ const badgeContent = computed(() => {
         :buyer-user="room?.auction?.buyerUser ?? undefined"
         :is-animal-card-clickable="isAnimalCardClickable"
         :is-game-end="isGameEnd"
+        :my-user-id="myUserId"
         :target-user="room?.trade?.targetUser ?? undefined"
         :top-user="room?.auction?.topUser ?? undefined"
         :turn-user-id="room?.turnUser?.id"
@@ -596,10 +618,9 @@ const badgeContent = computed(() => {
 
     <section>
       <AtomsMoneyCards
+        :confirmed-trade-bet-user-card-ids="confirmedTradeBetUserCardIds"
         :is-money-card-clickable="isMoneyCardClickable"
-        :user-cards="
-          room?.users.find(({ id }) => id === myUserId)?.userCards ?? []
-        "
+        :user="room?.users.find(({ id }) => id === myUserId)"
         @change="
           (moneyUserCardIds) => {
             if (isMoneyCardClickable === false) return;

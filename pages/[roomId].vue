@@ -447,7 +447,7 @@ const badgeContent = computed(() => {
           v-if="room?.auction?.animalCard.img === undefined"
           :style="{
             position: 'absolute',
-            top: '40px',
+            top: '0',
             width: '100px',
             height: '138.91px',
             display: 'flex',
@@ -587,6 +587,7 @@ const badgeContent = computed(() => {
         :buyer-user="room?.auction?.buyerUser ?? undefined"
         :is-animal-card-clickable="isAnimalCardClickable"
         :is-game-end="isGameEnd"
+        :my-user-id="myUserId"
         :target-user="room?.trade?.targetUser ?? undefined"
         :top-user="room?.auction?.topUser ?? undefined"
         :turn-user-id="room?.turnUser?.id"

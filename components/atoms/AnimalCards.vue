@@ -4,6 +4,7 @@ import type { User, UserCard } from '@/types';
 const props = defineProps<{
   user: User & { userCards: UserCard[] };
   isAnimalCardClickable: boolean;
+  isMe: boolean;
 }>();
 
 const animalUserCards = computed(() =>
@@ -31,12 +32,13 @@ const clickAnimalCard = (animalCardId: number) => {
 </script>
 
 <template>
-  <div v-auto-animate class="animal-card-container">
+  <div v-auto-animate class="animal-card-container" :class="{ me: isMe }">
     <img
       v-for="animalUserCard in animalUserCards"
       :key="animalUserCard.id"
       class="card"
       :class="{
+        'my-card': isMe,
         clickable: isAnimalCardClickable,
         clicked: tradeAnimalUserCardIds[user.id]?.includes(animalUserCard.id),
       }"
@@ -59,6 +61,16 @@ const clickAnimalCard = (animalCardId: number) => {
   border-radius: 10px;
   margin: 0 10px;
   width: 100%;
+}
+
+.me {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgb(220, 220, 220),
+    rgb(220, 220, 220) 125px,
+    rgb(246, 246, 246) 125px,
+    rgb(246, 246, 246) 250px
+  );
 }
 
 .card {

@@ -9,6 +9,7 @@ const props = defineProps<{
   topUser?: User;
   buyerUser?: User;
   targetUser?: User;
+  myUserId: string;
 }>();
 
 const score = computed(() => {
@@ -57,17 +58,8 @@ const userName = computed(() => {
   >
     <AtomsAnimalCards
       :is-animal-card-clickable="isAnimalCardClickable"
+      :is-me="user.id === myUserId"
       :user="user"
     />
   </v-badge>
 </template>
-
-<style>
-.user-name-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5rem;
-  color: rgb(82, 82, 82);
-}
-</style>

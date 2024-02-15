@@ -38,6 +38,10 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  if (buySellableTimer.value !== null) {
+    clearTimeout(buySellableTimer.value);
+  }
+
   window.removeEventListener('beforeunload', beforeunloadHandler);
   window.removeEventListener('unload', unloadHandler);
   ws.removeEventListener('message', onMessageHandler);
@@ -304,8 +308,19 @@ const startTrade = async () => {
 
 const isMoneyCardClickable = ref(false);
 const newUserCardIds = useNewUserCardIds();
+const buySellableTimer = ref<NodeJS.Timeout | null>(null);
+const isBuySellable = ref(false);
 
 watch(room, (newRoom, oldRoom) => {
+  // タイマーリセット
+  if (buySellableTimer.value !== null) {
+    clearTimeout(buySellableTimer.value);
+  }
+
+  // BUY SELLクリッカブル制御(遅延)
+  isBuySellable.value = false;
+  buySellableTimer.value = setTimeout(() => (isBuySellable.value = true), 5000);
+
   // auction買い取りの場合、お金カードをクリック可能にする
   if (room.value?.auction?.buyerUser?.id === myUserId.value) {
     isMoneyCardClickable.value = true;
@@ -534,6 +549,7 @@ const confirmedTradeBetUserCardIds = computed(() => {
             <v-btn
               block
               color="red-accent-2"
+              :disabled="!isBuySellable"
               :style="{ margin: '10px 0' }"
               @click="buyAuction()"
               >buy</v-btn
@@ -541,6 +557,7 @@ const confirmedTradeBetUserCardIds = computed(() => {
             <v-btn
               block
               color="blue-accent-2"
+              :disabled="!isBuySellable"
               :style="{ margin: '10px 0' }"
               @click="sellAuction()"
               >sell</v-btn

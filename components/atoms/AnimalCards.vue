@@ -29,16 +29,22 @@ const clickAnimalCard = (animalCardId: number) => {
     ];
   }
 };
+
+const newUserCardIds = useNewUserCardIds();
 </script>
 
 <template>
-  <div v-auto-animate class="animal-card-container" :class="{ me: isMe }">
+  <div
+    v-auto-animate
+    class="animal-card-container"
+    :class="{ 'my-card-container': isMe }"
+  >
     <img
       v-for="animalUserCard in animalUserCards"
       :key="animalUserCard.id"
       class="card"
       :class="{
-        'my-card': isMe,
+        'new-card': newUserCardIds[user.id]?.includes(animalUserCard.id),
         clickable: isAnimalCardClickable,
         clicked: tradeAnimalUserCardIds[user.id]?.includes(animalUserCard.id),
       }"
@@ -63,7 +69,7 @@ const clickAnimalCard = (animalCardId: number) => {
   width: 100%;
 }
 
-.me {
+.my-card-container {
   background: repeating-linear-gradient(
     -45deg,
     rgb(220, 220, 220),
@@ -82,6 +88,10 @@ const clickAnimalCard = (animalCardId: number) => {
     0px 3px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
     0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
     0px 1px 5px 0px var(--v-shadow-key-ambient-opacity, rgba(0, 0, 0, 0.12));
+}
+
+.new-card {
+  border: 5px solid #ffab00;
 }
 
 .clickable {

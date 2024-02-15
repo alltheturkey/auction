@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import type { UserCard } from '@/types';
+import type { User, UserCard } from '@/types';
 
 const props = defineProps<{
-  userCards: UserCard[];
+  user?: User & { userCards: UserCard[] };
   isMoneyCardClickable: boolean;
+  confirmedTradeBetUserCardIds: number[];
 }>();
 
 const emit = defineEmits<{
@@ -11,10 +12,11 @@ const emit = defineEmits<{
   submit: [moneyUserCardIds: number[]];
 }>();
 
-const MoneyUserCards = computed(() =>
-  props.userCards
-    .filter(({ card }) => card.type === 'MONEY')
-    .toSorted((a, b) => a.card.point - b.card.point),
+const MoneyUserCards = computed(
+  () =>
+    props.user?.userCards
+      .filter(({ card }) => card.type === 'MONEY')
+      .toSorted((a, b) => a.card.point - b.card.point) ?? [],
 );
 
 const clickedMoneyUserCardIds = ref<number[]>([]);
@@ -33,6 +35,8 @@ const clickMoneyCard = (userCardId: number) => {
     ];
   }
 };
+
+const newUserCardIds = useNewUserCardIds();
 </script>
 
 <template>
@@ -43,8 +47,13 @@ const clickMoneyCard = (userCardId: number) => {
         :key="moneyUserCard.id"
         class="card"
         :class="{
+          'new-card': newUserCardIds[user?.id ?? '']?.includes(
+            moneyUserCard.id,
+          ),
           clickable: isMoneyCardClickable,
-          clicked: clickedMoneyUserCardIds.includes(moneyUserCard.id),
+          clicked:
+            clickedMoneyUserCardIds.includes(moneyUserCard.id) ||
+            confirmedTradeBetUserCardIds.includes(moneyUserCard.id),
         }"
         :src="moneyUserCard.card.img"
         @click="
@@ -96,6 +105,10 @@ const clickMoneyCard = (userCardId: number) => {
     0px 3px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
     0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
     0px 1px 5px 0px var(--v-shadow-key-ambient-opacity, rgba(0, 0, 0, 0.12));
+}
+
+.new-card {
+  border: 5px solid #ffab00;
 }
 
 .clickable {

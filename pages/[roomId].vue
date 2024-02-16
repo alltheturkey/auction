@@ -476,7 +476,7 @@ const badgeContent = computed(() => {
       ({ userId }) => userId === room.value?.trade?.targetUser.id,
     ).length;
 
-    return `${room.value?.turnUser?.name}(${turnUserTradeBetLength})⚔️${room.value.trade.targetUser.name}(${targetUserTradeBetLength})`;
+    return `${room.value?.turnUser?.name} (${turnUserTradeBetLength})⚔️${room.value.trade.targetUser.name} (${targetUserTradeBetLength})`;
   }
 
   if (room.value?.turnUser) {

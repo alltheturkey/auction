@@ -629,6 +629,8 @@ const sortedUsers = computed(() => {
         <v-btn
           v-if="isAuctionable === false && isTradable === false"
           block
+          color="deep-orange-lighten-1"
+          prepend-icon="mdi-skip-next"
           @click="skipTurn()"
           >skip</v-btn
         >

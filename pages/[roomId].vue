@@ -38,8 +38,8 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  if (buySellableTimer.value !== null) {
-    clearTimeout(buySellableTimer.value);
+  if (buySellableTimer !== undefined) {
+    clearTimeout(buySellableTimer);
   }
 
   window.removeEventListener('beforeunload', beforeunloadHandler);
@@ -308,18 +308,18 @@ const startTrade = async () => {
 
 const isMoneyCardClickable = ref(false);
 const newUserCardIds = useNewUserCardIds();
-const buySellableTimer = ref<NodeJS.Timeout | null>(null);
+let buySellableTimer: NodeJS.Timeout | undefined;
 const isBuySellable = ref(false);
 
 watch(room, (newRoom, oldRoom) => {
   // タイマーリセット
-  if (buySellableTimer.value !== null) {
-    clearTimeout(buySellableTimer.value);
+  if (buySellableTimer !== undefined) {
+    clearTimeout(buySellableTimer);
   }
 
   // BUY SELLクリッカブル制御(遅延)
   isBuySellable.value = false;
-  buySellableTimer.value = setTimeout(() => (isBuySellable.value = true), 4000);
+  buySellableTimer = setTimeout(() => (isBuySellable.value = true), 4000);
 
   // auction買い取りの場合、お金カードをクリック可能にする
   if (room.value?.auction?.buyerUser?.id === myUserId.value) {

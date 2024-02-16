@@ -540,7 +540,9 @@ const sortedUsers = computed(() => {
               textAlign: 'center',
             }"
           >
-            {{ `💰${room.auction.amount}` }}
+            <span>💰</span>
+            <AtomsAnimatedNumber :value="room.auction.amount" />
+            <!-- {{ `💰${room.auction.amount}` }} -->
           </div>
         </div>
 

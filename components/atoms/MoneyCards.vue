@@ -69,6 +69,8 @@ const newUserCardIds = useNewUserCardIds();
         width: '100%',
         display: 'flex',
         justifyContent: 'center',
+        height: '36px',
+        marginBottom: '15px',
       }"
     >
       <v-btn

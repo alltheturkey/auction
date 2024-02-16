@@ -5,13 +5,13 @@ import { prismaErrorHandler } from '~/server/lib/prismaErrorHandler';
 const prisma = new PrismaClient();
 
 export default defineEventHandler(async () => {
-  // 1日以上更新されていない部屋を削除
+  // 12h以上更新されていない部屋を削除
   await prisma
     .$transaction(async (prisma) => {
       const oldRooms = await prisma.room.findMany({
         where: {
           updatedAt: {
-            lt: new Date(Date.now() - 1000 * 60 * 60 * 24),
+            lt: new Date(Date.now() - 1000 * 60 * 60 * 12),
           },
         },
         include: {

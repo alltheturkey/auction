@@ -319,7 +319,7 @@ watch(room, (newRoom, oldRoom) => {
 
   // BUY SELLクリッカブル制御(遅延)
   isBuySellable.value = false;
-  buySellableTimer.value = setTimeout(() => (isBuySellable.value = true), 5000);
+  buySellableTimer.value = setTimeout(() => (isBuySellable.value = true), 4000);
 
   // auction買い取りの場合、お金カードをクリック可能にする
   if (room.value?.auction?.buyerUser?.id === myUserId.value) {
@@ -410,10 +410,50 @@ const skipTurn = () => {
   void useFetch(`/api/next-turn/${roomId}`);
 };
 
+const userScores = computed<
+  {
+    user: User & {
+      userCards: UserCard[];
+    };
+    score: number;
+    isWinner: boolean;
+  }[]
+>(() => {
+  if (isGameEnd.value) {
+    const scores =
+      room.value?.users.map((user) => {
+        const animalCardsByPoint = new Map(
+          user.userCards
+            .filter(({ card: { type } }) => type === 'ANIMAL')
+            .map((obj) => [obj.card.point, obj.card]),
+        );
+
+        const score =
+          animalCardsByPoint.size *
+          [...animalCardsByPoint.keys()].reduce((a, b) => a + b, 0);
+
+        return { user, score };
+      }) ?? [];
+
+    const highScore = Math.max(...scores.map(({ score }) => score));
+
+    return scores.map(({ user, score }) => ({
+      user,
+      score,
+      isWinner: score === highScore,
+    }));
+  }
+
+  return [];
+});
+
 const badgeContent = computed(() => {
   if (isGameEnd.value) {
     // 勝者表示
-    return '🏆';
+    return `🏆${userScores.value
+      .filter(({ isWinner }) => isWinner)
+      .map(({ user }) => user.name)
+      .join('&')}`;
   }
 
   if (room.value?.auction) {
@@ -540,7 +580,9 @@ const sortedUsers = computed(() => {
               textAlign: 'center',
             }"
           >
-            {{ `💰${room.auction.amount}` }}
+            <span>💰</span>
+            <AtomsAnimatedNumber :value="room.auction.amount" />
+            <!-- {{ `💰${room.auction.amount}` }} -->
           </div>
         </div>
 
@@ -595,7 +637,13 @@ const sortedUsers = computed(() => {
       >
         Start
       </v-btn>
-      <v-btn v-if="isGameEnd" @click="startGame()">restart</v-btn>
+      <v-btn
+        v-if="isGameEnd"
+        color="grey-darken-3"
+        prepend-icon="mdi-reload"
+        @click="startGame()"
+        >restart</v-btn
+      >
 
       <span
         v-if="
@@ -627,6 +675,8 @@ const sortedUsers = computed(() => {
         <v-btn
           v-if="isAuctionable === false && isTradable === false"
           block
+          color="deep-orange-lighten-1"
+          prepend-icon="mdi-skip-next"
           @click="skipTurn()"
           >skip</v-btn
         >
@@ -640,7 +690,14 @@ const sortedUsers = computed(() => {
         :buyer-user="room?.auction?.buyerUser ?? undefined"
         :is-animal-card-clickable="isAnimalCardClickable"
         :is-game-end="isGameEnd"
+        :is-winner="
+          userScores.find(({ user: { id } }) => id === user.id)?.isWinner ??
+          false
+        "
         :my-user-id="myUserId"
+        :score="
+          userScores.find(({ user: { id } }) => id === user.id)?.score ?? 0
+        "
         :target-user="room?.trade?.targetUser ?? undefined"
         :top-user="room?.auction?.topUser ?? undefined"
         :turn-user-id="room?.turnUser?.id"

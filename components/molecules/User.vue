@@ -10,24 +10,13 @@ const props = defineProps<{
   buyerUser?: User;
   targetUser?: User;
   myUserId: string;
+  score: number;
+  isWinner: boolean;
 }>();
-
-const score = computed(() => {
-  const animalCardsByPoint = new Map(
-    props.user.userCards
-      .filter(({ card: { type } }) => type === 'ANIMAL')
-      .map((obj) => [obj.card.point, obj.card]),
-  );
-
-  return (
-    animalCardsByPoint.size *
-    [...animalCardsByPoint.keys()].reduce((a, b) => a + b, 0)
-  );
-});
 
 const userName = computed(() => {
   if (props.isGameEnd) {
-    return `${props.user.name} (${score.value})`;
+    return `${props.isWinner ? '🏆' : ''}${props.user.name} (${props.score})`;
   }
 
   switch (props.user.id) {

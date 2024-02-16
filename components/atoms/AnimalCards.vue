@@ -31,6 +31,28 @@ const clickAnimalCard = (animalCardId: number) => {
 };
 
 const newUserCardIds = useNewUserCardIds();
+
+// 4枚揃った動物カード
+const completedAnimalUserCardIds = computed(() => {
+  const animalCardPointSet = new Set(
+    props.user.userCards
+      .filter(({ card }) => card.type === 'ANIMAL')
+      .map(({ card: { point } }) => point),
+  );
+
+  return [...animalCardPointSet]
+    .map(
+      (point) =>
+        [
+          point,
+          props.user.userCards
+            .filter(({ card }) => card.type === 'ANIMAL')
+            .filter(({ card }) => card.point === point),
+        ] as const,
+    )
+    .filter(([, userCards]) => userCards.length === 4)
+    .flatMap(([, userCards]) => userCards.map(({ id }) => id));
+});
 </script>
 
 <template>
@@ -45,11 +67,20 @@ const newUserCardIds = useNewUserCardIds();
       class="card"
       :class="{
         'new-card': newUserCardIds[user.id]?.includes(animalUserCard.id),
-        clickable: isAnimalCardClickable,
+        clickable:
+          isAnimalCardClickable &&
+          !completedAnimalUserCardIds.includes(animalUserCard.id),
         clicked: tradeAnimalUserCardIds[user.id]?.includes(animalUserCard.id),
       }"
       :src="animalUserCard.card.img"
-      @click="clickAnimalCard(animalUserCard.id)"
+      @click="
+        if (
+          isAnimalCardClickable &&
+          !completedAnimalUserCardIds.includes(animalUserCard.id)
+        ) {
+          clickAnimalCard(animalUserCard.id);
+        }
+      "
     />
   </div>
 </template>

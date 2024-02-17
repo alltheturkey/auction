@@ -329,8 +329,6 @@ watch(room, (newRoom, oldRoom) => {
   buySellableTimer = setTimeout(() => (isBuySellable.value = true), 4000);
 
   // auction買い取りの場合、お金カードをクリック可能にする
-  console.log(room.value?.auction?.buyerUser?.id, myUserId.value);
-
   if (room.value?.auction?.buyerUser?.id === myUserId.value) {
     isMoneyCardClickable.value = true;
   }

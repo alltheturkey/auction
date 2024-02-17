@@ -9,7 +9,7 @@ const props = defineProps<{
   topUser?: User;
   buyerUser?: User;
   targetUser?: User;
-  myUserId: string;
+  myUserId: string | null;
   score: number;
   isWinner: boolean;
 }>();

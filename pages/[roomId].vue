@@ -4,7 +4,7 @@ import type { Room, User, UserCard } from '@/types';
 const runtimeConfig = useRuntimeConfig();
 const roomId = useRoute('roomId').params.roomId;
 const ws = new WebSocket(new URL(roomId, runtimeConfig.public.ws).href);
-const myUserId = ref('');
+const myUserId = ref(sessionStorage.getItem('userId'));
 const roomName = ref('');
 const room: Ref<Room | undefined> = ref();
 
@@ -21,7 +21,7 @@ const beforeunloadHandler = (e: BeforeUnloadEvent) => {
 
 const unloadHandler = () => {
   if (room.value?.turnUser == null) {
-    if (document.visibilityState === 'hidden' && myUserId.value) {
+    if (document.visibilityState === 'hidden' && myUserId.value !== null) {
       // ユーザ削除(ルーム退出)
       navigator.sendBeacon(`/api/users/${myUserId.value}`);
     } else if (document.visibilityState === 'visible') {
@@ -55,7 +55,7 @@ onUnmounted(() => {
   ws.close();
 
   // ユーザ削除(ルーム退出)
-  if (myUserId.value) {
+  if (myUserId.value !== null) {
     // ゲーム開始後はリレーションが存在するので失敗する(同じタブなら再接続できる)
     navigator.sendBeacon(`/api/users/${myUserId.value}`);
   }
@@ -78,16 +78,13 @@ onBeforeRouteLeave(() => {
 const joinRoom = () => {
   void useFetch(`/api/rooms/${roomId}`).then(async ({ data: room, status }) => {
     roomName.value = room.value?.name ?? '';
-    const sessionUserId = sessionStorage.getItem('userId');
 
     if (status.value === 'error' || room.value?.turnUserId !== null) {
-      // 開始済みゲームに参加していたユーザがリロードしたときに再接続
+      // 開始済みゲームに参加していたユーザがリロードしたときに再接続(ユーザ作成しない)
       if (
-        sessionUserId !== null &&
-        (room.value?.users.some(({ id }) => id === sessionUserId) ?? false)
+        myUserId.value !== null &&
+        (room.value?.users.some(({ id }) => id === myUserId.value) ?? false)
       ) {
-        myUserId.value = sessionUserId;
-
         return;
       } else {
         sessionStorage.clear();
@@ -270,7 +267,7 @@ watch(
         tradeAnimalUserCardIds.value,
       ).flat().length;
       const myTradeAnimaluserCardIdsLength =
-        tradeAnimalUserCardIds.value[myUserId.value]?.length ?? 0;
+        tradeAnimalUserCardIds.value[myUserId.value ?? '']?.length ?? 0;
 
       if (
         myTradeAnimaluserCardIdsLength > 0 &&
@@ -304,7 +301,8 @@ const startTrade = async () => {
       roomId,
       targetUserId,
       targetUserAnimalUserCardIds: tradeAnimalUserCardIds.value[targetUserId],
-      turnUserAnimalUserCardIds: tradeAnimalUserCardIds.value[myUserId.value],
+      turnUserAnimalUserCardIds:
+        tradeAnimalUserCardIds.value[myUserId.value ?? ''],
     },
   });
 
@@ -331,6 +329,8 @@ watch(room, (newRoom, oldRoom) => {
   buySellableTimer = setTimeout(() => (isBuySellable.value = true), 4000);
 
   // auction買い取りの場合、お金カードをクリック可能にする
+  console.log(room.value?.auction?.buyerUser?.id, myUserId.value);
+
   if (room.value?.auction?.buyerUser?.id === myUserId.value) {
     isMoneyCardClickable.value = true;
   }

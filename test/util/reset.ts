@@ -1,6 +1,6 @@
-import { PrismaClient } from '@prisma/client/edge';
+import { PrismaClient } from '@prisma/client';
 import { afterAll, beforeAll } from 'vitest';
-import type { Prisma } from '@prisma/client/edge';
+import type { Prisma } from '@prisma/client';
 import { seed } from '~/prisma/seed';
 
 const prisma = new PrismaClient();

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client/edge';
+import { PrismaClient } from '@prisma/client';
 import { insertNameFromId } from '~/server/lib/insertNameFromId';
 import { prismaErrorHandler } from '~/server/lib/prismaErrorHandler';
 

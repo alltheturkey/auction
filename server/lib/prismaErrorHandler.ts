@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client/edge';
+import type { Prisma } from '@prisma/client';
 
 /**
  * Prismaエラーハンドラ

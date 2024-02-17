@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client/edge';
+import { PrismaClient } from '@prisma/client';
 import { broadcastRoom } from '~/server/lib/broadcastRoom';
 import { prismaErrorHandler } from '~/server/lib/prismaErrorHandler';
 import { shuffleArr } from '~/server/lib/shuffleArr';

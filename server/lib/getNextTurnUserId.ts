@@ -1,4 +1,4 @@
-import type { Room } from '@prisma/client';
+import type { Room } from '@prisma/client/edge';
 
 /**
  * 次のターンのユーザーIDを取得

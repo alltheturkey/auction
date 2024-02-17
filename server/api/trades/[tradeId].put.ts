@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client/edge';
 import { z } from 'zod';
 import { broadcastRoom } from '~/server/lib/broadcastRoom';
 import { prismaErrorHandler } from '~/server/lib/prismaErrorHandler';

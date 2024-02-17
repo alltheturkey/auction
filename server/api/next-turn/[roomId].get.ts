@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client/edge';
 import { broadcastRoom } from '~/server/lib/broadcastRoom';
 import { getNextTurnUserId } from '~/server/lib/getNextTurnUserId';
 import { insertNameFromId } from '~/server/lib/insertNameFromId';

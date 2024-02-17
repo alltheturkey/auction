@@ -40,6 +40,7 @@ onMounted(() => {
   window.addEventListener('beforeunload', beforeunloadHandler);
   window.addEventListener('visibilitychange', unloadHandler);
   ws.addEventListener('message', onMessageHandler);
+  ws.addEventListener('open', joinRoom);
 });
 
 onUnmounted(() => {
@@ -50,6 +51,7 @@ onUnmounted(() => {
   window.removeEventListener('beforeunload', beforeunloadHandler);
   window.removeEventListener('visibilitychange', unloadHandler);
   ws.removeEventListener('message', onMessageHandler);
+  ws.removeEventListener('open', joinRoom);
   ws.close();
 
   // ユーザ削除(ルーム退出)
@@ -118,8 +120,6 @@ const joinRoom = () => {
     });
   });
 };
-
-joinRoom();
 
 const startGame = () => {
   void useFetch(`/api/rooms/${roomId}`, {

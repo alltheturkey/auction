@@ -527,7 +527,7 @@ const sortedUsers = computed(() => {
         margin: '5px 0',
       }"
     >
-      <div>
+      <div :style="{ position: 'relative' }">
         <v-badge :content="badgeContent" location="bottom">
           <img
             class="card"

@@ -20,9 +20,14 @@ const beforeunloadHandler = (e: BeforeUnloadEvent) => {
 };
 
 const unloadHandler = () => {
-  if (myUserId.value) {
-    // ユーザ削除(ルーム退出)
-    navigator.sendBeacon(`/api/users/${myUserId.value}`);
+  if (room.value?.turnUser == null) {
+    if (document.visibilityState === 'hidden' && myUserId.value) {
+      // ユーザ削除(ルーム退出)
+      navigator.sendBeacon(`/api/users/${myUserId.value}`);
+    } else if (document.visibilityState === 'visible') {
+      // ルーム再参加
+      joinRoom();
+    }
   }
 };
 
@@ -33,7 +38,7 @@ const onMessageHandler = (event: MessageEvent<string>) => {
 
 onMounted(() => {
   window.addEventListener('beforeunload', beforeunloadHandler);
-  window.addEventListener('unload', unloadHandler);
+  window.addEventListener('visibilitychange', unloadHandler);
   ws.addEventListener('message', onMessageHandler);
 });
 
@@ -43,7 +48,7 @@ onUnmounted(() => {
   }
 
   window.removeEventListener('beforeunload', beforeunloadHandler);
-  window.removeEventListener('unload', unloadHandler);
+  window.removeEventListener('visibilitychange', unloadHandler);
   ws.removeEventListener('message', onMessageHandler);
   ws.close();
 
@@ -68,49 +73,53 @@ onBeforeRouteLeave(() => {
 });
 
 // ルーム参加処理
-void useFetch(`/api/rooms/${roomId}`).then(async ({ data: room, status }) => {
-  roomName.value = room.value?.name ?? '';
-  const sessionUserId = sessionStorage.getItem('userId');
+const joinRoom = () => {
+  void useFetch(`/api/rooms/${roomId}`).then(async ({ data: room, status }) => {
+    roomName.value = room.value?.name ?? '';
+    const sessionUserId = sessionStorage.getItem('userId');
 
-  if (status.value === 'error' || room.value?.turnUserId !== null) {
-    // 開始済みゲームに参加していたユーザがリロードしたときに再接続
-    if (
-      sessionUserId !== null &&
-      (room.value?.users.some(({ id }) => id === sessionUserId) ?? false)
-    ) {
-      myUserId.value = sessionUserId;
+    if (status.value === 'error' || room.value?.turnUserId !== null) {
+      // 開始済みゲームに参加していたユーザがリロードしたときに再接続
+      if (
+        sessionUserId !== null &&
+        (room.value?.users.some(({ id }) => id === sessionUserId) ?? false)
+      ) {
+        myUserId.value = sessionUserId;
 
-      return;
-    } else {
-      sessionStorage.clear();
-      await navigateTo('/');
+        return;
+      } else {
+        sessionStorage.clear();
+        await navigateTo('/');
 
-      return;
+        return;
+      }
     }
-  }
 
-  let userName = localStorage.getItem('userName');
+    let userName = localStorage.getItem('userName');
 
-  while (userName === null) {
-    userName = prompt('name?');
-  }
-
-  localStorage.setItem('userName', userName);
-
-  // ユーザ作成(ルーム参加)
-  void useFetch('/api/users', {
-    method: 'POST',
-    body: {
-      name: userName,
-      roomId,
-    },
-  }).then(({ data: user }) => {
-    if (user.value) {
-      myUserId.value = user.value.id;
-      sessionStorage.setItem('userId', myUserId.value);
+    while (userName === null) {
+      userName = prompt('name?');
     }
+
+    localStorage.setItem('userName', userName);
+
+    // ユーザ作成(ルーム参加)
+    void useFetch('/api/users', {
+      method: 'POST',
+      body: {
+        name: userName,
+        roomId,
+      },
+    }).then(({ data: user }) => {
+      if (user.value) {
+        myUserId.value = user.value.id;
+        sessionStorage.setItem('userId', myUserId.value);
+      }
+    });
   });
-});
+};
+
+joinRoom();
 
 const startGame = () => {
   void useFetch(`/api/rooms/${roomId}`, {

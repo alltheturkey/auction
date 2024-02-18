@@ -32,7 +32,10 @@ const unloadHandler = () => {
 };
 
 const onMessageHandler = (event: MessageEvent<string>) => {
-  // console.log(JSON.parse(event.data));
+  if (event.data === 'pong') {
+    return;
+  }
+
   room.value = JSON.parse(event.data) as Room;
 };
 
@@ -52,6 +55,7 @@ onUnmounted(() => {
   window.removeEventListener('visibilitychange', unloadHandler);
   ws.removeEventListener('message', onMessageHandler);
   ws.removeEventListener('open', joinRoom);
+  clearInterval(wsPingInterval);
   ws.close();
 
   // ユーザ削除(ルーム退出)
@@ -74,8 +78,14 @@ onBeforeRouteLeave(() => {
   }
 });
 
+let wsPingInterval: NodeJS.Timeout | undefined;
+
 // ルーム参加処理
 const joinRoom = () => {
+  wsPingInterval = setInterval(() => {
+    ws.send('ping');
+  }, 60 * 1000);
+
   void useFetch(`/api/rooms/${roomId}`).then(async ({ data: room, status }) => {
     roomName.value = room.value?.name ?? '';
 

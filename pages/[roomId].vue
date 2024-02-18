@@ -532,7 +532,21 @@ const sortedUsers = computed(() => {
 
 <template>
   <div>
-    <h2 class="room-name">{{ roomName }}</h2>
+    <section
+      :style="{
+        display: 'flex',
+        alignItems: 'center',
+        margin: '2px 0 0 10px',
+      }"
+    >
+      <v-icon
+        color="grey-darken-1"
+        icon="mdi-home"
+        size="small"
+        @click="navigateTo('/')"
+      />
+      <span class="room-name"> {{ roomName }}</span>
+    </section>
 
     <section
       v-auto-animate
@@ -763,7 +777,15 @@ const sortedUsers = computed(() => {
 
 .room-name {
   color: rgb(162, 162, 162);
-  margin: 0 10px;
+  margin: 0 0 0 7.25px;
   view-transition-name: room-name;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+@media screen and (max-width: 600px) {
+  .room-name {
+    font-size: 1.25rem;
+  }
 }
 </style>

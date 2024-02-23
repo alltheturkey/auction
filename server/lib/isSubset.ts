@@ -21,6 +21,6 @@ export const isSubset = <T extends number | string>(
   const supersetCount = countElement(superset);
 
   return Object.entries(subsetCount).every(
-    ([element, count]) => supersetCount[element] >= count,
+    ([element, count]) => supersetCount[element] ?? 0 >= count,
   );
 };

@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     .parseAsync(await readBody(event))
     .catch(zodErrorHandler);
 
-  const tradeId = event.context.params!.tradeId;
+  const tradeId = event.context.params!.tradeId!;
   const { room } = await prisma.trade
     .findUniqueOrThrow({
       where: {

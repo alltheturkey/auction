@@ -76,6 +76,8 @@ onBeforeRouteLeave(() => {
       return false;
     }
   }
+
+  return;
 });
 
 let wsPingInterval: NodeJS.Timeout | undefined;

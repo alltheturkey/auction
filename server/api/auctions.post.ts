@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
 
   await prisma
     .$transaction(async (prisma) => {
-      const animalCard = shuffleArr(deckAnimalCards)[0];
+      const animalCard = shuffleArr(deckAnimalCards)[0]!;
 
       const auction = await prisma.auction.create({
         data: {

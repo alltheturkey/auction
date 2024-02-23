@@ -42,4 +42,14 @@ export default defineNuxtConfig({
       ],
     },
   },
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        noImplicitAny: true,
+        noImplicitReturns: true,
+        noFallthroughCasesInSwitch: true,
+        noUncheckedIndexedAccess: true,
+      },
+    },
+  },
 });

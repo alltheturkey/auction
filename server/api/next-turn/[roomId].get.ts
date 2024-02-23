@@ -7,7 +7,7 @@ import { prismaErrorHandler } from '~/server/lib/prismaErrorHandler';
 const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
-  const roomId = event.context.params!.roomId;
+  const roomId = event.context.params!.roomId!;
   const room = await prisma.room
     .findUniqueOrThrow({
       where: {

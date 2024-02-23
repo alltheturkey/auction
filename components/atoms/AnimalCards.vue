@@ -18,10 +18,14 @@ const tradeAnimalUserCardIds = useTradeAnimalUserCardIds();
 const clickAnimalCard = (animalCardId: number) => {
   if (!props.isAnimalCardClickable) return;
 
-  if (tradeAnimalUserCardIds.value[props.user.id]?.includes(animalCardId)) {
-    tradeAnimalUserCardIds.value[props.user.id] = tradeAnimalUserCardIds.value[
-      props.user.id
-    ].filter((id) => id !== animalCardId);
+  if (
+    tradeAnimalUserCardIds.value[props.user.id]?.includes(animalCardId) ??
+    false
+  ) {
+    tradeAnimalUserCardIds.value[props.user.id] =
+      tradeAnimalUserCardIds.value[props.user.id]?.filter(
+        (id) => id !== animalCardId,
+      ) ?? [];
   } else {
     tradeAnimalUserCardIds.value[props.user.id] = [
       ...(tradeAnimalUserCardIds.value[props.user.id] ?? []),

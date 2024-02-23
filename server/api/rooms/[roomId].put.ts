@@ -6,7 +6,7 @@ import { shuffleArr } from '~/server/lib/shuffleArr';
 const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
-  const roomId = event.context.params!.roomId;
+  const roomId = event.context.params!.roomId!;
   const { users } = await prisma.room
     .findUniqueOrThrow({
       where: { id: roomId },
@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
         id: roomId,
       },
       data: {
-        turnUserId: shuffledUsers[0].id,
+        turnUserId: shuffledUsers[0]!.id,
         auctionId: null,
         tradeId: null,
         userOrder: shuffledUsers.map(({ id }) => id),

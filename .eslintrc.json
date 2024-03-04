@@ -27,7 +27,7 @@
     "vue/camelcase": "warn",
     "vue/no-console": [
       "warn",
-      { "allow": ["time", "timeEnd", "info", "error", "debug"] }
+      { "allow": ["time", "timeEnd", "info", "warn", "error", "debug"] }
     ],
     "vue/block-order": "warn",
     "vue/block-tag-newline": "warn",
@@ -54,7 +54,7 @@
     "curly": ["warn", "multi-line"],
     "no-console": [
       "warn",
-      { "allow": ["time", "timeEnd", "info", "error", "debug"] }
+      { "allow": ["time", "timeEnd", "info", "warn", "error", "debug"] }
     ],
     "padding-line-between-statements": [
       "warn",

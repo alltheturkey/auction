@@ -5,7 +5,6 @@
     "editorconfig.editorconfig",
     "vivaxy.vscode-conventional-commits",
     "prisma.prisma",
-    "vue.volar",
-    "vue.vscode-typescript-vue-plugin"
+    "vue.volar"
   ]
 }

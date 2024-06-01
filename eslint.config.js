@@ -3,14 +3,12 @@
 import stylistic from '@stylistic/eslint-plugin';
 import pluginTs from '@typescript-eslint/eslint-plugin';
 import parserTs from '@typescript-eslint/parser';
-import gitignore from 'eslint-config-flat-gitignore';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import jsdoc from 'eslint-plugin-jsdoc';
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 import withNuxt from './.nuxt/eslint.config.mjs';
 
 export default withNuxt(eslintConfigPrettier).prepend(
-  gitignore(),
   {
     languageOptions: {
       parser: parserTs,

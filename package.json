@@ -31,7 +31,6 @@
     "@prisma/client": "^5.8.1",
     "@stylistic/eslint-plugin": "^2.1.0",
     "@vue/test-utils": "^2.4.4",
-    "eslint-config-flat-gitignore": "^0.1.5",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jsdoc": "^48.2.7",
     "eslint-plugin-unicorn": "^53.0.0",

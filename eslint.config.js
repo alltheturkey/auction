@@ -42,7 +42,7 @@ export default withNuxt(eslintConfigPrettier).prepend(
         'warn',
         { allow: ['time', 'timeEnd', 'info', 'warn', 'error', 'debug'] },
       ],
-      'vue/block-order': 'warn',
+      'vue/block-order': ['warn', { order: ['script', 'template', 'style'] }],
       'vue/block-tag-newline': 'warn',
       'vue/define-macros-order': 'warn',
       'vue/html-comment-content-newline': 'warn',

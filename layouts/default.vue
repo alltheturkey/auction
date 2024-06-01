@@ -1,13 +1,3 @@
-<template>
-  <v-app
-    :style="{
-      backgroundColor: '#e1e1e1',
-    }"
-  >
-    <slot />
-  </v-app>
-</template>
-
 <script setup lang="ts">
 useHead({
   title: 'auction',
@@ -19,6 +9,16 @@ useHead({
   ],
 });
 </script>
+
+<template>
+  <v-app
+    :style="{
+      backgroundColor: '#e1e1e1',
+    }"
+  >
+    <slot />
+  </v-app>
+</template>
 
 <style>
 html {

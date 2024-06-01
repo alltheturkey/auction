@@ -9,7 +9,7 @@ import jsdoc from 'eslint-plugin-jsdoc';
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 import withNuxt from './.nuxt/eslint.config.mjs';
 
-export default withNuxt().prepend(
+export default withNuxt(eslintConfigPrettier).prepend(
   gitignore(),
   {
     languageOptions: {
@@ -216,5 +216,4 @@ export default withNuxt().prepend(
       ],
     },
   },
-  eslintConfigPrettier,
 );

@@ -1,34 +1,34 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import eslint from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
+import pluginTs from '@typescript-eslint/eslint-plugin';
+import parserTs from '@typescript-eslint/parser';
 import gitignore from 'eslint-config-flat-gitignore';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import jsdoc from 'eslint-plugin-jsdoc';
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
-import tseslint from 'typescript-eslint';
 import withNuxt from './.nuxt/eslint.config.mjs';
 
 export default withNuxt().prepend(
   gitignore(),
   {
     languageOptions: {
+      parser: parserTs,
       parserOptions: {
         project: true,
         tsconfigRootDir: import.meta.dirname,
       },
     },
   },
-  eslint.configs.recommended,
   eslintPluginUnicorn.configs['flat/recommended'],
   jsdoc.configs['flat/recommended'],
-  ...tseslint.configs.recommendedTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
   {
     plugins: {
       '@stylistic': stylistic,
     },
     rules: {
+      ...pluginTs.configs['recommended-type-checked'].rules,
+      ...pluginTs.configs['stylistic-type-checked'].rules,
       'vue/require-macro-variable-name': 'error',
       'vue/define-emits-declaration': ['error', 'type-literal'],
       'vue/define-props-declaration': 'error',
@@ -133,7 +133,6 @@ export default withNuxt().prepend(
       'jsdoc/require-returns': 'off',
       'jsdoc/require-returns-type': 'off',
       'jsdoc/require-param-type': 'off',
-      '@typescript-eslint/no-for-in-array': 'error',
       '@typescript-eslint/strict-boolean-expressions': 'error',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
       '@typescript-eslint/naming-convention': [

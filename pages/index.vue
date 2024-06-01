@@ -56,7 +56,7 @@ const createRoom = async () => {
                 });
               }
             "
-          ></v-list>
+          />
         </v-card>
       </v-col>
     </v-row>

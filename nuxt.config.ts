@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     '@nuxtjs/robots',
     '@nuxtjs/google-fonts',
     '@formkit/auto-animate/nuxt',
+    '@nuxt/eslint',
   ],
   runtimeConfig: {
     wsApi: process.env.NUXT_WS_API ?? 'http://localhost:4567',

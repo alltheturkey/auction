@@ -65,7 +65,6 @@ export default withNuxt(eslintConfigPrettier).prepend(
       camelcase: 'warn',
       'max-depth': 'warn',
       'array-callback-return': 'warn',
-      'no-return-await': 'warn',
       'no-implicit-coercion': 'warn',
       'no-param-reassign': ['warn', { props: true }],
       curly: ['warn', 'multi-line'],
@@ -73,7 +72,6 @@ export default withNuxt(eslintConfigPrettier).prepend(
         'warn',
         { allow: ['time', 'timeEnd', 'info', 'warn', 'error', 'debug'] },
       ],
-      'spaced-comment': ['warn', 'always'],
       'sort-imports': ['warn', { ignoreDeclarationSort: true }],
       'unicorn/catch-error-name': [
         'warn',
@@ -145,6 +143,7 @@ export default withNuxt(eslintConfigPrettier).prepend(
       '@typescript-eslint/consistent-type-imports': 'warn',
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-inferrable-types': 'off',
+      '@stylistic/spaced-comment': 'warn',
       '@stylistic/padding-line-between-statements': [
         'warn',
         {
@@ -168,6 +167,7 @@ export default withNuxt(eslintConfigPrettier).prepend(
         { blankLine: 'always', prev: '*', next: 'type' },
         { blankLine: 'always', prev: 'type', next: '*' },
       ],
+
       'import/newline-after-import': 'warn',
       'import/no-duplicates': 'warn',
       'import/no-default-export': 'warn',

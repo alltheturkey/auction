@@ -338,7 +338,7 @@ watch(room, (newRoom, oldRoom) => {
 
   // BUY SELLクリッカブル制御(遅延)
   isBuySellable.value = false;
-  buySellableTimer = setTimeout(() => (isBuySellable.value = true), 4000);
+  buySellableTimer = setTimeout(() => (isBuySellable.value = true), 3000);
 
   // auction買い取りの場合、お金カードをクリック可能にする
   if (room.value?.auction?.buyerUser?.id === myUserId.value) {
